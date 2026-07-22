@@ -1,0 +1,147 @@
+{
+  "generated_at": "2026-07-22T18:04:27.705353+00:00",
+  "institutions": {
+    "nusenda": {
+      "name": "Nusenda Credit Union",
+      "cards": [
+        {
+          "annual_fee": "None",
+          "purchase_apr": "12.50% - 16.50%",
+          "balance_transfer_apr": "12.50% - 16.50%",
+          "balance_transfer_fee": "None",
+          "cash_advance_apr": "12.50% - 16.50%",
+          "cash_advance_fee": "1% of the amount of each cash advance (minimum: $2.00 ; maximum: $20.00 )",
+          "foreign_transaction_fee": "1% of transaction amount",
+          "late_payment_fee": "If your payment is late, up to $27.00 for the first offense and up to $30.00 each if 2 or more offenses occur within 6 months.",
+          "returned_payment_fee": "Up to $26.00 if your payment is returned for any reason.",
+          "intro_offers": "Promotional APR on all purchases for the first 18 months after card opening. Once the",
+          "rewards_structure": "None",
+          "card_name": "Visa Platinum"
+        },
+        {
+          "annual_fee": "None",
+          "purchase_apr": "12.50% - 16.50%",
+          "balance_transfer_apr": "12.50% - 16.50%",
+          "balance_transfer_fee": "None",
+          "cash_advance_apr": "12.50% - 16.50%",
+          "cash_advance_fee": "1% of the amount of each cash advance (minimum: $2.00 ; maximum: $20.00 )",
+          "foreign_transaction_fee": "1% of transaction amount",
+          "late_payment_fee": "If your payment is late, up to $27.00 for the first offense and up to $30.00 each if 2 or more offenses occur within 6 months.",
+          "returned_payment_fee": "Up to $26.00 if your payment is returned for any reason.",
+          "intro_offers": "Promotional APR on all purchases for the first 18 months after card opening. Once the",
+          "rewards_structure": "1 bonus point for every dollar spent on purchases, and 3 bonus points per dollar in quarterly rotating categories.",
+          "card_name": "Visa Platinum Rewards"
+        },
+        {
+          "annual_fee": "None",
+          "purchase_apr": "12.50% - 16.50%",
+          "balance_transfer_apr": "12.50% - 16.50%",
+          "balance_transfer_fee": "None",
+          "cash_advance_apr": "12.50% - 16.50%",
+          "cash_advance_fee": "1% of the amount of each cash advance (minimum: $2.00 ; maximum: $20.00 )",
+          "foreign_transaction_fee": "1% of transaction amount",
+          "late_payment_fee": "If your payment is late, up to $27.00 for the first offense and up to $30.00 each if 2 or more offenses occur within 6 months.",
+          "returned_payment_fee": "Up to $26.00 if your payment is returned for any reason.",
+          "intro_offers": "Promotional APR on all purchases for the first 18 months after card opening. Once the",
+          "rewards_structure": "1% cash back on all purchases and 5% cash back on purchases in quarterly rotating categories.",
+          "card_name": "Visa Platinum Cash Rewards"
+        },
+        {
+          "annual_fee": "None",
+          "purchase_apr": "12.50% - 16.50%",
+          "balance_transfer_apr": "12.50% - 16.50%",
+          "balance_transfer_fee": "None",
+          "cash_advance_apr": "12.50% - 16.50%",
+          "cash_advance_fee": "1% of the amount of each cash advance (minimum: $2.00 ; maximum: $20.00 )",
+          "foreign_transaction_fee": "1% of transaction amount",
+          "late_payment_fee": "If your payment is late, up to $27.00 for the first offense and up to $30.00 each if 2 or more offenses occur within 6 months.",
+          "returned_payment_fee": "Up to $26.00 if your payment is returned for any reason.",
+          "intro_offers": "None",
+          "rewards_structure": "None",
+          "card_name": "Visa Secured Credit Card"
+        }
+      ],
+      "warnings": []
+    },
+    "century_bank": {
+      "name": "Century Bank (New Mexico)",
+      "cards": [
+        {
+          "annual_fee": "None",
+          "purchase_apr": "16.74%",
+          "balance_transfer_apr": "16.74%",
+          "balance_transfer_fee": "Either $5 or 3% of each balance transferred, whichever is greater.",
+          "cash_advance_apr": "26.74%",
+          "cash_advance_fee": "Either $5 or 3% of each cash advance, whichever is greater.",
+          "foreign_transaction_fee": "1% of the U.S. dollar amount of each transaction made in a foreign currency, in U.S. dollars",
+          "late_payment_fee": "Up to $40.",
+          "returned_payment_fee": "Up to $40.",
+          "intro_offers": "0% Introductory APR applies for twelve billing cycles from date of account opening",
+          "rewards_structure": "1 point per dollar on net purchases.",
+          "card_name": "Rewards Platinum"
+        },
+        {
+          "annual_fee": "None",
+          "purchase_apr": "17.74%",
+          "balance_transfer_apr": "17.74%",
+          "balance_transfer_fee": "Either $5 or 3% of each balance transferred, whichever is greater.",
+          "cash_advance_apr": "27.74%",
+          "cash_advance_fee": "Either $5 or 3% of each cash advance, whichever is greater.",
+          "foreign_transaction_fee": "1% of the U.S. dollar amount of each transaction made in a foreign currency, in U.S. dollars",
+          "late_payment_fee": "Up to $40.",
+          "returned_payment_fee": "Up to $40.",
+          "intro_offers": "0% Introductory APR applies for twelve billing cycles from date of account opening",
+          "rewards_structure": "1 point per dollar on net purchases (redeemable for cash back/statement credit).",
+          "card_name": "Cash Rewards Platinum"
+        },
+        {
+          "annual_fee": "None",
+          "purchase_apr": "14.74%",
+          "balance_transfer_apr": "14.74%",
+          "balance_transfer_fee": "Either $5 or 3% of each balance transferred, whichever is greater.",
+          "cash_advance_apr": "24.74%",
+          "cash_advance_fee": "Either $5 or 3% of each cash advance, whichever is greater.",
+          "foreign_transaction_fee": "1% of the U.S. dollar amount of each transaction made in a foreign currency, in U.S. dollars",
+          "late_payment_fee": "Up to $40.",
+          "returned_payment_fee": "Up to $40.",
+          "intro_offers": "0% Introductory APR applies for twelve billing cycles from date of account opening",
+          "rewards_structure": "None",
+          "card_name": "Platinum Edition"
+        },
+        {
+          "annual_fee": "None",
+          "purchase_apr": "16.49%",
+          "balance_transfer_apr": "16.49%",
+          "balance_transfer_fee": "Either $5 or 3% of each balance transferred, whichever is greater.",
+          "cash_advance_apr": "25.49%",
+          "cash_advance_fee": "Either $5 or 3% of each cash advance, whichever is greater.",
+          "foreign_transaction_fee": "1% of the U.S. dollar amount of each transaction made in a foreign currency, in U.S. dollars",
+          "late_payment_fee": "Up to $40.",
+          "returned_payment_fee": "Up to $40.",
+          "intro_offers": "0% Introductory APR applies for twelve billing cycles from date of account opening",
+          "rewards_structure": "1.5 points per dollar on purchases. 30,000 bonus points after spending $2,500 in first 3 months.",
+          "card_name": "Visa Signature"
+        },
+        {
+          "annual_fee": "$29",
+          "purchase_apr": "24.74%",
+          "balance_transfer_apr": "24.74%",
+          "balance_transfer_fee": "Either $5 or 3% of each balance transferred, whichever is greater.",
+          "cash_advance_apr": "28.24%",
+          "cash_advance_fee": "Either $5 or 3% of each cash advance, whichever is greater.",
+          "foreign_transaction_fee": "1% of the U.S. dollar amount of each transaction made in a foreign currency, in U.S. dollars",
+          "late_payment_fee": "Up to $40.",
+          "returned_payment_fee": "Up to $40.",
+          "intro_offers": "Not disclosed",
+          "rewards_structure": "None",
+          "card_name": "Secured Platinum"
+        }
+      ],
+      "warnings": [
+        "[Century Bank (New Mexico) - Visa Signature] Field 'foreign_transaction_fee' could not be parsed.",
+        "[Century Bank (New Mexico) - Rewards Platinum] Field 'purchase_apr' could not be parsed.",
+        "[Century Bank (New Mexico) - Cash Rewards Platinum] Field 'purchase_apr' could not be parsed."
+      ]
+    }
+  }
+}

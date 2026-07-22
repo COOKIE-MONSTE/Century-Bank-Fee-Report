@@ -1,0 +1,87 @@
+name: Daily Credit Card Fee Comparison
+
+# Run on weekdays at 06:00 UTC (midnight Pacific Time)
+# Adjust the cron expression if you prefer a different time.
+on:
+  schedule:
+    - cron: '0 6 * * 1-5'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Skip sending email and just write output/dry_run_report.html'
+        type: boolean
+        default: false
+
+# Needed so the "Commit updated history" step below can push data/history.json back.
+# Some orgs/repos default the GITHUB_TOKEN to read-only, which would make that push fail.
+permissions:
+  contents: write
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # Ensure we fetch the full history to allow committing back
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m venv venv
+          . venv/bin/activate
+          pip install -r requirements.txt
+
+      - name: Run fee comparison script
+        env:
+          EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
+          EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          DRY_RUN: ${{ (github.event_name == 'workflow_dispatch' && inputs.dry_run) && '1' || '' }}
+        run: |
+          . venv/bin/activate
+          python run.py
+
+      - name: Upload dry-run preview
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: dry-run-report
+          path: output/dry_run_report.html
+
+      - name: Commit updated history
+        if: success()
+        env:
+          GIT_AUTHOR_NAME: github-actions
+          GIT_AUTHOR_EMAIL: github-actions@github.com
+          GIT_COMMITTER_NAME: github-actions
+          GIT_COMMITTER_EMAIL: github-actions@github.com
+        run: |
+          . venv/bin/activate
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          # Add the history file if it was changed by the script
+          git add data/history.json
+          # Only commit if there are changes
+          if ! git diff --cached --quiet; then
+            git commit -m "Update fee comparison history [skip ci]"
+            git push
+          else
+            echo "No changes to commit"
+          fi

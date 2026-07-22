@@ -1,0 +1,91 @@
+# Global Configuration Settings
+settings:
+  primary_institution: "Nusenda Credit Union"  # The "us" in the "where we are uncompetitive" check
+  email:
+    sender: "fee-comparison-agent@domain.com"
+    receiver: "recipient@domain.com"
+    subject_prefix: "Daily Credit Card Fee Comparison"
+  git:
+    commit_history: true  # If true, auto-commits data/history.json in GHA
+
+# Institution Scraper Mappings
+institutions:
+  nusenda:
+    name: "Nusenda Credit Union"
+    url: "https://www.nusenda.org/loans-credit-cards/credit-cards/platinum-terms-and-conditions"
+    type: "html"
+    # Mapping table headers/keywords to specific fields for smart fallback parsing
+    field_keywords:
+      annual_fee:
+        - "annual fee"
+      purchase_apr:
+        - "apr for purchases"
+        - "purchases for visa"
+      balance_transfer_apr:
+        - "balance transfers"
+        - "apr for balance transfers"
+      balance_transfer_fee:
+        - "balance transfer:"
+        - "balance transfer fee"
+      cash_advance_apr:
+        - "cash advances"
+        - "apr for cash advances"
+      cash_advance_fee:
+        - "cash advance:"
+        - "cash advance fee"
+      foreign_transaction_fee:
+        - "foreign transaction"
+      late_payment_fee:
+        - "late payment"
+      returned_payment_fee:
+        - "returned payment"
+      intro_offers:
+        - "promotional apr"
+        - "introductory"
+        - "intro rate"
+      rewards_structure:
+        - "rewards"
+        - "points"
+        - "cashback"
+        - "cash back"
+
+  century_bank:
+    name: "Century Bank (New Mexico)"
+    url: "https://www.icba.org/documents/610744/2081834/TCM+Disclosures_Jan302026.pdf/e756a0a8-53ab-dacc-711f-9af929f28bd4?version=2.0&t=1769633568867&download=true"
+    type: "pdf"
+    # Regexes used on extracted PDF text to find key fields
+    regexes:
+      annual_fee:
+        - "(?i)annual\\s+fee[:\\s]+(none|\\$[0-9,.]+)"
+        - "(?i)(?:annual\\s+fee)[^\\n]*?(none|\\$[0-9,.]+)"
+      purchase_apr:
+        - "(?i)purchases[:\\s]+([0-9.]+\\s*%\\s*(?:to\\s*[0-9.]+\\s*%|varies|variable)?)"
+        - "(?i)purchase\\s+apr[:\\s]+([0-9.]+\\s*%)"
+        - "([0-9.]+\\s*%\\s*to\\s*[0-9.]+\\s*%\\s*APR\\s*for\\s*purchases)"
+      balance_transfer_apr:
+        - "(?i)balance\\s+transfers?[:\\s]+([0-9.]+\\s*%|varies)"
+        - "(?i)balance\\s+transfer\\s+apr[:\\s]+([0-9.]+\\s*%)"
+      balance_transfer_fee:
+        - "(?i)balance\\s+transfers?\\s+fee[:\\s]+(none|\\$[0-9,.]+|[0-9.]+\\s*%[^\\n]*)"
+        - "(?i)balance\\s+transfer[:\\s]+(none|\\$[0-9,.]+|[0-9.]+\\s*%[^\\n]*)"
+      cash_advance_apr:
+        - "(?i)cash\\s+advances?[:\\s]+([0-9.]+\\s*%)"
+        - "(?i)cash\\s+advance\\s+apr[:\\s]+([0-9.]+\\s*%)"
+      cash_advance_fee:
+        - "(?i)cash\\s+advances?\\s+fee[:\\s]+(\\#[0-9,.]+|[0-9.]+\\s*%[^\\n]*|\\$[0-9,.]+[^\\n]*)"
+        - "(?i)cash\\s+advance[:\\s]+(\\#[0-9,.]+|[0-9.]+\\s*%[^\\n]*|\\$[0-9,.]+[^\\n]*)"
+      foreign_transaction_fee:
+        - "(?i)foreign\\s+transactions?[:\\s]+(none|\\$[0-9,.]+|[0-9.]+\\s*%[^\\n]*)"
+        - "(?i)foreign\\s+transaction\\s+fee[:\\s]+(none|\\$[0-9,.]+|[0-9.]+\\s*%[^\\n]*)"
+      late_payment_fee:
+        - "(?i)late\\s+payment[:\\s]+(up\\s+to\\s+\\$[0-9,.]+|\\$[0-9,.]+[^\\n]*)"
+        - "(?i)late\\s+payment\\s+fee[:\\s]+(up\\s+to\\s+\\$[0-9,.]+|\\$[0-9,.]+[^\\n]*)"
+      returned_payment_fee:
+        - "(?i)returned\\s+payment[:\\s]+(up\\s+to\\s+\\$[0-9,.]+|\\$[0-9,.]+[^\\n]*)"
+        - "(?i)returned\\s+payment\\s+fee[:\\s]+(up\\s+to\\s+\\$[0-9,.]+|\\$[0-9,.]+[^\\n]*)"
+      intro_offers:
+        - "(?i)introductory[:\\s]+([^\\n\\.]+)"
+        - "(?i)intro\\s+apr[:\\s]+([^\\n\\.]+)"
+      rewards_structure:
+        - "(?i)rewards?[:\\s]+([^\\n\\.]+)"
+        - "(?i)rewards?\\s+structure[:\\s]+([^\\n\\.]+)"
