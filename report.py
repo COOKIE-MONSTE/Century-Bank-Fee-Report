@@ -41,43 +41,58 @@ def render_report(results, primary_institution, subject):
 
     results: {inst_key: {"name": str, "cards": [...], "warnings": [...]}}
 
-    The table is pivoted so each row is a fee category (not a card/product) and
-    each column is a product, so equivalent fees from different institutions
-    land on the same row regardless of product type.
+    One institution can be backed by multiple config entries/scrapers (e.g.
+    Nusenda's credit cards + retail fee products) -- all of those are merged
+    into a single column per institution here, so the table stays one column
+    per bank as more institutions get added. Where a field has more than one
+    distinct value across an institution's products (e.g. Rewards Structure
+    differing by credit card), all distinct values are kept, joined together,
+    instead of silently dropping any of them.
+
+    The table is pivoted so each row is a fee category and each column an
+    institution, so equivalent fees from different institutions land on the
+    same row.
     """
-    ordered_keys = sorted(
-        results.keys(),
-        key=lambda k: results[k]["name"] != primary_institution,
-    )
+    all_warnings = []
+    institution_order = []
+    institution_cards = {}
+    for inst in results.values():
+        name = inst["name"]
+        if name not in institution_cards:
+            institution_cards[name] = []
+            institution_order.append(name)
+        institution_cards[name].extend(inst["cards"])
+        all_warnings.extend(inst.get("warnings", []))
+
+    institution_order.sort(key=lambda name: name != primary_institution)
 
     columns = []
-    all_warnings = []
-    for inst_key in ordered_keys:
-        inst = results[inst_key]
-        is_primary = inst["name"] == primary_institution
-        for card in inst["cards"]:
-            columns.append({
-                "institution": inst["name"],
-                "product_name": card.get("card_name", "Unknown Product"),
-                "is_primary": is_primary,
-                "data": card,
-            })
-        all_warnings.extend(inst.get("warnings", []))
+    for name in institution_order:
+        merged = {}
+        for key, _ in FIELD_LABELS:
+            distinct_values = []
+            for card in institution_cards[name]:
+                value = card.get(key)
+                if value not in EMPTY_VALUES and value not in distinct_values:
+                    distinct_values.append(value)
+            if distinct_values:
+                merged[key] = "; ".join(distinct_values)
+        columns.append({
+            "institution": name,
+            "is_primary": name == primary_institution,
+            "data": merged,
+        })
 
     rows = []
     for key, label in FIELD_LABELS:
         values = [col["data"].get(key) for col in columns]
-        institutions_with_value = {
-            col["institution"] for col, v in zip(columns, values) if v not in EMPTY_VALUES
-        }
-        if not institutions_with_value:
+        present_count = sum(1 for v in values if v not in EMPTY_VALUES)
+        if present_count == 0:
             continue
         rows.append({
             "label": label,
             "cells": values,
-            # "Shared" means this fee shows up for more than one institution,
-            # not just more than one product from the same institution.
-            "shared": len(institutions_with_value) >= 2,
+            "shared": present_count >= 2,
         })
 
     env = Environment(loader=FileSystemLoader("templates"))

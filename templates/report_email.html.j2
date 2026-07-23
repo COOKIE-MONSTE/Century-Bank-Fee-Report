@@ -10,7 +10,6 @@
   th, td { border: 1px solid #ddd; padding: 6px 8px; text-align: left; vertical-align: top; }
   th { background: #2c3e50; color: #fff; }
   th.primary { background: #1a5276; }
-  th small { display: block; font-weight: normal; color: #cfd9de; margin-top: 2px; }
   td.fee-label { font-weight: bold; background: #f0f3f5; white-space: nowrap; }
   tr.shared td.fee-label { background: #eaf2fb; }
   tr.shared { background: #f5faff; }
@@ -35,7 +34,7 @@
       <tr>
         <th>Fee</th>
         {% for col in columns %}
-        <th class="{{ 'primary' if col.is_primary else '' }}">{{ col.institution }}<small>{{ col.product_name }}</small></th>
+        <th class="{{ 'primary' if col.is_primary else '' }}">{{ col.institution }}</th>
         {% endfor %}
       </tr>
     </thead>
