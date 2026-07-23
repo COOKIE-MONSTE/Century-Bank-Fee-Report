@@ -24,6 +24,13 @@ FIELD_LABELS = [
     ("wire_transfer_incoming_fee", "Incoming Wire Transfer Fee"),
     ("wire_transfer_outgoing_domestic_fee", "Outgoing Domestic Wire Transfer Fee"),
     ("wire_transfer_outgoing_international_fee", "Outgoing International Wire Transfer Fee"),
+    ("cashiers_check_fee", "Cashier's / Official Check Fee"),
+    ("check_cashing_non_member_fee", "Non-Customer Check Cashing Fee"),
+    ("safe_deposit_late_payment_fee", "Safe Deposit Box Late Payment Fee"),
+    ("safe_deposit_drill_fee", "Safe Deposit Box Drilling Fee"),
+    ("card_replacement_fee", "Card Replacement Fee"),
+    ("card_replacement_rush_fee", "Rush Card Replacement Fee"),
+    ("monthly_maintenance_fee", "Monthly Maintenance Fee"),
 ]
 
 EMPTY_VALUES = {None, "", "Not disclosed"}

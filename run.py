@@ -8,6 +8,7 @@ import yaml
 from scraper.html_scraper import HTMLScraper
 from scraper.pdf_scraper import PDFScraper
 from scraper.fee_schedule_scraper import StaticFeeScraper
+from scraper.lkcs_widget_scraper import LKCSFeeScraper
 from report import render_report
 from emailer import send_email
 
@@ -21,6 +22,7 @@ SCRAPER_TYPES = {
     "html": HTMLScraper,
     "pdf": PDFScraper,
     "static": StaticFeeScraper,
+    "lkcs_widget": LKCSFeeScraper,
 }
 
 
