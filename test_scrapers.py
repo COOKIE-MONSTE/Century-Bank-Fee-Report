@@ -1,7 +1,7 @@
 import yaml
 import json
 from scraper.html_scraper import HTMLScraper
-from scraper.pdf_scraper import PDFScraper
+from scraper.fee_schedule_scraper import StaticFeeScraper
 
 with open("config.yaml", "r") as f:
     config = yaml.safe_load(f)
@@ -21,12 +21,12 @@ print("Nusenda Scraper Warnings:", nusenda_scraper.warnings)
 
 print("\n" + "="*50 + "\n")
 
-# Test Century Bank PDFScraper
+# Test Century Bank StaticFeeScraper
 century_config = config["institutions"]["century_bank"]
-print("Running Century Bank PDFScraper...")
-century_scraper = PDFScraper(
+print("Running Century Bank StaticFeeScraper...")
+century_scraper = StaticFeeScraper(
     name=century_config["name"],
-    url=century_config["url"],
+    url=century_config.get("url", ""),
     config=century_config
 )
 century_cards = century_scraper.scrape()

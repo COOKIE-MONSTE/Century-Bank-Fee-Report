@@ -37,7 +37,7 @@ institutions:
         - "foreign transaction"
       late_payment_fee:
         - "late payment"
-      returned_payment_fee:
+      returned_item_fee:
         - "returned payment"
       intro_offers:
         - "promotional apr"
@@ -51,41 +51,21 @@ institutions:
 
   century_bank:
     name: "Century Bank (New Mexico)"
-    url: "https://www.icba.org/documents/610744/2081834/TCM+Disclosures_Jan302026.pdf/e756a0a8-53ab-dacc-711f-9af929f28bd4?version=2.0&t=1769633568867&download=true"
-    type: "pdf"
-    # Regexes used on extracted PDF text to find key fields
-    regexes:
-      annual_fee:
-        - "(?i)annual\\s+fee[:\\s]+(none|\\$[0-9,.]+)"
-        - "(?i)(?:annual\\s+fee)[^\\n]*?(none|\\$[0-9,.]+)"
-      purchase_apr:
-        - "(?i)purchases[:\\s]+([0-9.]+\\s*%\\s*(?:to\\s*[0-9.]+\\s*%|varies|variable)?)"
-        - "(?i)purchase\\s+apr[:\\s]+([0-9.]+\\s*%)"
-        - "([0-9.]+\\s*%\\s*to\\s*[0-9.]+\\s*%\\s*APR\\s*for\\s*purchases)"
-      balance_transfer_apr:
-        - "(?i)balance\\s+transfers?[:\\s]+([0-9.]+\\s*%|varies)"
-        - "(?i)balance\\s+transfer\\s+apr[:\\s]+([0-9.]+\\s*%)"
-      balance_transfer_fee:
-        - "(?i)balance\\s+transfers?\\s+fee[:\\s]+(none|\\$[0-9,.]+|[0-9.]+\\s*%[^\\n]*)"
-        - "(?i)balance\\s+transfer[:\\s]+(none|\\$[0-9,.]+|[0-9.]+\\s*%[^\\n]*)"
-      cash_advance_apr:
-        - "(?i)cash\\s+advances?[:\\s]+([0-9.]+\\s*%)"
-        - "(?i)cash\\s+advance\\s+apr[:\\s]+([0-9.]+\\s*%)"
-      cash_advance_fee:
-        - "(?i)cash\\s+advances?\\s+fee[:\\s]+(\\#[0-9,.]+|[0-9.]+\\s*%[^\\n]*|\\$[0-9,.]+[^\\n]*)"
-        - "(?i)cash\\s+advance[:\\s]+(\\#[0-9,.]+|[0-9.]+\\s*%[^\\n]*|\\$[0-9,.]+[^\\n]*)"
-      foreign_transaction_fee:
-        - "(?i)foreign\\s+transactions?[:\\s]+(none|\\$[0-9,.]+|[0-9.]+\\s*%[^\\n]*)"
-        - "(?i)foreign\\s+transaction\\s+fee[:\\s]+(none|\\$[0-9,.]+|[0-9.]+\\s*%[^\\n]*)"
-      late_payment_fee:
-        - "(?i)late\\s+payment[:\\s]+(up\\s+to\\s+\\$[0-9,.]+|\\$[0-9,.]+[^\\n]*)"
-        - "(?i)late\\s+payment\\s+fee[:\\s]+(up\\s+to\\s+\\$[0-9,.]+|\\$[0-9,.]+[^\\n]*)"
-      returned_payment_fee:
-        - "(?i)returned\\s+payment[:\\s]+(up\\s+to\\s+\\$[0-9,.]+|\\$[0-9,.]+[^\\n]*)"
-        - "(?i)returned\\s+payment\\s+fee[:\\s]+(up\\s+to\\s+\\$[0-9,.]+|\\$[0-9,.]+[^\\n]*)"
-      intro_offers:
-        - "(?i)introductory[:\\s]+([^\\n\\.]+)"
-        - "(?i)intro\\s+apr[:\\s]+([^\\n\\.]+)"
-      rewards_structure:
-        - "(?i)rewards?[:\\s]+([^\\n\\.]+)"
-        - "(?i)rewards?\\s+structure[:\\s]+([^\\n\\.]+)"
+    type: "static"
+    # Source: Century Bank's published account Fee Schedule (effective Dec 1, 2023),
+    # a scanned/photographed PDF with no extractable text layer -- a reference copy
+    # lives at assets/century_bank_fee_schedule.pdf. Values below are hand-transcribed
+    # from that document; update them here if Century Bank revises its fee schedule.
+    product_name: "General Account Fee Schedule"
+    fees:
+      overdraft_fee: "$35.00"
+      returned_item_fee: "$35.00"
+      returned_deposit_item_fee: "$15.00"
+      stop_payment_fee: "$35.00"
+      dormant_account_fee: "$10.00 per month (after 1 year of inactivity)"
+      currency_exchange_fee: "$25.00"
+      account_research_fee: "$25.00 per hour (1 hour minimum)"
+      atm_out_of_network_fee: "$2.50"
+      wire_transfer_incoming_fee: "$15.00"
+      wire_transfer_outgoing_domestic_fee: "$30.00"
+      wire_transfer_outgoing_international_fee: "$50.00"

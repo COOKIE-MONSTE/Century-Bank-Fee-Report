@@ -7,6 +7,7 @@ import yaml
 
 from scraper.html_scraper import HTMLScraper
 from scraper.pdf_scraper import PDFScraper
+from scraper.fee_schedule_scraper import StaticFeeScraper
 from report import render_report
 from emailer import send_email
 
@@ -19,6 +20,7 @@ logger = logging.getLogger("FeeComparisonScraper")
 SCRAPER_TYPES = {
     "html": HTMLScraper,
     "pdf": PDFScraper,
+    "static": StaticFeeScraper,
 }
 
 
@@ -32,7 +34,7 @@ def scrape_all(config):
             results[inst_key] = {"name": name, "cards": [], "warnings": [f"Unknown scraper type: {inst_cfg['type']}"]}
             continue
 
-        scraper = scraper_cls(name=name, url=inst_cfg["url"], config=inst_cfg)
+        scraper = scraper_cls(name=name, url=inst_cfg.get("url", ""), config=inst_cfg)
         try:
             cards = scraper.scrape()
         except Exception as e:

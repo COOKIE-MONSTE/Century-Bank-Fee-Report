@@ -54,7 +54,7 @@ class BaseScraper:
             "cash_advance_fee": "Not disclosed",
             "foreign_transaction_fee": "Not disclosed",
             "late_payment_fee": "Not disclosed",
-            "returned_payment_fee": "Not disclosed",
+            "returned_item_fee": "Not disclosed",
             "intro_offers": "Not disclosed",
             "rewards_structure": "Not disclosed"
         }

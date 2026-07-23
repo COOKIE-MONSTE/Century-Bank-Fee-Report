@@ -8,10 +8,15 @@
   .subtitle { color: #666; font-size: 13px; margin: 0 0 20px 0; }
   table { border-collapse: collapse; width: 100%; background: #fff; font-size: 12px; }
   th, td { border: 1px solid #ddd; padding: 6px 8px; text-align: left; vertical-align: top; }
-  th { background: #2c3e50; color: #fff; position: sticky; top: 0; }
-  tr.primary { background: #eaf2fb; }
-  tr.primary td:first-child { font-weight: bold; }
+  th { background: #2c3e50; color: #fff; }
+  th.primary { background: #1a5276; }
+  th small { display: block; font-weight: normal; color: #cfd9de; margin-top: 2px; }
+  td.fee-label { font-weight: bold; background: #f0f3f5; white-space: nowrap; }
+  tr.shared td.fee-label { background: #eaf2fb; }
+  tr.shared { background: #f5faff; }
   .table-wrap { overflow-x: auto; }
+  .legend { font-size: 11px; color: #666; margin-top: 6px; }
+  .legend .swatch { display: inline-block; width: 10px; height: 10px; background: #eaf2fb; border: 1px solid #ddd; vertical-align: middle; margin-right: 4px; }
   .warnings { margin-top: 24px; }
   .warnings h2 { font-size: 15px; margin-bottom: 8px; }
   .warnings ul { font-size: 12px; color: #7a4b00; background: #fff8e6; border: 1px solid #f0dca0; padding: 12px 12px 12px 28px; border-radius: 4px; }
@@ -21,33 +26,32 @@
 </head>
 <body>
   <h1>{{ subject }}</h1>
-  <p class="subtitle">Generated {{ generated_at }}. Rows for {{ primary_institution }} are highlighted for quick reference.</p>
+  <p class="subtitle">Generated {{ generated_at }}. Columns for {{ primary_institution }} are highlighted in the header.</p>
 
-  {% if rows %}
+  {% if rows and columns %}
   <div class="table-wrap">
   <table>
     <thead>
       <tr>
-        <th>Institution</th>
-        <th>Card</th>
-        {% for _, label in fields %}
-        <th>{{ label }}</th>
+        <th>Fee</th>
+        {% for col in columns %}
+        <th class="{{ 'primary' if col.is_primary else '' }}">{{ col.institution }}<small>{{ col.product_name }}</small></th>
         {% endfor %}
       </tr>
     </thead>
     <tbody>
       {% for row in rows %}
-      <tr class="{{ 'primary' if row.is_primary else '' }}">
-        <td>{{ row.institution }}</td>
-        <td>{{ row.card_name }}</td>
-        {% for key, _ in fields %}
-        <td>{{ row.card.get(key, "Not disclosed") }}</td>
+      <tr class="{{ 'shared' if row.shared else '' }}">
+        <td class="fee-label">{{ row.label }}</td>
+        {% for val in row.cells %}
+        <td>{{ val if val and val != "Not disclosed" else "—" }}</td>
         {% endfor %}
       </tr>
       {% endfor %}
     </tbody>
   </table>
   </div>
+  <p class="legend"><span class="swatch"></span>Rows shaded like this appear on 2 or more products &mdash; the closest fee-for-fee comparisons available today.</p>
   {% else %}
   <p class="empty-note">No card data was available for this run.</p>
   {% endif %}
