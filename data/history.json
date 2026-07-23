@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-23T20:46:23.876332+00:00",
+  "generated_at": "2026-07-23T21:12:12.084842+00:00",
   "institutions": {
     "nusenda": {
       "name": "Nusenda Credit Union",
@@ -63,6 +63,45 @@
       ],
       "warnings": []
     },
+    "nusenda_retail_fees": {
+      "name": "Nusenda Credit Union",
+      "cards": [
+        {
+          "card_name": "General Fees",
+          "card_replacement_fee": "$5.00",
+          "atm_out_of_network_fee": "$1.50",
+          "cashiers_check_fee": "$2.50",
+          "check_cashing_non_member_fee": "$4.00",
+          "dormant_account_fee": "$5.00",
+          "overdraft_fee": "$10.00",
+          "account_research_fee": "$20.00",
+          "returned_deposit_item_fee": "$5.00",
+          "card_replacement_rush_fee": "$25.00",
+          "safe_deposit_drill_fee": "$75.00",
+          "safe_deposit_late_payment_fee": "$10.00",
+          "stop_payment_fee": "$25.00",
+          "wire_transfer_outgoing_domestic_fee": "$14.00",
+          "wire_transfer_outgoing_international_fee": "$37.00"
+        },
+        {
+          "card_name": "Checking Account Fees",
+          "returned_item_fee": "No Charge for 1st-5th Items; $10.00 per item for 6th- or more items"
+        },
+        {
+          "card_name": "Dividend Checking Fee (Unlimited Checks Cleared)",
+          "monthly_maintenance_fee": "$5.00"
+        },
+        {
+          "card_name": "Essential Checking Fee (Unlimited Checks Cleared)",
+          "monthly_maintenance_fee": "$5.00"
+        },
+        {
+          "card_name": "Money Market Account Fee",
+          "monthly_maintenance_fee": "$7.50"
+        }
+      ],
+      "warnings": []
+    },
     "century_bank": {
       "name": "Century Bank (New Mexico)",
       "cards": [
@@ -78,6 +117,12 @@
           "wire_transfer_incoming_fee": "$15.00",
           "wire_transfer_outgoing_domestic_fee": "$30.00",
           "wire_transfer_outgoing_international_fee": "$50.00",
+          "cashiers_check_fee": "$10.00",
+          "check_cashing_non_member_fee": "$10.00",
+          "safe_deposit_late_payment_fee": "$15.00",
+          "safe_deposit_drill_fee": "Actual cost",
+          "card_replacement_fee": "$12.00",
+          "card_replacement_rush_fee": "$75.00",
           "card_name": "General Account Fee Schedule"
         }
       ],
