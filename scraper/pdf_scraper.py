@@ -47,6 +47,14 @@ class PDFScraper(BaseScraper):
             "Visa Signature": "1.5 points per dollar on purchases. 30,000 bonus points after spending $2,500 in first 3 months."
         }
 
+        category_mapping = {
+            "Rewards Platinum": "credit_card_rewards",
+            "Cash Rewards Platinum": "credit_card_rewards",
+            "Platinum Edition": "credit_card_standard",
+            "Secured Platinum": "credit_card_secured",
+            "Visa Signature": "credit_card_premium",
+        }
+
         # Scan each page for target card names
         for page_idx in range(len(reader.pages)):
             try:
@@ -84,6 +92,7 @@ class PDFScraper(BaseScraper):
                 logger.info(f"Parsing disclosures page {page_idx+1} for: {matched_card_name}")
                 card_data = self.get_default_fields()
                 card_data["card_name"] = matched_card_name
+                card_data["category"] = category_mapping.get(matched_card_name, "uncategorized")
                 card_data["rewards_structure"] = rewards_mapping.get(matched_card_name, "None")
 
                 # --- 1. Annual Fee ---
@@ -168,7 +177,7 @@ class PDFScraper(BaseScraper):
                     if card_data[field] == "Not disclosed":
                         self.log_field_warning(matched_card_name, field)
 
-                cards.append(card_data)
+                cards.append(self.finalize_card(card_data))
 
         # Remove duplicate entries
         unique_cards = []

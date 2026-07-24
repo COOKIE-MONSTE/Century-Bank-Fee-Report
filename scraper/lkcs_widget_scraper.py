@@ -2,6 +2,7 @@ import logging
 import requests
 from bs4 import BeautifulSoup
 from .base import BaseScraper
+from . import categories
 
 logger = logging.getLogger("FeeComparisonScraper")
 
@@ -38,7 +39,7 @@ class LKCSFeeScraper(BaseScraper):
             return None
 
     def _match_keyword(self, type_text):
-        keywords = self.config.get("field_keywords", {})
+        keywords = self.get_keywords()
         type_lower = type_text.lower()
         for field, kw_list in keywords.items():
             for kw in kw_list:
@@ -93,9 +94,12 @@ class LKCSFeeScraper(BaseScraper):
                 if piece not in grouped[field]:
                     grouped[field].append(piece)
 
-            card = {"card_name": product_name}
+            widget_categories = self.config.get("widget_categories", {})
+            category = widget_categories.get(s_value) or categories.guess_category(product_name)
+
+            card = {"card_name": product_name, "category": category}
             for field, pieces in grouped.items():
                 card[field] = self.clean_value("; ".join(pieces))
-            cards.append(card)
+            cards.append(self.finalize_card(card))
 
         return cards

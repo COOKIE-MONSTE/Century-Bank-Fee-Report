@@ -5,7 +5,10 @@
 <style>
   body { font-family: Arial, Helvetica, sans-serif; color: #222; background: #f7f7f7; margin: 0; padding: 20px; }
   h1 { font-size: 18px; margin: 0 0 4px 0; }
+  h2 { font-size: 15px; margin: 28px 0 2px 0; }
   .subtitle { color: #666; font-size: 13px; margin: 0 0 20px 0; }
+  .basis-note { font-size: 11px; color: #555; margin: 0 0 8px 0; }
+  .basis-note.not-comparable { color: #7a4b00; background: #fff8e6; border: 1px solid #f0dca0; padding: 6px 10px; border-radius: 4px; display: inline-block; }
   table { border-collapse: collapse; width: 100%; background: #fff; font-size: 12px; }
   th, td { border: 1px solid #ddd; padding: 6px 8px; text-align: left; vertical-align: top; }
   th { background: #2c3e50; color: #fff; }
@@ -13,7 +16,20 @@
   td.fee-label { font-weight: bold; background: #f0f3f5; white-space: nowrap; }
   tr.shared td.fee-label { background: #eaf2fb; }
   tr.shared { background: #f5faff; }
-  .table-wrap { overflow-x: auto; }
+  .table-wrap { overflow-x: auto; margin-bottom: 4px; }
+  .fee-value { display: block; }
+  .fee-value + .fee-value { margin-top: 6px; padding-top: 6px; border-top: 1px dashed #ddd; }
+  .scope { display: block; color: #888; font-size: 10px; font-style: italic; }
+  .mechanism { display: block; color: #888; font-size: 10px; }
+  .confidence-badge { display: inline-block; font-size: 9px; font-weight: bold; text-transform: uppercase; padding: 1px 5px; border-radius: 3px; margin-top: 2px; }
+  .confidence-low { background: #fdecea; color: #a94442; }
+  .confidence-medium { background: #fff8e6; color: #7a4b00; }
+  .mismatch-flag { display: inline-block; font-size: 10px; font-weight: bold; color: #a94442; background: #fdecea; border: 1px solid #f3c8c4; padding: 1px 6px; border-radius: 3px; margin-left: 6px; }
+  .drift-badge { display: inline-block; font-size: 9px; font-weight: bold; text-transform: uppercase; padding: 1px 5px; border-radius: 3px; margin-top: 2px; background: #eaf2fb; color: #1a5276; }
+  /* A flag with a confirmed track record of mostly being a false alarm is
+     demoted to this muted style instead of being hidden -- still visible,
+     just quieter, and the tooltip always shows the track record behind it. */
+  .confidence-badge.demoted, .mismatch-flag.demoted, .drift-badge.demoted { background: #f0f0f0; color: #888; border-color: #e0e0e0; }
   .legend { font-size: 11px; color: #666; margin-top: 6px; }
   .legend .swatch { display: inline-block; width: 10px; height: 10px; background: #eaf2fb; border: 1px solid #ddd; vertical-align: middle; margin-right: 4px; }
   .warnings { margin-top: 24px; }
@@ -25,32 +41,51 @@
 </head>
 <body>
   <h1>{{ subject }}</h1>
-  <p class="subtitle">Generated {{ generated_at }}. Columns for {{ primary_institution }} are highlighted in the header.</p>
+  <p class="subtitle">Generated {{ generated_at }}. Columns for {{ primary_institution }} are highlighted in the header. Fees are grouped by product category -- see the note above each table for the comparison basis, and each value's italicized line for which specific product(s) it was verified for.</p>
 
-  {% if rows and columns %}
+  {% if sections %}
+  {% for section in sections %}
+  <h2>{{ section.label }}</h2>
+  <p class="basis-note{{ '' if section.comparable else ' not-comparable' }}">{{ section.basis_note }}</p>
   <div class="table-wrap">
   <table>
     <thead>
       <tr>
         <th>Fee</th>
-        {% for col in columns %}
-        <th class="{{ 'primary' if col.is_primary else '' }}">{{ col.institution }}</th>
+        {% for inst in section.institutions %}
+        <th class="{{ 'primary' if inst == primary_institution else '' }}">{{ inst }}</th>
         {% endfor %}
       </tr>
     </thead>
     <tbody>
-      {% for row in rows %}
+      {% for row in section.rows %}
       <tr class="{{ 'shared' if row.shared else '' }}">
-        <td class="fee-label">{{ row.label }}</td>
-        {% for val in row.cells %}
-        <td>{{ val if val and val != "Not disclosed" else "—" }}</td>
+        <td class="fee-label">{{ row.label }}
+          {% if row.mechanism_mismatch %}
+          <span class="mismatch-flag{{ ' demoted' if row.mismatch_severity == 'demoted' else '' }}"
+                title="These values use different fee mechanisms (e.g. flat vs. percentage vs. recurring) -- not a direct apples-to-apples comparison.{% if row.mismatch_stats %} Historically {{ row.mismatch_stats.false_alarms }}/{{ row.mismatch_stats.total }} confirmed false alarms for this flag on this fee.{% endif %}">&#9888; different fee types{% if row.mismatch_severity == 'demoted' %} (often not significant){% endif %}</span>
+          {% endif %}
+        </td>
+        {% for cell in row.cells %}
+        <td>
+          {% if cell %}
+            {% for entry in cell %}
+            <span class="fee-value">{{ entry.value }}<span class="scope">{{ entry.scope }}</span><span class="mechanism">{{ entry.mechanism_label }}</span>{% if entry.confidence != "high" %}<span class="confidence-badge confidence-{{ entry.confidence }}{{ ' demoted' if entry.confidence_severity == 'demoted' else '' }}"{% if entry.confidence_stats %} title="Historically {{ entry.confidence_stats.false_alarms }}/{{ entry.confidence_stats.total }} confirmed false alarms for this flag on this fee."{% endif %}>{{ entry.confidence }} confidence{% if entry.confidence_severity == 'demoted' %} (often a false alarm){% endif %}</span>{% endif %}{% if entry.changed %}<span class="drift-badge{{ ' demoted' if entry.drift_severity == 'demoted' else '' }}"{% if entry.drift_stats %} title="Historically {{ entry.drift_stats.false_alarms }}/{{ entry.drift_stats.total }} confirmed false alarms for this flag on this fee."{% endif %}>changed since last snapshot &mdash; was: {{ entry.previous_value }}</span>{% endif %}</span>
+            {% endfor %}
+          {% else %}
+            &mdash;
+          {% endif %}
+        </td>
         {% endfor %}
       </tr>
       {% endfor %}
     </tbody>
   </table>
   </div>
-  <p class="legend"><span class="swatch"></span>Rows shaded like this appear on 2 or more products &mdash; the closest fee-for-fee comparisons available today.</p>
+  {% if section.comparable %}
+  <p class="legend"><span class="swatch"></span>Rows shaded like this appear for 2 or more institutions in this category &mdash; the closest fee-for-fee comparisons available today.</p>
+  {% endif %}
+  {% endfor %}
   {% else %}
   <p class="empty-note">No card data was available for this run.</p>
   {% endif %}
@@ -65,5 +100,7 @@
     </ul>
   </div>
   {% endif %}
+
+  <p class="empty-note">Spotted a wrong value or a badge that's a false alarm? Add a verdict to data/feedback_log.yaml -- confirmed corrections are added to the shared fee-name taxonomy for every institution, and repeated false-alarm verdicts quiet that flag type down in future reports.</p>
 </body>
 </html>

@@ -1,0 +1,47 @@
+# Human feedback on flags the agent has raised (low-confidence extractions,
+# mechanism mismatches, values that changed since the last snapshot). This
+# is how you actually teach the agent -- see feedback.py for what each
+# verdict does:
+#
+#   - verdict: real_error
+#       The flag was catching a genuine problem. If you also know the
+#       correct value, or the source phrase the scraper should have
+#       recognized, record it -- a `synonym` block gets promoted into the
+#       shared cross-institution taxonomy (scraper/fee_taxonomy.py) so
+#       every institution's scraper recognizes that phrase from the next
+#       run onward, not just the one that triggered this entry.
+#   - verdict: false_alarm
+#       The flag fired but the value was actually fine. Once a flag_type
+#       (optionally narrowed to a specific fee_type) accumulates enough
+#       confirmed false-alarm verdicts, the agent demotes that flag's
+#       prominence in future reports -- muted styling, never hidden, and
+#       the report always shows the track record that justified it.
+#
+# Fields:
+#   date         - when you reviewed it (YYYY-MM-DD)
+#   institution  - institution name as shown in the report
+#   category     - category key from scraper/categories.py (e.g. "credit_card_standard")
+#   fee_type     - field key from config.yaml / report.py (e.g. "balance_transfer_apr")
+#   flag_type    - "low_confidence" | "mechanism_mismatch" | "drift"
+#   verdict      - "real_error" | "false_alarm"
+#   note         - why (free text)
+#   synonym      - optional, only for verdict: real_error:
+#                    phrase: "the exact source-page wording that should map to fee_type"
+#                    fee_type: "the canonical field it means"
+#
+# Example (remove the leading '# ' to activate):
+#
+# - date: "2026-07-25"
+#   institution: "Nusenda Credit Union"
+#   category: "credit_card_standard"
+#   fee_type: "balance_transfer_apr"
+#   flag_type: "low_confidence"
+#   verdict: "real_error"
+#   note: >
+#     Confirmed against the live page: the standing balance-transfer APR is
+#     the second table (12.50%-16.50%), not the first (which is actually
+#     the combined cash-advance/balance-transfer promo rate). The keyword
+#     "balance transfers" is too generic and matches both tables.
+#   synonym: null
+
+[]

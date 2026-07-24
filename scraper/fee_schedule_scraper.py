@@ -16,4 +16,8 @@ class StaticFeeScraper(BaseScraper):
         product_name = self.config.get("product_name", "General Fee Schedule")
         fees = dict(self.config.get("fees", {}))
         fees["card_name"] = product_name
-        return [fees]
+        # This schedule applies bank-wide rather than to one specific
+        # account tier, so it's tagged as general_account_fees unless
+        # config.yaml overrides it with a more specific category.
+        fees["category"] = self.config.get("category", "general_account_fees")
+        return [self.finalize_card(fees)]

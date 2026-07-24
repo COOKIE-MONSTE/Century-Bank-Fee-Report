@@ -59,6 +59,16 @@ institutions:
     client_id: "62155"
     endpoint_r: "277"
     widgets: [978, 979, 980, 981, 982]
+    # Product category per widget (see scraper/categories.py), keyed by the
+    # same widget id used in `widgets` above -- lets comparisons only match
+    # this widget's fees against other institutions' products of the same
+    # tier, instead of against every product Nusenda has.
+    widget_categories:
+      978: "general_account_fees"   # General Fees
+      979: "checking_general"       # Checking Account Fees
+      980: "checking_premium"       # Dividend Checking Fee (Unlimited Checks Cleared)
+      981: "checking_basic"         # Essential Checking Fee (Unlimited Checks Cleared)
+      982: "money_market"           # Money Market Account Fee
     field_keywords:
       overdraft_fee:
         - "overdraft (share)"
@@ -119,3 +129,58 @@ institutions:
       safe_deposit_drill_fee: "Actual cost"
       card_replacement_fee: "$12.00"
       card_replacement_rush_fee: "$75.00"
+
+  secu_nm:
+    name: "State Employees Credit Union of New Mexico"
+    url: "https://www.secunm.org/fee-schedule.html"
+    type: "service_fee_table"
+    # The page's fee data is one 37-row SERVICE/FEE table (its other 22
+    # tables are loan/CD/savings rate tables, out of scope here). Some rows
+    # are visually indented sub-items of a preceding row (e.g. "Wire
+    # Transfer: Domestic" followed by an indented "International" row) --
+    # scraper/service_fee_table_scraper.py reconstructs those into
+    # "Wire Transfer: International" automatically.
+    product_name: "SECU NM Fee Schedule"
+    category: "general_account_fees"
+    table_header_hints: ["service", "fee"]
+    field_keywords:
+      card_replacement_fee:
+        - "atm/debit card re-issue"
+      wire_transfer_outgoing_domestic_fee:
+        - "wire transfer: domestic"
+      wire_transfer_outgoing_international_fee:
+        - "wire transfer: international"
+      # Confirmed with the requester: SECU NM lists "NSF - Nonsufficient
+      # Funds Fee" and "Overdraft Privilege NSF Fee" as separate rows
+      # (both $25.00) -- both are treated as sources for overdraft_fee.
+      # Matched on "nsf"/"nonsufficient funds"/"overdraft privilege" rather
+      # than a longer phrase because the page's dash character between
+      # "NSF" and "Nonsufficient Funds Fee" doesn't decode cleanly.
+      overdraft_fee:
+        - "nsf"
+        - "nonsufficient funds"
+        - "overdraft privilege"
+      foreign_transaction_fee:
+        - "international atm/debit card transactions"
+      atm_out_of_network_fee:
+        - "foreign atm fee"
+      # Fees below weren't in the requester's known-mapping list but are
+      # confident matches to our existing categories (near-exact phrasing
+      # or an already-listed synonym in scraper/fee_taxonomy.py).
+      account_research_fee:
+        - "account reconciliation or research"
+      cashiers_check_fee:
+        - "cashier's/official check fee"
+      dormant_account_fee:
+        - "dormant account fee"
+      returned_item_fee:
+        - "return check charge"
+      stop_payment_fee:
+        - "stop payment fee"
+      # Rows with no plausible existing category (early account closure,
+      # collection items, check/statement copies, counter checks, CD/club
+      # early withdrawal penalties, escheatment, excess withdrawal count,
+      # garnishment, gift cards, returned mail, loan-pay-by-phone, shared
+      # branching, uncollected funds) are deliberately left unmapped here
+      # -- the scraper reports them as unmatched (see its warnings/
+      # data/history.json) instead of forcing them into an existing field.
