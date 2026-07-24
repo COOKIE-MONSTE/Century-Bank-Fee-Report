@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-24T08:24:16.882253+00:00",
+  "generated_at": "2026-07-24T19:12:28.388615+00:00",
   "institutions": {
     "nusenda": {
       "name": "Nusenda Credit Union",
@@ -14,9 +14,23 @@
           "foreign_transaction_fee": "1% of transaction amount",
           "late_payment_fee": "If your payment is late, up to $27.00 for the first offense and up to $30.00 each if 2 or more offenses occur within 6 months.",
           "returned_item_fee": "Up to $26.00 if your payment is returned for any reason.",
-          "intro_offers": "Promotional APR on all purchases for the first 18 months after card opening. Once the",
+          "intro_offers": "Promotional APR on all purchases for the first 18 months after card opening. Once the 5% APR Intro Rate expires, your APR will return to your normal variable rate of 12.50% - 16.50% APR.",
           "rewards_structure": "None",
-          "card_name": "Visa Platinum"
+          "card_name": "Visa Platinum",
+          "category": "credit_card_standard",
+          "_field_confidence": {
+            "purchase_apr": "high",
+            "balance_transfer_apr": "low",
+            "cash_advance_apr": "high",
+            "annual_fee": "high",
+            "balance_transfer_fee": "high",
+            "cash_advance_fee": "high",
+            "foreign_transaction_fee": "high",
+            "late_payment_fee": "high",
+            "returned_item_fee": "high",
+            "intro_offers": "medium",
+            "rewards_structure": "high"
+          }
         },
         {
           "annual_fee": "None",
@@ -28,9 +42,23 @@
           "foreign_transaction_fee": "1% of transaction amount",
           "late_payment_fee": "If your payment is late, up to $27.00 for the first offense and up to $30.00 each if 2 or more offenses occur within 6 months.",
           "returned_item_fee": "Up to $26.00 if your payment is returned for any reason.",
-          "intro_offers": "Promotional APR on all purchases for the first 18 months after card opening. Once the",
+          "intro_offers": "Promotional APR on all purchases for the first 18 months after card opening. Once the 5% APR Intro Rate expires, your APR will return to your normal variable rate of 12.50% - 16.50% APR.",
           "rewards_structure": "1 bonus point for every dollar spent on purchases, and 3 bonus points per dollar in quarterly rotating categories.",
-          "card_name": "Visa Platinum Rewards"
+          "card_name": "Visa Platinum Rewards",
+          "category": "credit_card_rewards",
+          "_field_confidence": {
+            "purchase_apr": "high",
+            "balance_transfer_apr": "low",
+            "cash_advance_apr": "high",
+            "annual_fee": "high",
+            "balance_transfer_fee": "high",
+            "cash_advance_fee": "high",
+            "foreign_transaction_fee": "high",
+            "late_payment_fee": "high",
+            "returned_item_fee": "high",
+            "intro_offers": "medium",
+            "rewards_structure": "high"
+          }
         },
         {
           "annual_fee": "None",
@@ -42,9 +70,23 @@
           "foreign_transaction_fee": "1% of transaction amount",
           "late_payment_fee": "If your payment is late, up to $27.00 for the first offense and up to $30.00 each if 2 or more offenses occur within 6 months.",
           "returned_item_fee": "Up to $26.00 if your payment is returned for any reason.",
-          "intro_offers": "Promotional APR on all purchases for the first 18 months after card opening. Once the",
+          "intro_offers": "Promotional APR on all purchases for the first 18 months after card opening. Once the 5% APR Intro Rate expires, your APR will return to your normal variable rate of 12.50% - 16.50% APR.",
           "rewards_structure": "1% cash back on all purchases and 5% cash back on purchases in quarterly rotating categories.",
-          "card_name": "Visa Platinum Cash Rewards"
+          "card_name": "Visa Platinum Cash Rewards",
+          "category": "credit_card_rewards",
+          "_field_confidence": {
+            "purchase_apr": "high",
+            "balance_transfer_apr": "low",
+            "cash_advance_apr": "high",
+            "annual_fee": "high",
+            "balance_transfer_fee": "high",
+            "cash_advance_fee": "high",
+            "foreign_transaction_fee": "high",
+            "late_payment_fee": "high",
+            "returned_item_fee": "high",
+            "intro_offers": "medium",
+            "rewards_structure": "high"
+          }
         },
         {
           "annual_fee": "None",
@@ -58,16 +100,33 @@
           "returned_item_fee": "Up to $26.00 if your payment is returned for any reason.",
           "intro_offers": "None",
           "rewards_structure": "None",
-          "card_name": "Visa Secured Credit Card"
+          "card_name": "Visa Secured Credit Card",
+          "category": "credit_card_secured",
+          "_field_confidence": {
+            "purchase_apr": "high",
+            "balance_transfer_apr": "low",
+            "cash_advance_apr": "high",
+            "annual_fee": "high",
+            "balance_transfer_fee": "high",
+            "cash_advance_fee": "high",
+            "foreign_transaction_fee": "high",
+            "late_payment_fee": "high",
+            "returned_item_fee": "high",
+            "intro_offers": "medium",
+            "rewards_structure": "high"
+          }
         }
       ],
-      "warnings": []
+      "warnings": [
+        "[Nusenda Credit Union] Field 'balance_transfer_apr' had 2 conflicting values across the page's tables: ['5% Promotional APR on all cash advances and balance transfers for the first 18 months after card opening. After that, the APR on your Platinum Card will be 12.50% - 16.50% , depending on your credit history. This APR will vary with the market based on the Prime Rate.', '0% Promotional APR on Balance transfers 1 for 12 months from the date of account opening. After that, your standard APR 12.50% to 16.50% depending on your credit history. This APR will vary with the market based Prime Rate.'] -- using the last one seen ('0% Promotional APR on Balance transfers 1 for 12 months from the date of account opening. After that, your standard APR 12.50% to 16.50% depending on your credit history. This APR will vary with the market based Prime Rate.'); verify manually."
+      ]
     },
     "nusenda_retail_fees": {
       "name": "Nusenda Credit Union",
       "cards": [
         {
           "card_name": "General Fees",
+          "category": "general_account_fees",
           "card_replacement_fee": "$5.00",
           "atm_out_of_network_fee": "$1.50",
           "cashiers_check_fee": "$2.50",
@@ -85,18 +144,22 @@
         },
         {
           "card_name": "Checking Account Fees",
+          "category": "checking_general",
           "returned_item_fee": "No Charge for 1st-5th Items; $10.00 per item for 6th- or more items"
         },
         {
           "card_name": "Dividend Checking Fee (Unlimited Checks Cleared)",
+          "category": "checking_premium",
           "monthly_maintenance_fee": "$5.00"
         },
         {
           "card_name": "Essential Checking Fee (Unlimited Checks Cleared)",
+          "category": "checking_basic",
           "monthly_maintenance_fee": "$5.00"
         },
         {
           "card_name": "Money Market Account Fee",
+          "category": "money_market",
           "monthly_maintenance_fee": "$7.50"
         }
       ],
@@ -123,10 +186,1419 @@
           "safe_deposit_drill_fee": "Actual cost",
           "card_replacement_fee": "$12.00",
           "card_replacement_rush_fee": "$75.00",
-          "card_name": "General Account Fee Schedule"
+          "card_name": "General Account Fee Schedule",
+          "category": "general_account_fees"
         }
       ],
       "warnings": []
+    },
+    "secu_nm": {
+      "name": "State Employees Credit Union of New Mexico",
+      "cards": [
+        {
+          "card_name": "SECU NM Fee Schedule",
+          "category": "general_account_fees",
+          "account_research_fee": "$20.00 per hour",
+          "card_replacement_fee": "$10.00",
+          "cashiers_check_fee": "$1.00",
+          "dormant_account_fee": "$10.00 per month",
+          "atm_out_of_network_fee": "$1.50",
+          "foreign_transaction_fee": "Variable",
+          "overdraft_fee": "$25.00",
+          "returned_item_fee": "$10.00",
+          "stop_payment_fee": "$25.00",
+          "wire_transfer_outgoing_domestic_fee": "$15.00",
+          "wire_transfer_outgoing_international_fee": "$50.00",
+          "_field_confidence": {
+            "account_research_fee": "high",
+            "card_replacement_fee": "high",
+            "cashiers_check_fee": "high",
+            "dormant_account_fee": "high",
+            "atm_out_of_network_fee": "high",
+            "foreign_transaction_fee": "high",
+            "overdraft_fee": "high",
+            "returned_item_fee": "high",
+            "stop_payment_fee": "high",
+            "wire_transfer_outgoing_domestic_fee": "high",
+            "wire_transfer_outgoing_international_fee": "high"
+          }
+        }
+      ],
+      "warnings": [
+        "[State Employees Credit Union of New Mexico] 22 fee row(s) did not match any known category (shown for review, not forced into an existing one): 'Closing Account Within First 90 Days': '$10.00'; 'Collection Items': '$20.00 (plus costs)'; 'Copies: Check Copies': '$3.00'; 'Copies: Monthly Statement Copies': '$3.00'; 'Copies: Both Available via Online Banking': 'FREE'; 'Counter Checks': '$2.00 per page'; 'Early Withdrawal \u2013 Certificate Builder': '$10.00'; 'Early Withdrawal \u2013 Christmas Club': '$5.00'; 'Escheatment Fee': '$50.00'; 'Excessive ATM Withdrawal Fee (10 free)': '$0.65 per after 10'; 'Excessive ATM Withdrawal Fee (10 free): Savings Withdrawal': '10 FREE per month'; 'Excessive ATM Withdrawal Fee (10 free): Checking Withdrawal': '10 FREE per month'; 'Garnishment or IRS Levy Fee': '$50.00'; 'Gift Cards: Members': '$2.50'; 'Gift Cards: Non-members': '$4.50'; 'Gift Cards: With Reward Checking, Kasasa Cash & Kasasa Cash Back': 'FREE'; 'Gift Cards: With Perks+ Checking & Kasasa Tunes': 'FREE'; 'Online Banking / Bill Pay': 'FREE'; 'Returned Mail Fee': '$5.00'; 'SECU Loan Pay (Free Online)': '$5.00'; 'Shared Branching Transactions': '$2.00 (5 FREE per month)'; 'Uncollected Funds Fee': '$25.00'"
+      ]
     }
-  }
+  },
+  "fee_facts": [
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "Visa Platinum",
+      "fee_type": "annual_fee",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "None",
+      "scope": "Visa Platinum",
+      "scope_products": [
+        "Visa Platinum"
+      ],
+      "confidence": "high",
+      "mechanism": "no_fee",
+      "mechanism_label": "No fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "Visa Platinum",
+      "fee_type": "purchase_apr",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "12.50% - 16.50%",
+      "scope": "Visa Platinum",
+      "scope_products": [
+        "Visa Platinum"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "Visa Platinum",
+      "fee_type": "balance_transfer_apr",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "12.50% - 16.50%",
+      "scope": "Visa Platinum",
+      "scope_products": [
+        "Visa Platinum"
+      ],
+      "confidence": "low",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "Visa Platinum",
+      "fee_type": "balance_transfer_fee",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "None",
+      "scope": "Visa Platinum",
+      "scope_products": [
+        "Visa Platinum"
+      ],
+      "confidence": "high",
+      "mechanism": "no_fee",
+      "mechanism_label": "No fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "Visa Platinum",
+      "fee_type": "cash_advance_apr",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "12.50% - 16.50%",
+      "scope": "Visa Platinum",
+      "scope_products": [
+        "Visa Platinum"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "Visa Platinum",
+      "fee_type": "cash_advance_fee",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "1% of the amount of each cash advance (minimum: $2.00 ; maximum: $20.00 )",
+      "scope": "Visa Platinum",
+      "scope_products": [
+        "Visa Platinum"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "Visa Platinum",
+      "fee_type": "foreign_transaction_fee",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "1% of transaction amount",
+      "scope": "Visa Platinum",
+      "scope_products": [
+        "Visa Platinum"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "Visa Platinum",
+      "fee_type": "late_payment_fee",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "If your payment is late, up to $27.00 for the first offense and up to $30.00 each if 2 or more offenses occur within 6 months.",
+      "scope": "Visa Platinum",
+      "scope_products": [
+        "Visa Platinum"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "Visa Platinum",
+      "fee_type": "returned_item_fee",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "Up to $26.00 if your payment is returned for any reason.",
+      "scope": "Visa Platinum",
+      "scope_products": [
+        "Visa Platinum"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "Visa Platinum",
+      "fee_type": "intro_offers",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "Promotional APR on all purchases for the first 18 months after card opening. Once the 5% APR Intro Rate expires, your APR will return to your normal variable rate of 12.50% - 16.50% APR.",
+      "scope": "Visa Platinum",
+      "scope_products": [
+        "Visa Platinum"
+      ],
+      "confidence": "medium",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "Visa Platinum",
+      "fee_type": "rewards_structure",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "None",
+      "scope": "Visa Platinum",
+      "scope_products": [
+        "Visa Platinum"
+      ],
+      "confidence": "high",
+      "mechanism": "no_fee",
+      "mechanism_label": "No fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": null,
+      "fee_type": "annual_fee",
+      "category": "credit_card_rewards",
+      "category_label": "Rewards Credit Card",
+      "value": "None",
+      "scope": "verified across all products",
+      "scope_products": [
+        "Visa Platinum Rewards",
+        "Visa Platinum Cash Rewards"
+      ],
+      "confidence": "high",
+      "mechanism": "no_fee",
+      "mechanism_label": "No fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": null,
+      "fee_type": "purchase_apr",
+      "category": "credit_card_rewards",
+      "category_label": "Rewards Credit Card",
+      "value": "12.50% - 16.50%",
+      "scope": "verified across all products",
+      "scope_products": [
+        "Visa Platinum Rewards",
+        "Visa Platinum Cash Rewards"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": null,
+      "fee_type": "balance_transfer_apr",
+      "category": "credit_card_rewards",
+      "category_label": "Rewards Credit Card",
+      "value": "12.50% - 16.50%",
+      "scope": "verified across all products",
+      "scope_products": [
+        "Visa Platinum Rewards",
+        "Visa Platinum Cash Rewards"
+      ],
+      "confidence": "low",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": null,
+      "fee_type": "balance_transfer_fee",
+      "category": "credit_card_rewards",
+      "category_label": "Rewards Credit Card",
+      "value": "None",
+      "scope": "verified across all products",
+      "scope_products": [
+        "Visa Platinum Rewards",
+        "Visa Platinum Cash Rewards"
+      ],
+      "confidence": "high",
+      "mechanism": "no_fee",
+      "mechanism_label": "No fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": null,
+      "fee_type": "cash_advance_apr",
+      "category": "credit_card_rewards",
+      "category_label": "Rewards Credit Card",
+      "value": "12.50% - 16.50%",
+      "scope": "verified across all products",
+      "scope_products": [
+        "Visa Platinum Rewards",
+        "Visa Platinum Cash Rewards"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": null,
+      "fee_type": "cash_advance_fee",
+      "category": "credit_card_rewards",
+      "category_label": "Rewards Credit Card",
+      "value": "1% of the amount of each cash advance (minimum: $2.00 ; maximum: $20.00 )",
+      "scope": "verified across all products",
+      "scope_products": [
+        "Visa Platinum Rewards",
+        "Visa Platinum Cash Rewards"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": null,
+      "fee_type": "foreign_transaction_fee",
+      "category": "credit_card_rewards",
+      "category_label": "Rewards Credit Card",
+      "value": "1% of transaction amount",
+      "scope": "verified across all products",
+      "scope_products": [
+        "Visa Platinum Rewards",
+        "Visa Platinum Cash Rewards"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": null,
+      "fee_type": "late_payment_fee",
+      "category": "credit_card_rewards",
+      "category_label": "Rewards Credit Card",
+      "value": "If your payment is late, up to $27.00 for the first offense and up to $30.00 each if 2 or more offenses occur within 6 months.",
+      "scope": "verified across all products",
+      "scope_products": [
+        "Visa Platinum Rewards",
+        "Visa Platinum Cash Rewards"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": null,
+      "fee_type": "returned_item_fee",
+      "category": "credit_card_rewards",
+      "category_label": "Rewards Credit Card",
+      "value": "Up to $26.00 if your payment is returned for any reason.",
+      "scope": "verified across all products",
+      "scope_products": [
+        "Visa Platinum Rewards",
+        "Visa Platinum Cash Rewards"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": null,
+      "fee_type": "intro_offers",
+      "category": "credit_card_rewards",
+      "category_label": "Rewards Credit Card",
+      "value": "Promotional APR on all purchases for the first 18 months after card opening. Once the 5% APR Intro Rate expires, your APR will return to your normal variable rate of 12.50% - 16.50% APR.",
+      "scope": "verified across all products",
+      "scope_products": [
+        "Visa Platinum Rewards",
+        "Visa Platinum Cash Rewards"
+      ],
+      "confidence": "medium",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "Visa Platinum Rewards",
+      "fee_type": "rewards_structure",
+      "category": "credit_card_rewards",
+      "category_label": "Rewards Credit Card",
+      "value": "1 bonus point for every dollar spent on purchases, and 3 bonus points per dollar in quarterly rotating categories.",
+      "scope": "Visa Platinum Rewards",
+      "scope_products": [
+        "Visa Platinum Rewards"
+      ],
+      "confidence": "high",
+      "mechanism": "unknown",
+      "mechanism_label": "Unclear",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "Visa Platinum Cash Rewards",
+      "fee_type": "rewards_structure",
+      "category": "credit_card_rewards",
+      "category_label": "Rewards Credit Card",
+      "value": "1% cash back on all purchases and 5% cash back on purchases in quarterly rotating categories.",
+      "scope": "Visa Platinum Cash Rewards",
+      "scope_products": [
+        "Visa Platinum Cash Rewards"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "Visa Secured Credit Card",
+      "fee_type": "annual_fee",
+      "category": "credit_card_secured",
+      "category_label": "Secured Credit Card",
+      "value": "None",
+      "scope": "Visa Secured Credit Card",
+      "scope_products": [
+        "Visa Secured Credit Card"
+      ],
+      "confidence": "high",
+      "mechanism": "no_fee",
+      "mechanism_label": "No fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "Visa Secured Credit Card",
+      "fee_type": "purchase_apr",
+      "category": "credit_card_secured",
+      "category_label": "Secured Credit Card",
+      "value": "12.50% - 16.50%",
+      "scope": "Visa Secured Credit Card",
+      "scope_products": [
+        "Visa Secured Credit Card"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "Visa Secured Credit Card",
+      "fee_type": "balance_transfer_apr",
+      "category": "credit_card_secured",
+      "category_label": "Secured Credit Card",
+      "value": "12.50% - 16.50%",
+      "scope": "Visa Secured Credit Card",
+      "scope_products": [
+        "Visa Secured Credit Card"
+      ],
+      "confidence": "low",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "Visa Secured Credit Card",
+      "fee_type": "balance_transfer_fee",
+      "category": "credit_card_secured",
+      "category_label": "Secured Credit Card",
+      "value": "None",
+      "scope": "Visa Secured Credit Card",
+      "scope_products": [
+        "Visa Secured Credit Card"
+      ],
+      "confidence": "high",
+      "mechanism": "no_fee",
+      "mechanism_label": "No fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "Visa Secured Credit Card",
+      "fee_type": "cash_advance_apr",
+      "category": "credit_card_secured",
+      "category_label": "Secured Credit Card",
+      "value": "12.50% - 16.50%",
+      "scope": "Visa Secured Credit Card",
+      "scope_products": [
+        "Visa Secured Credit Card"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "Visa Secured Credit Card",
+      "fee_type": "cash_advance_fee",
+      "category": "credit_card_secured",
+      "category_label": "Secured Credit Card",
+      "value": "1% of the amount of each cash advance (minimum: $2.00 ; maximum: $20.00 )",
+      "scope": "Visa Secured Credit Card",
+      "scope_products": [
+        "Visa Secured Credit Card"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "Visa Secured Credit Card",
+      "fee_type": "foreign_transaction_fee",
+      "category": "credit_card_secured",
+      "category_label": "Secured Credit Card",
+      "value": "1% of transaction amount",
+      "scope": "Visa Secured Credit Card",
+      "scope_products": [
+        "Visa Secured Credit Card"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "Visa Secured Credit Card",
+      "fee_type": "late_payment_fee",
+      "category": "credit_card_secured",
+      "category_label": "Secured Credit Card",
+      "value": "If your payment is late, up to $27.00 for the first offense and up to $30.00 each if 2 or more offenses occur within 6 months.",
+      "scope": "Visa Secured Credit Card",
+      "scope_products": [
+        "Visa Secured Credit Card"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "Visa Secured Credit Card",
+      "fee_type": "returned_item_fee",
+      "category": "credit_card_secured",
+      "category_label": "Secured Credit Card",
+      "value": "Up to $26.00 if your payment is returned for any reason.",
+      "scope": "Visa Secured Credit Card",
+      "scope_products": [
+        "Visa Secured Credit Card"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "Visa Secured Credit Card",
+      "fee_type": "intro_offers",
+      "category": "credit_card_secured",
+      "category_label": "Secured Credit Card",
+      "value": "None",
+      "scope": "Visa Secured Credit Card",
+      "scope_products": [
+        "Visa Secured Credit Card"
+      ],
+      "confidence": "medium",
+      "mechanism": "no_fee",
+      "mechanism_label": "No fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "Visa Secured Credit Card",
+      "fee_type": "rewards_structure",
+      "category": "credit_card_secured",
+      "category_label": "Secured Credit Card",
+      "value": "None",
+      "scope": "Visa Secured Credit Card",
+      "scope_products": [
+        "Visa Secured Credit Card"
+      ],
+      "confidence": "high",
+      "mechanism": "no_fee",
+      "mechanism_label": "No fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "General Fees",
+      "fee_type": "card_replacement_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$5.00",
+      "scope": "General Fees",
+      "scope_products": [
+        "General Fees"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "General Fees",
+      "fee_type": "atm_out_of_network_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$1.50",
+      "scope": "General Fees",
+      "scope_products": [
+        "General Fees"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "General Fees",
+      "fee_type": "cashiers_check_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$2.50",
+      "scope": "General Fees",
+      "scope_products": [
+        "General Fees"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "General Fees",
+      "fee_type": "check_cashing_non_member_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$4.00",
+      "scope": "General Fees",
+      "scope_products": [
+        "General Fees"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "General Fees",
+      "fee_type": "dormant_account_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$5.00",
+      "scope": "General Fees",
+      "scope_products": [
+        "General Fees"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "General Fees",
+      "fee_type": "overdraft_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$10.00",
+      "scope": "General Fees",
+      "scope_products": [
+        "General Fees"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "General Fees",
+      "fee_type": "account_research_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$20.00",
+      "scope": "General Fees",
+      "scope_products": [
+        "General Fees"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "General Fees",
+      "fee_type": "returned_deposit_item_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$5.00",
+      "scope": "General Fees",
+      "scope_products": [
+        "General Fees"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "General Fees",
+      "fee_type": "card_replacement_rush_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$25.00",
+      "scope": "General Fees",
+      "scope_products": [
+        "General Fees"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "General Fees",
+      "fee_type": "safe_deposit_drill_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$75.00",
+      "scope": "General Fees",
+      "scope_products": [
+        "General Fees"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "General Fees",
+      "fee_type": "safe_deposit_late_payment_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$10.00",
+      "scope": "General Fees",
+      "scope_products": [
+        "General Fees"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "General Fees",
+      "fee_type": "stop_payment_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$25.00",
+      "scope": "General Fees",
+      "scope_products": [
+        "General Fees"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "General Fees",
+      "fee_type": "wire_transfer_outgoing_domestic_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$14.00",
+      "scope": "General Fees",
+      "scope_products": [
+        "General Fees"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "General Fees",
+      "fee_type": "wire_transfer_outgoing_international_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$37.00",
+      "scope": "General Fees",
+      "scope_products": [
+        "General Fees"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "Checking Account Fees",
+      "fee_type": "returned_item_fee",
+      "category": "checking_general",
+      "category_label": "Checking Account (tier unspecified)",
+      "value": "No Charge for 1st-5th Items; $10.00 per item for 6th- or more items",
+      "scope": "Checking Account Fees",
+      "scope_products": [
+        "Checking Account Fees"
+      ],
+      "confidence": "high",
+      "mechanism": "per_unit",
+      "mechanism_label": "Per-unit / rate-based",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "Dividend Checking Fee (Unlimited Checks Cleared)",
+      "fee_type": "monthly_maintenance_fee",
+      "category": "checking_premium",
+      "category_label": "Premium / Dividend Checking Account",
+      "value": "$5.00",
+      "scope": "Dividend Checking Fee (Unlimited Checks Cleared)",
+      "scope_products": [
+        "Dividend Checking Fee (Unlimited Checks Cleared)"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "Essential Checking Fee (Unlimited Checks Cleared)",
+      "fee_type": "monthly_maintenance_fee",
+      "category": "checking_basic",
+      "category_label": "Basic Checking Account",
+      "value": "$5.00",
+      "scope": "Essential Checking Fee (Unlimited Checks Cleared)",
+      "scope_products": [
+        "Essential Checking Fee (Unlimited Checks Cleared)"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "Money Market Account Fee",
+      "fee_type": "monthly_maintenance_fee",
+      "category": "money_market",
+      "category_label": "Money Market Account",
+      "value": "$7.50",
+      "scope": "Money Market Account Fee",
+      "scope_products": [
+        "Money Market Account Fee"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Century Bank (New Mexico)",
+      "product_name": "General Account Fee Schedule",
+      "fee_type": "overdraft_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$35.00",
+      "scope": "General Account Fee Schedule",
+      "scope_products": [
+        "General Account Fee Schedule"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Century Bank (New Mexico)",
+      "product_name": "General Account Fee Schedule",
+      "fee_type": "returned_item_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$35.00",
+      "scope": "General Account Fee Schedule",
+      "scope_products": [
+        "General Account Fee Schedule"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Century Bank (New Mexico)",
+      "product_name": "General Account Fee Schedule",
+      "fee_type": "returned_deposit_item_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$15.00",
+      "scope": "General Account Fee Schedule",
+      "scope_products": [
+        "General Account Fee Schedule"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Century Bank (New Mexico)",
+      "product_name": "General Account Fee Schedule",
+      "fee_type": "stop_payment_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$35.00",
+      "scope": "General Account Fee Schedule",
+      "scope_products": [
+        "General Account Fee Schedule"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Century Bank (New Mexico)",
+      "product_name": "General Account Fee Schedule",
+      "fee_type": "dormant_account_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$10.00 per month (after 1 year of inactivity)",
+      "scope": "General Account Fee Schedule",
+      "scope_products": [
+        "General Account Fee Schedule"
+      ],
+      "confidence": "high",
+      "mechanism": "recurring",
+      "mechanism_label": "Recurring (periodic)",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Century Bank (New Mexico)",
+      "product_name": "General Account Fee Schedule",
+      "fee_type": "currency_exchange_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$25.00",
+      "scope": "General Account Fee Schedule",
+      "scope_products": [
+        "General Account Fee Schedule"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Century Bank (New Mexico)",
+      "product_name": "General Account Fee Schedule",
+      "fee_type": "account_research_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$25.00 per hour (1 hour minimum)",
+      "scope": "General Account Fee Schedule",
+      "scope_products": [
+        "General Account Fee Schedule"
+      ],
+      "confidence": "high",
+      "mechanism": "per_unit",
+      "mechanism_label": "Per-unit / rate-based",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Century Bank (New Mexico)",
+      "product_name": "General Account Fee Schedule",
+      "fee_type": "atm_out_of_network_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$2.50",
+      "scope": "General Account Fee Schedule",
+      "scope_products": [
+        "General Account Fee Schedule"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Century Bank (New Mexico)",
+      "product_name": "General Account Fee Schedule",
+      "fee_type": "wire_transfer_incoming_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$15.00",
+      "scope": "General Account Fee Schedule",
+      "scope_products": [
+        "General Account Fee Schedule"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Century Bank (New Mexico)",
+      "product_name": "General Account Fee Schedule",
+      "fee_type": "wire_transfer_outgoing_domestic_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$30.00",
+      "scope": "General Account Fee Schedule",
+      "scope_products": [
+        "General Account Fee Schedule"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Century Bank (New Mexico)",
+      "product_name": "General Account Fee Schedule",
+      "fee_type": "wire_transfer_outgoing_international_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$50.00",
+      "scope": "General Account Fee Schedule",
+      "scope_products": [
+        "General Account Fee Schedule"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Century Bank (New Mexico)",
+      "product_name": "General Account Fee Schedule",
+      "fee_type": "cashiers_check_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$10.00",
+      "scope": "General Account Fee Schedule",
+      "scope_products": [
+        "General Account Fee Schedule"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Century Bank (New Mexico)",
+      "product_name": "General Account Fee Schedule",
+      "fee_type": "check_cashing_non_member_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$10.00",
+      "scope": "General Account Fee Schedule",
+      "scope_products": [
+        "General Account Fee Schedule"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Century Bank (New Mexico)",
+      "product_name": "General Account Fee Schedule",
+      "fee_type": "safe_deposit_late_payment_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$15.00",
+      "scope": "General Account Fee Schedule",
+      "scope_products": [
+        "General Account Fee Schedule"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Century Bank (New Mexico)",
+      "product_name": "General Account Fee Schedule",
+      "fee_type": "safe_deposit_drill_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "Actual cost",
+      "scope": "General Account Fee Schedule",
+      "scope_products": [
+        "General Account Fee Schedule"
+      ],
+      "confidence": "high",
+      "mechanism": "variable",
+      "mechanism_label": "Variable / cost-based",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Century Bank (New Mexico)",
+      "product_name": "General Account Fee Schedule",
+      "fee_type": "card_replacement_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$12.00",
+      "scope": "General Account Fee Schedule",
+      "scope_products": [
+        "General Account Fee Schedule"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Century Bank (New Mexico)",
+      "product_name": "General Account Fee Schedule",
+      "fee_type": "card_replacement_rush_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$75.00",
+      "scope": "General Account Fee Schedule",
+      "scope_products": [
+        "General Account Fee Schedule"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "State Employees Credit Union of New Mexico",
+      "product_name": "SECU NM Fee Schedule",
+      "fee_type": "account_research_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$20.00 per hour",
+      "scope": "SECU NM Fee Schedule",
+      "scope_products": [
+        "SECU NM Fee Schedule"
+      ],
+      "confidence": "high",
+      "mechanism": "per_unit",
+      "mechanism_label": "Per-unit / rate-based",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "State Employees Credit Union of New Mexico",
+      "product_name": "SECU NM Fee Schedule",
+      "fee_type": "card_replacement_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$10.00",
+      "scope": "SECU NM Fee Schedule",
+      "scope_products": [
+        "SECU NM Fee Schedule"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "State Employees Credit Union of New Mexico",
+      "product_name": "SECU NM Fee Schedule",
+      "fee_type": "cashiers_check_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$1.00",
+      "scope": "SECU NM Fee Schedule",
+      "scope_products": [
+        "SECU NM Fee Schedule"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "State Employees Credit Union of New Mexico",
+      "product_name": "SECU NM Fee Schedule",
+      "fee_type": "dormant_account_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$10.00 per month",
+      "scope": "SECU NM Fee Schedule",
+      "scope_products": [
+        "SECU NM Fee Schedule"
+      ],
+      "confidence": "high",
+      "mechanism": "recurring",
+      "mechanism_label": "Recurring (periodic)",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "State Employees Credit Union of New Mexico",
+      "product_name": "SECU NM Fee Schedule",
+      "fee_type": "atm_out_of_network_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$1.50",
+      "scope": "SECU NM Fee Schedule",
+      "scope_products": [
+        "SECU NM Fee Schedule"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "State Employees Credit Union of New Mexico",
+      "product_name": "SECU NM Fee Schedule",
+      "fee_type": "foreign_transaction_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "Variable",
+      "scope": "SECU NM Fee Schedule",
+      "scope_products": [
+        "SECU NM Fee Schedule"
+      ],
+      "confidence": "high",
+      "mechanism": "unknown",
+      "mechanism_label": "Unclear",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "State Employees Credit Union of New Mexico",
+      "product_name": "SECU NM Fee Schedule",
+      "fee_type": "overdraft_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$25.00",
+      "scope": "SECU NM Fee Schedule",
+      "scope_products": [
+        "SECU NM Fee Schedule"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "State Employees Credit Union of New Mexico",
+      "product_name": "SECU NM Fee Schedule",
+      "fee_type": "returned_item_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$10.00",
+      "scope": "SECU NM Fee Schedule",
+      "scope_products": [
+        "SECU NM Fee Schedule"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "State Employees Credit Union of New Mexico",
+      "product_name": "SECU NM Fee Schedule",
+      "fee_type": "stop_payment_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$25.00",
+      "scope": "SECU NM Fee Schedule",
+      "scope_products": [
+        "SECU NM Fee Schedule"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "State Employees Credit Union of New Mexico",
+      "product_name": "SECU NM Fee Schedule",
+      "fee_type": "wire_transfer_outgoing_domestic_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$15.00",
+      "scope": "SECU NM Fee Schedule",
+      "scope_products": [
+        "SECU NM Fee Schedule"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "State Employees Credit Union of New Mexico",
+      "product_name": "SECU NM Fee Schedule",
+      "fee_type": "wire_transfer_outgoing_international_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$50.00",
+      "scope": "SECU NM Fee Schedule",
+      "scope_products": [
+        "SECU NM Fee Schedule"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    }
+  ]
 }
