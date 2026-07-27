@@ -19,6 +19,8 @@ from scraper.multi_card_page_scraper import MultiCardPageScraper
 from scraper.shared_credit_card_scraper import SharedCreditCardDisclosureScraper
 from scraper.asserted_fee_scraper import AssertedFeeScraper
 from scraper.tis_table_scraper import TisTableScraper
+from scraper.tcm_issuer_scraper import TcmIssuerScraper
+from scraper.html_scraper import HTMLScraper
 
 # (institution_key, card_name, field, expected_value) as observed 2026-07-27.
 EXPECTATIONS = [
@@ -51,6 +53,15 @@ EXPECTATIONS = [
     ("secu_nm_regular_checking", "Regular Checking", "monthly_maintenance_fee", "None"),
     ("secu_nm_tis_savings", "Share Savings", "monthly_maintenance_fee", "None"),
     ("secu_nm_tis_savings", "IRA Savings (Roth/Traditional)", "monthly_maintenance_fee", "None"),
+    # Addendum 2: Century Bank (TCM Bank, N.A. issuer) + Nusenda Secured APR fix.
+    ("century_bank_credit_cards", "Rewards Platinum", "annual_fee", "Not publicly disclosed"),
+    ("century_bank_credit_cards", "Rewards Platinum", "cash_advance_fee",
+     "$5 or 3% of the advance, whichever is greater; no maximum"),
+    ("century_bank_credit_cards", "Rewards Platinum", "late_payment_fee",
+     "$30 (first offense) / $41 (repeat within 6 billing cycles)"),
+    ("century_bank_credit_cards", "Visa Secured", "foreign_transaction_fee", "1.0% of transaction amount"),
+    ("nusenda", "Visa Secured Credit Card", "purchase_apr", "16.75%"),
+    ("nusenda", "Visa Platinum", "purchase_apr", "12.50% - 16.50%"),
 ]
 
 SCRAPER_TYPES = {
@@ -59,6 +70,8 @@ SCRAPER_TYPES = {
     "shared_credit_card_disclosure": SharedCreditCardDisclosureScraper,
     "asserted_fee": AssertedFeeScraper,
     "tis_table": TisTableScraper,
+    "tcm_issuer": TcmIssuerScraper,
+    "html": HTMLScraper,
 }
 
 

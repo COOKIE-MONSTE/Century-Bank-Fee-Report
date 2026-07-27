@@ -10,6 +10,51 @@ class HTMLScraper(BaseScraper):
     def __init__(self, name, url, config):
         super().__init__(name, url, config)
 
+    def _fetch_secured_apr(self):
+        """Fetches the Secured card's own APR addendum, if configured.
+
+        The general terms-and-conditions page's disclosure text doesn't
+        differentiate the Secured card's rate from the Consumer range --
+        this scraper was broadcasting the same "12.50% - 16.50%" purchase_apr
+        to Visa Secured too, which is wrong: confirmed the Secured addendum
+        has its own distinct rate. The addendum's rate is itself derived
+        from a variable Prime Rate index, so it's fetched live rather than
+        hardcoded (it will drift as Prime Rate changes).
+        """
+        addendum_url = self.config.get("secured_apr_addendum_url")
+        if not addendum_url:
+            return None
+        response = self.fetch_url(addendum_url)
+        if not response:
+            return None
+        try:
+            import pypdf
+            import io
+            reader = pypdf.PdfReader(io.BytesIO(response.content))
+            text = " ".join(" ".join(page.extract_text() for page in reader.pages).split())
+        except Exception as e:
+            msg = f"[{self.name}] Failed to parse Secured card APR addendum: {e}"
+            logger.error(msg)
+            self.warnings.append(msg)
+            return None
+
+        # Numbers in this addendum series aren't immune to the ToUnicode
+        # corruption that mangles prose ("subsHtute", "transacHons") --
+        # confirmed the decimal point between the two digit groups shows up
+        # corrupted in more than one way across fetches of the same
+        # document: sometimes silently dropped ("1675%"), sometimes
+        # replaced by a stray control byte instead of a literal period. \D?
+        # (any single non-digit, optional) tolerates either -- or a clean
+        # "16.75%" -- without the risk of grabbing digits from a different
+        # number entirely.
+        m = re.search(r"ANNUAL PERCENTAGE RATE of (\d{2})\D?(\d{2})%\s*for purchase", text, re.IGNORECASE)
+        if not m:
+            msg = f"[{self.name}] Could not find a purchase APR in the Secured card addendum."
+            logger.warning(msg)
+            self.warnings.append(msg)
+            return None
+        return f"{m.group(1)}.{m.group(2)}%"
+
     def scrape(self):
         """Scrapes card data from the HTML page."""
         response = self.fetch_url()
@@ -166,6 +211,8 @@ class HTMLScraper(BaseScraper):
             }
         ]
 
+        secured_apr = self._fetch_secured_apr()
+
         for template in card_templates:
             card = base_data.copy()
             card["card_name"] = template["card_name"]
@@ -176,7 +223,15 @@ class HTMLScraper(BaseScraper):
             # rewards_structure/card_name/category are curated per-card
             # values, not extracted from ambiguous text, so they're always
             # high confidence regardless of how the shared page fields scored.
-            card["_field_confidence"] = {**field_confidence, "rewards_structure": "high"}
+            card_confidence = {**field_confidence, "rewards_structure": "high"}
+
+            if template["category"] == "credit_card_secured" and secured_apr:
+                # Override the shared-page range with the Secured card's own
+                # addendum-sourced rate -- see _fetch_secured_apr().
+                card["purchase_apr"] = secured_apr
+                card_confidence["purchase_apr"] = "high"
+
+            card["_field_confidence"] = card_confidence
             cards.append(self.finalize_card(card))
 
         return cards

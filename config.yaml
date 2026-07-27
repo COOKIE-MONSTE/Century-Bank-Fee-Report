@@ -14,6 +14,15 @@ institutions:
     name: "Nusenda Credit Union"
     url: "https://www.nusenda.org/loans-credit-cards/credit-cards/platinum-terms-and-conditions"
     type: "html"
+    # Visa Secured's own APR addendum (Prime + 9.75%) -- overrides the
+    # Consumer-range purchase_apr this scraper would otherwise broadcast to
+    # every card template, including Secured, which is wrong: confirmed the
+    # Secured addendum has its own distinct rate. Six addenda exist total,
+    # organized by APR tier rather than card name, with no way to map the
+    # three Consumer tiers to the three Consumer card names without
+    # guessing -- this is the one addendum that IS unambiguous, since
+    # there's exactly one Secured card and one Secured addendum.
+    secured_apr_addendum_url: "https://www.nusenda.org/docs/default-source/addendums/visa-9-75-11-10-25--16-75.pdf?sfvrsn=66e73a2a_1"
     # Mapping table headers/keywords to specific fields for smart fallback parsing
     field_keywords:
       annual_fee:
@@ -138,11 +147,45 @@ institutions:
       card_replacement_fee: "$12.00"
       card_replacement_rush_fee: "$75.00"
 
-  # Century Bank does NOT issue its own credit cards -- confirmed 2026-07-27: the
-  # personal-credit-cards page states "Cards are issued by TCM Bank, N.A.", has zero
-  # tables/Schumer box, and its only apply link goes off-domain to mycommunityccard.com.
-  # There is no scrapeable card fee data, so no config entry is created for them
-  # (per the task's explicit instruction not to configure them as scrapeable products).
+  century_bank_credit_cards:
+    name: "Century Bank (New Mexico)"
+    url: "https://www.tcmbank.com/cardholder-services"
+    type: "tcm_issuer"
+    # Century Bank's own site has zero fee data for these cards ("Cards are
+    # issued by TCM Bank, N.A.", no Schumer box; the apply link goes to
+    # mycommunityccard.com, an off-domain client-rendered shell with a
+    # literal empty <body> -- confirmed 2026-07-27, don't attempt to
+    # render it). TCM sets the fee terms, not Century -- but a Century
+    # cardholder pays them, so comparison output still attributes them to
+    # Century Bank; scraper/tcm_issuer_scraper.py tags each card with
+    # `_issuer: "TCM Bank, N.A."` for provenance/footnoting instead of
+    # dropping or hiding the attribution.
+    #
+    # Agreement links are resolved fresh from this crawl root every run,
+    # never pinned -- confirmed the deep-linked PDF URLs rot: a URL noted
+    # down was already stale within months (the crawl root now resolves
+    # to a newer "..._March2026.pdf" on tcmbank.com, not the one on
+    # icba.org that had been recorded).
+    #
+    # Annual fee and APR are set per partner bank and disclosed only on a
+    # sheet at account opening -- never published anywhere. Recorded as
+    # the literal string "Not publicly disclosed" (distinct from the
+    # generic "Not disclosed" placeholder used elsewhere, which means
+    # "field not found" -- this means "confirmed to not exist publicly"),
+    # rather than left blank or guessed from another TCM partner's terms.
+    products:
+      "Rewards Platinum":
+        agreement: "consumer"
+        category: "credit_card_rewards"
+      "Cash Rewards Platinum":
+        agreement: "consumer"
+        category: "credit_card_rewards"
+      "Visa Signature Travel":
+        agreement: "consumer"
+        category: "credit_card_premium"
+      "Visa Secured":
+        agreement: "secured"
+        category: "credit_card_secured"
 
   century_bank_checking:
     name: "Century Bank (New Mexico)"

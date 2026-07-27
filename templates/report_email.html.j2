@@ -42,11 +42,85 @@
   .warnings ul { font-size: 12px; color: #7a4b00; background: #fff8e6; border: 1px solid #f0dca0; padding: 12px 12px 12px 28px; border-radius: 4px; }
   .warnings li { margin-bottom: 4px; }
   .empty-note { color: #888; font-size: 12px; margin-top: 20px; }
+  .not-stated { color: #aaa; font-style: italic; }
+  .matrix-note { font-size: 11px; color: #555; margin: 0 0 8px 0; }
 </style>
 </head>
 <body>
   <h1>{{ subject }}</h1>
   <p class="subtitle">Generated {{ generated_at }}. Columns for {{ primary_institution }} are highlighted in the header. Fees are grouped by product category -- see the note above each table for the comparison basis, and each value's italicized line for which specific product(s) it was verified for.</p>
+
+  {% if consumer_matrix or secured_matrix %}
+  <h2>Credit Card Comparison (Institution-Level)</h2>
+  <p class="matrix-note">None of these institutions supports a clean per-card comparison (a shared agreement/disclosure covers multiple cards identically, or tiers don't map to card names) -- so credit cards are compared at the institution level here instead of per-product like the sections below. APR is shown as this institution's own range across its tiers. A dash means the available source doesn't address that fee at all -- that's different from a confirmed "None", which means the source affirmatively states there's no fee.</p>
+  {% if consumer_matrix %}
+  <div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Fee</th>
+        {% for inst in consumer_matrix.institutions %}
+        <th class="{{ 'primary' if inst == primary_institution else '' }}">{{ inst }}{% if loop.index0 in consumer_matrix.issuer_columns %}<sup title="Every value in this column except Annual Fee/APR is set by this institution's card issuer -- see the footnote below.">&dagger;</sup>{% endif %}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in consumer_matrix.rows %}
+      <tr>
+        <td class="fee-label">{{ row.label }}</td>
+        {% for cell in row.cells %}
+        <td>
+          {% if cell.not_stated %}
+            <span class="not-stated">&mdash; not stated</span>
+          {% elif cell.not_publicly_disclosed %}
+            <span>{{ cell.value }}<sup title="Set individually by this institution and disclosed only at account opening -- not publicly available. See the footnote below.">&Dagger;</sup></span>
+          {% else %}
+            {{ cell.value }}
+          {% endif %}
+        </td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% endif %}
+
+  {% if secured_matrix %}
+  <h2>Secured Credit Card Comparison</h2>
+  <p class="matrix-note">Secured cards carry materially different terms from an institution's consumer cards, so they're compared separately rather than folded into the matrix above. SECU NM has no secured card and isn't included here.</p>
+  <div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Fee</th>
+        {% for inst in secured_matrix.institutions %}
+        <th class="{{ 'primary' if inst == primary_institution else '' }}">{{ inst }}{% if loop.index0 in secured_matrix.issuer_columns %}<sup title="Every value in this column except Annual Fee/APR is set by this institution's card issuer -- see the footnote below.">&dagger;</sup>{% endif %}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in secured_matrix.rows %}
+      <tr>
+        <td class="fee-label">{{ row.label }}</td>
+        {% for cell in row.cells %}
+        <td>
+          {% if cell.not_stated %}
+            <span class="not-stated">&mdash; not stated</span>
+          {% elif cell.not_publicly_disclosed %}
+            <span>{{ cell.value }}<sup title="Set individually by this institution and disclosed only at account opening -- not publicly available. See the footnote below.">&Dagger;</sup></span>
+          {% else %}
+            {{ cell.value }}
+          {% endif %}
+        </td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% endif %}
+  {% endif %}
 
   {% if sections %}
   {% for section in sections %}
@@ -75,7 +149,7 @@
         <td>
           {% if cell %}
             {% for entry in cell %}
-            <span class="fee-value">{{ entry.value }}<span class="scope">{{ entry.scope }}</span><span class="mechanism">{{ entry.mechanism_label }}</span>{% if entry.verification == "asserted" %}<span class="assertion-badge" title="Sourced from a written catch-all statement, not independently confirmed per product.{% if entry.source_quote %} Quote: &quot;{{ entry.source_quote }}&quot;{% endif %}{% if entry.source_locator %} ({{ entry.source_locator }}){% endif %}">asserted, not independently verified</span>{% endif %}{% if entry.confidence != "high" %}<span class="confidence-badge confidence-{{ entry.confidence }}{{ ' demoted' if entry.confidence_severity == 'demoted' else '' }}"{% if entry.confidence_stats %} title="Historically {{ entry.confidence_stats.false_alarms }}/{{ entry.confidence_stats.total }} confirmed false alarms for this flag on this fee."{% endif %}>{{ entry.confidence }} confidence{% if entry.confidence_severity == 'demoted' %} (often a false alarm){% endif %}</span>{% endif %}{% if entry.changed %}<span class="drift-badge{{ ' demoted' if entry.drift_severity == 'demoted' else '' }}"{% if entry.drift_stats %} title="Historically {{ entry.drift_stats.false_alarms }}/{{ entry.drift_stats.total }} confirmed false alarms for this flag on this fee."{% endif %}>changed since last snapshot &mdash; was: {{ entry.previous_value }}</span>{% endif %}</span>
+            <span class="fee-value">{{ entry.value }}{% if entry.issuers %}<sup title="Set by the issuer ({{ entry.issuers|join(', ') }}), not by this institution directly -- see the footnote below.">&dagger;</sup>{% endif %}{% if entry.not_publicly_disclosed %}<sup title="Set individually by this institution and disclosed only at account opening -- not publicly available. See the footnote below.">&Dagger;</sup>{% endif %}<span class="scope">{{ entry.scope }}</span><span class="mechanism">{{ entry.mechanism_label }}</span>{% if entry.verification == "asserted" %}<span class="assertion-badge" title="Sourced from a written catch-all statement, not independently confirmed per product.{% if entry.source_quote %} Quote: &quot;{{ entry.source_quote }}&quot;{% endif %}{% if entry.source_locator %} ({{ entry.source_locator }}){% endif %}">asserted, not independently verified</span>{% endif %}{% if entry.confidence != "high" %}<span class="confidence-badge confidence-{{ entry.confidence }}{{ ' demoted' if entry.confidence_severity == 'demoted' else '' }}"{% if entry.confidence_stats %} title="Historically {{ entry.confidence_stats.false_alarms }}/{{ entry.confidence_stats.total }} confirmed false alarms for this flag on this fee."{% endif %}>{{ entry.confidence }} confidence{% if entry.confidence_severity == 'demoted' %} (often a false alarm){% endif %}</span>{% endif %}{% if entry.changed %}<span class="drift-badge{{ ' demoted' if entry.drift_severity == 'demoted' else '' }}"{% if entry.drift_stats %} title="Historically {{ entry.drift_stats.false_alarms }}/{{ entry.drift_stats.total }} confirmed false alarms for this flag on this fee."{% endif %}>changed since last snapshot &mdash; was: {{ entry.previous_value }}</span>{% endif %}</span>
             {% endfor %}
           {% else %}
             &mdash;
@@ -104,6 +178,13 @@
       {% endfor %}
     </ul>
   </div>
+  {% endif %}
+
+  {% if used_issuer_footnote or used_not_disclosed_footnote %}
+  <p class="empty-note">
+    {% if used_issuer_footnote %}&dagger; Issued by a third-party issuer on the institution's behalf. Fees are set by the issuer and are what this institution's cardholders pay.<br>{% endif %}
+    {% if used_not_disclosed_footnote %}&Dagger; Set individually by this institution and disclosed only at account opening; not publicly available.{% endif %}
+  </p>
   {% endif %}
 
   <p class="empty-note">Spotted a wrong value or a badge that's a false alarm? Add a verdict to data/feedback_log.yaml -- confirmed corrections are added to the shared fee-name taxonomy for every institution, and repeated false-alarm verdicts quiet that flag type down in future reports.</p>

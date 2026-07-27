@@ -38,12 +38,19 @@ FIELD_LABELS = [
 FIELD_LABEL_MAP = dict(FIELD_LABELS)
 FIELD_ORDER = [key for key, _ in FIELD_LABELS]
 
+# Must match scraper/tcm_issuer_scraper.py's NOT_PUBLICLY_DISCLOSED exactly --
+# deliberately a different string than the generic "Not disclosed" empty-value
+# placeholder: this one means "confirmed to not exist publicly", not "field
+# not found".
+NOT_PUBLICLY_DISCLOSED = "Not publicly disclosed"
+
 
 def _fee_label(fee_key):
     return FIELD_LABEL_MAP.get(fee_key, fee_key.replace("_", " ").title())
 
 
-def render_report(results, primary_institution, subject, facts_by_institution, track_records):
+def render_report(results, primary_institution, subject, facts_by_institution, track_records,
+                   consumer_card_matrix=None, secured_card_matrix=None, matrix_warnings=None):
     """Renders the comparison email body.
 
     results: {inst_key: {"name": str, "cards": [...], "warnings": [...]}}
@@ -52,6 +59,10 @@ def render_report(results, primary_institution, subject, facts_by_institution, t
     track_records: (specific, general) from feedback.compute_flag_track_record
         -- confirmed human verdict history used to calibrate how loudly a
         flag type is shown (see feedback.flag_severity).
+    consumer_card_matrix / secured_card_matrix / matrix_warnings: from
+        credit_card_matrix.build_matrix() -- a separate institution-level
+        credit card comparison, not routed through the per-product
+        category sections below (see that module's docstring for why).
 
     Fees are grouped into one section per product category (see
     scraper/categories.py) instead of one column per institution, so a
@@ -65,10 +76,13 @@ def render_report(results, primary_institution, subject, facts_by_institution, t
     never assuming a fee applies more broadly than what was scraped.
     """
     specific_record, general_record = track_records
+    report_state = {"used_issuer_footnote": False, "used_not_disclosed_footnote": False}
 
     all_warnings = []
     for inst in results.values():
         all_warnings.extend(inst.get("warnings", []))
+    if matrix_warnings:
+        all_warnings.extend(matrix_warnings)
 
     institution_order = list(facts_by_institution.keys())
     institution_order.sort(key=lambda name: name != primary_institution)
@@ -143,6 +157,13 @@ def render_report(results, primary_institution, subject, facts_by_institution, t
                     if f["mechanism"] not in (None, "unknown"):
                         row_mechanisms.add(f["mechanism"])
 
+                    issuers = f.get("issuers", [])
+                    not_publicly_disclosed = f["value"] == NOT_PUBLICLY_DISCLOSED
+                    if issuers:
+                        report_state["used_issuer_footnote"] = True
+                    if not_publicly_disclosed:
+                        report_state["used_not_disclosed_footnote"] = True
+
                     entries.append({
                         "value": f["value"],
                         "scope": f["scope"],
@@ -157,6 +178,8 @@ def render_report(results, primary_institution, subject, facts_by_institution, t
                         "previous_value": f.get("previous_value"),
                         "drift_severity": drift_severity,
                         "drift_stats": drift_stats,
+                        "issuers": issuers,
+                        "not_publicly_disclosed": not_publicly_disclosed,
                     })
                 cells.append(entries)
 
@@ -196,10 +219,54 @@ def render_report(results, primary_institution, subject, facts_by_institution, t
     env = Environment(loader=FileSystemLoader("templates"))
     template = env.get_template("report_email.html.j2")
 
+    consumer_matrix_view = _prepare_matrix_view(consumer_card_matrix, report_state)
+    secured_matrix_view = _prepare_matrix_view(secured_card_matrix, report_state)
+
     return template.render(
         subject=subject,
         generated_at=datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
         primary_institution=primary_institution,
         sections=sections,
         warnings=all_warnings,
+        used_issuer_footnote=report_state["used_issuer_footnote"],
+        used_not_disclosed_footnote=report_state["used_not_disclosed_footnote"],
+        consumer_matrix=consumer_matrix_view,
+        secured_matrix=secured_matrix_view,
     )
+
+
+def _prepare_matrix_view(matrix, report_state):
+    """Annotates a credit_card_matrix.build_matrix() row set for the
+    template: each cell becomes {value, not_stated, not_publicly_disclosed}
+    so "no data available" and "confirmed no fee" never render the same
+    way, and marks the report-wide footnote flags if the matrix uses them.
+    """
+    if not matrix or not matrix["rows"]:
+        return None
+
+    institutions = matrix["institutions"]
+    rows = []
+    for row in matrix["rows"]:
+        not_stated_values = row.get("not_stated_values", set())
+        cells = []
+        for value in row["cells"]:
+            is_not_disclosed = value == NOT_PUBLICLY_DISCLOSED
+            is_not_stated = value in not_stated_values and not is_not_disclosed
+            if is_not_disclosed:
+                report_state["used_not_disclosed_footnote"] = True
+            cells.append({
+                "value": value,
+                "not_stated": is_not_stated,
+                "not_publicly_disclosed": is_not_disclosed,
+            })
+        rows.append({"label": row["label"], "cells": cells})
+
+    # Every non-"Not publicly disclosed" value in Century's column is set by
+    # its card issuer (TCM Bank, N.A.), not by Century directly -- flagged
+    # at the column level here rather than per-cell, since it applies
+    # uniformly across the whole column (see credit_card_matrix.py).
+    issuer_columns = {i for i, name in enumerate(institutions) if name == "Century Bank (New Mexico)"}
+    if issuer_columns:
+        report_state["used_issuer_footnote"] = True
+
+    return {"institutions": institutions, "rows": rows, "issuer_columns": issuer_columns}

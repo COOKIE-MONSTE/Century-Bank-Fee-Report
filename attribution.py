@@ -21,7 +21,7 @@ from scraper.categories import label_for
 EMPTY_VALUES = {None, "", "Not disclosed"}
 
 # Keys on a card that describe the product/extraction itself rather than a fee.
-NON_FEE_KEYS = {"card_name", "category", "_field_confidence", "_asserted_universal"}
+NON_FEE_KEYS = {"card_name", "category", "_field_confidence", "_asserted_universal", "_issuer"}
 
 CONFIDENCE_RANK = {"low": 0, "medium": 1, "high": 2}
 
@@ -155,19 +155,21 @@ def build_fee_facts(institution_cards):
                         continue
                     product = card.get("card_name", "Unknown product")
                     confidence = card.get("_field_confidence", {}).get(fee_type, "high")
+                    issuer = card.get("_issuer")
                     asserted_meta = card.get("_asserted_universal", {}).get(fee_type)
 
                     if asserted_meta:
                         akey = (value, asserted_meta["quote"])
-                        if not any(p == product for p, _, _ in asserted_to_entries[akey]):
-                            asserted_to_entries[akey].append((product, confidence, asserted_meta.get("locator")))
+                        if not any(p == product for p, _, _, _ in asserted_to_entries[akey]):
+                            asserted_to_entries[akey].append((product, confidence, asserted_meta.get("locator"), issuer))
                     else:
-                        if not any(p == product for p, _ in value_to_entries[value]):
-                            value_to_entries[value].append((product, confidence))
+                        if not any(p == product for p, _, _ in value_to_entries[value]):
+                            value_to_entries[value].append((product, confidence, issuer))
 
                 for value, entries in value_to_entries.items():
-                    products = [p for p, _ in entries]
-                    confidence = _combine_confidence([c for _, c in entries])
+                    products = [p for p, _, _ in entries]
+                    confidence = _combine_confidence([c for _, c, _ in entries])
+                    issuers = sorted({i for _, _, i in entries if i})
 
                     if total_products > 1 and len(products) == total_products:
                         scope = "verified across all products"
@@ -190,12 +192,14 @@ def build_fee_facts(institution_cards):
                         "verification": "empirical",
                         "source_quote": None,
                         "source_locator": None,
+                        "issuers": issuers,
                     })
 
                 for (value, quote), entries in asserted_to_entries.items():
-                    products = [p for p, _, _ in entries]
-                    confidence = _combine_confidence([c for _, c, _ in entries])
+                    products = [p for p, _, _, _ in entries]
+                    confidence = _combine_confidence([c for _, c, _, _ in entries])
                     locator = entries[0][2]
+                    issuers = sorted({i for _, _, _, i in entries if i})
                     scope = f"asserted universal (per {', '.join(products)} disclosure{'s' if len(products) > 1 else ''})"
 
                     mechanism = classify_mechanism(value)
@@ -212,6 +216,7 @@ def build_fee_facts(institution_cards):
                         "verification": "asserted",
                         "source_quote": quote,
                         "source_locator": locator,
+                        "issuers": issuers,
                     })
 
         facts_by_institution[inst_name] = facts
@@ -249,6 +254,7 @@ def flatten_fee_facts(facts_by_institution):
                 "verification": fact.get("verification", "empirical"),
                 "source_quote": fact.get("source_quote"),
                 "source_locator": fact.get("source_locator"),
+                "issuers": fact.get("issuers", []),
                 "changed_since_last_snapshot": fact.get("changed_since_last_snapshot", False),
                 "previous_value": fact.get("previous_value"),
             })
