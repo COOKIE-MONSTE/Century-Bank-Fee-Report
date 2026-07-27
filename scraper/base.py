@@ -19,20 +19,26 @@ class BaseScraper:
         self.config = config
         self.warnings = []
 
-    def fetch_url(self):
-        """Fetches URL contents with headers to avoid bot detection."""
+    def fetch_url(self, url=None):
+        """Fetches URL contents with headers to avoid bot detection.
+
+        Defaults to self.url; pass `url` explicitly for a scraper that
+        needs to pull from more than one source (e.g. a shared PDF
+        disclosure plus a separate live rates page).
+        """
+        target = url or self.url
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
             "Accept-Language": "en-US,en;q=0.5"
         }
         try:
-            logger.info(f"Fetching URL for {self.name}: {self.url}")
-            response = requests.get(self.url, headers=headers, timeout=20)
+            logger.info(f"Fetching URL for {self.name}: {target}")
+            response = requests.get(target, headers=headers, timeout=20)
             response.raise_for_status()
             return response
         except Exception as e:
-            msg = f"Failed to reach {self.name} URL ({self.url}): {str(e)}"
+            msg = f"Failed to reach {self.name} URL ({target}): {str(e)}"
             logger.error(msg)
             self.warnings.append(msg)
             return None
@@ -109,6 +115,24 @@ class BaseScraper:
                 if kw not in merged[field]:
                     merged[field].append(kw)
         return merged
+
+    def assert_universal_fee(self, card, field, value, quote, locator):
+        """Marks a field's value as sourced from an explicit written
+        statement (e.g. "There are no maintenance fees on this account")
+        rather than a per-product line item.
+
+        This is deliberately kept separate from ordinary field assignment:
+        attribution.py tracks asserted values in their own bucket, never
+        blending them into the empirical "N products independently agree"
+        convergence that verified-across-all requires. A written catch-all
+        statement is real evidence, but it is not the same strength of
+        evidence as several independent scrapes agreeing, so it's surfaced
+        as "asserted universal" -- visibly distinct, with the source quote
+        attached -- rather than silently promoted to the same confidence.
+        """
+        card[field] = value
+        card.setdefault("_asserted_universal", {})[field] = {"quote": quote, "locator": locator}
+        return card
 
     def log_field_warning(self, card_name, field_name):
         msg = f"[{self.name} - {card_name}] Field '{field_name}' could not be parsed."

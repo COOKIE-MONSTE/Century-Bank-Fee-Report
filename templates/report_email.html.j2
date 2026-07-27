@@ -26,6 +26,11 @@
   .confidence-medium { background: #fff8e6; color: #7a4b00; }
   .mismatch-flag { display: inline-block; font-size: 10px; font-weight: bold; color: #a94442; background: #fdecea; border: 1px solid #f3c8c4; padding: 1px 6px; border-radius: 3px; margin-left: 6px; }
   .drift-badge { display: inline-block; font-size: 9px; font-weight: bold; text-transform: uppercase; padding: 1px 5px; border-radius: 3px; margin-top: 2px; background: #eaf2fb; color: #1a5276; }
+  /* Asserted-universal: a written catch-all statement, not several
+     independent scrapes agreeing -- kept visually distinct from a plain
+     "verified across all products" scope so it's never mistaken for
+     stronger evidence than it is. */
+  .assertion-badge { display: inline-block; font-size: 9px; font-weight: bold; text-transform: uppercase; padding: 1px 5px; border-radius: 3px; margin-top: 2px; background: #f3ecfb; color: #5b3a8e; }
   /* A flag with a confirmed track record of mostly being a false alarm is
      demoted to this muted style instead of being hidden -- still visible,
      just quieter, and the tooltip always shows the track record behind it. */
@@ -70,7 +75,7 @@
         <td>
           {% if cell %}
             {% for entry in cell %}
-            <span class="fee-value">{{ entry.value }}<span class="scope">{{ entry.scope }}</span><span class="mechanism">{{ entry.mechanism_label }}</span>{% if entry.confidence != "high" %}<span class="confidence-badge confidence-{{ entry.confidence }}{{ ' demoted' if entry.confidence_severity == 'demoted' else '' }}"{% if entry.confidence_stats %} title="Historically {{ entry.confidence_stats.false_alarms }}/{{ entry.confidence_stats.total }} confirmed false alarms for this flag on this fee."{% endif %}>{{ entry.confidence }} confidence{% if entry.confidence_severity == 'demoted' %} (often a false alarm){% endif %}</span>{% endif %}{% if entry.changed %}<span class="drift-badge{{ ' demoted' if entry.drift_severity == 'demoted' else '' }}"{% if entry.drift_stats %} title="Historically {{ entry.drift_stats.false_alarms }}/{{ entry.drift_stats.total }} confirmed false alarms for this flag on this fee."{% endif %}>changed since last snapshot &mdash; was: {{ entry.previous_value }}</span>{% endif %}</span>
+            <span class="fee-value">{{ entry.value }}<span class="scope">{{ entry.scope }}</span><span class="mechanism">{{ entry.mechanism_label }}</span>{% if entry.verification == "asserted" %}<span class="assertion-badge" title="Sourced from a written catch-all statement, not independently confirmed per product.{% if entry.source_quote %} Quote: &quot;{{ entry.source_quote }}&quot;{% endif %}{% if entry.source_locator %} ({{ entry.source_locator }}){% endif %}">asserted, not independently verified</span>{% endif %}{% if entry.confidence != "high" %}<span class="confidence-badge confidence-{{ entry.confidence }}{{ ' demoted' if entry.confidence_severity == 'demoted' else '' }}"{% if entry.confidence_stats %} title="Historically {{ entry.confidence_stats.false_alarms }}/{{ entry.confidence_stats.total }} confirmed false alarms for this flag on this fee."{% endif %}>{{ entry.confidence }} confidence{% if entry.confidence_severity == 'demoted' %} (often a false alarm){% endif %}</span>{% endif %}{% if entry.changed %}<span class="drift-badge{{ ' demoted' if entry.drift_severity == 'demoted' else '' }}"{% if entry.drift_stats %} title="Historically {{ entry.drift_stats.false_alarms }}/{{ entry.drift_stats.total }} confirmed false alarms for this flag on this fee."{% endif %}>changed since last snapshot &mdash; was: {{ entry.previous_value }}</span>{% endif %}</span>
             {% endfor %}
           {% else %}
             &mdash;

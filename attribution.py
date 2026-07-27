@@ -21,7 +21,7 @@ from scraper.categories import label_for
 EMPTY_VALUES = {None, "", "Not disclosed"}
 
 # Keys on a card that describe the product/extraction itself rather than a fee.
-NON_FEE_KEYS = {"card_name", "category", "_field_confidence"}
+NON_FEE_KEYS = {"card_name", "category", "_field_confidence", "_asserted_universal"}
 
 CONFIDENCE_RANK = {"low": 0, "medium": 1, "high": 2}
 
@@ -102,17 +102,29 @@ def build_fee_facts(institution_cards):
             "category": "credit_card_rewards",
             "category_label": "Rewards Credit Card",
             "value": "None",
-            "scope": "verified across all products" | "verified across: A, B" | "Visa Platinum",
+            "scope": "verified across all products" | "verified across: A, B" | "Visa Platinum"
+                     | "asserted universal (per X disclosure)",
             "scope_products": ["Visa Platinum Rewards", "Visa Platinum Cash Rewards"],
             "confidence": "high" | "medium" | "low",
             "mechanism": "flat" | "percentage" | "recurring" | "per_unit" | "variable" | "no_fee" | "unknown",
             "mechanism_label": "Flat fee",
+            "verification": "empirical" | "asserted",
+            "source_quote": None | str,
+            "source_locator": None | str,
         }
 
     Scope is computed within (institution, category) -- not institution-wide
     -- so a coincidental value match between e.g. a credit card's fee and an
     unrelated checking account's fee never gets reported as "verified"
     across both; they're different products in different categories.
+
+    A field a scraper set via BaseScraper.assert_universal_fee() (a written
+    catch-all statement, e.g. "no maintenance fees on this account") is
+    tracked in its own bucket, entirely separate from the empirical
+    "N products independently agree" convergence below -- it never
+    contributes to a verified-across-all count, and never gets silently
+    upgraded to that same confidence. It's always its own fact, visibly
+    labeled "asserted universal" with the source quote attached.
     """
     facts_by_institution = OrderedDict()
 
@@ -132,16 +144,26 @@ def build_fee_facts(institution_cards):
                         fee_types[key] = True
 
             for fee_type in fee_types:
-                # value -> [(product, confidence), ...]
+                # value -> [(product, confidence), ...] -- independently scraped
                 value_to_entries = defaultdict(list)
+                # (value, quote) -> [(product, confidence, locator), ...] -- asserted
+                asserted_to_entries = defaultdict(list)
+
                 for card in cat_cards:
                     value = card.get(fee_type)
                     if value in EMPTY_VALUES:
                         continue
                     product = card.get("card_name", "Unknown product")
                     confidence = card.get("_field_confidence", {}).get(fee_type, "high")
-                    if not any(p == product for p, _ in value_to_entries[value]):
-                        value_to_entries[value].append((product, confidence))
+                    asserted_meta = card.get("_asserted_universal", {}).get(fee_type)
+
+                    if asserted_meta:
+                        akey = (value, asserted_meta["quote"])
+                        if not any(p == product for p, _, _ in asserted_to_entries[akey]):
+                            asserted_to_entries[akey].append((product, confidence, asserted_meta.get("locator")))
+                    else:
+                        if not any(p == product for p, _ in value_to_entries[value]):
+                            value_to_entries[value].append((product, confidence))
 
                 for value, entries in value_to_entries.items():
                     products = [p for p, _ in entries]
@@ -165,6 +187,31 @@ def build_fee_facts(institution_cards):
                         "confidence": confidence,
                         "mechanism": mechanism,
                         "mechanism_label": MECHANISM_LABELS.get(mechanism, "Unclear"),
+                        "verification": "empirical",
+                        "source_quote": None,
+                        "source_locator": None,
+                    })
+
+                for (value, quote), entries in asserted_to_entries.items():
+                    products = [p for p, _, _ in entries]
+                    confidence = _combine_confidence([c for _, c, _ in entries])
+                    locator = entries[0][2]
+                    scope = f"asserted universal (per {', '.join(products)} disclosure{'s' if len(products) > 1 else ''})"
+
+                    mechanism = classify_mechanism(value)
+                    facts.append({
+                        "fee_type": fee_type,
+                        "category": category,
+                        "category_label": label_for(category),
+                        "value": value,
+                        "scope": scope,
+                        "scope_products": products,
+                        "confidence": confidence,
+                        "mechanism": mechanism,
+                        "mechanism_label": MECHANISM_LABELS.get(mechanism, "Unclear"),
+                        "verification": "asserted",
+                        "source_quote": quote,
+                        "source_locator": locator,
                     })
 
         facts_by_institution[inst_name] = facts
@@ -199,6 +246,9 @@ def flatten_fee_facts(facts_by_institution):
                 "confidence": fact["confidence"],
                 "mechanism": fact["mechanism"],
                 "mechanism_label": fact["mechanism_label"],
+                "verification": fact.get("verification", "empirical"),
+                "source_quote": fact.get("source_quote"),
+                "source_locator": fact.get("source_locator"),
                 "changed_since_last_snapshot": fact.get("changed_since_last_snapshot", False),
                 "previous_value": fact.get("previous_value"),
             })

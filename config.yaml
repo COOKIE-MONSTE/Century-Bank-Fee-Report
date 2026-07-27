@@ -110,6 +110,14 @@ institutions:
     # a scanned/photographed PDF with no extractable text layer -- a reference copy
     # lives at assets/century_bank_fee_schedule.pdf. Values below are hand-transcribed
     # from that document; update them here if Century Bank revises its fee schedule.
+    #
+    # This remains the ONLY source for the fees below. Confirmed 2026-07-27: there is
+    # no public master fee schedule anywhere on mycenturybank.com -- the site's own
+    # /rates page text says "Please refer to the Bank Fee Schedule for a detailed
+    # listing of fees" but never links to one, and none of the 66 links in the site's
+    # /sitemap point to a fee schedule either. Don't attempt to auto-source these; if
+    # Century Bank publishes one in the future, replace this hand-transcription with
+    # a real scraper against it.
     product_name: "General Account Fee Schedule"
     fees:
       overdraft_fee: "$35.00"
@@ -130,6 +138,81 @@ institutions:
       card_replacement_fee: "$12.00"
       card_replacement_rush_fee: "$75.00"
 
+  # Century Bank does NOT issue its own credit cards -- confirmed 2026-07-27: the
+  # personal-credit-cards page states "Cards are issued by TCM Bank, N.A.", has zero
+  # tables/Schumer box, and its only apply link goes off-domain to mycommunityccard.com.
+  # There is no scrapeable card fee data, so no config entry is created for them
+  # (per the task's explicit instruction not to configure them as scrapeable products).
+
+  century_bank_checking:
+    name: "Century Bank (New Mexico)"
+    url: "https://www.mycenturybank.com/personal-banking/century-checking"
+    type: "labeled_features"
+    product_name: "Century Checking"
+    category: "checking_basic"
+    content_selector: "main"
+
+  century_bank_interest_checking:
+    name: "Century Bank (New Mexico)"
+    url: "https://www.mycenturybank.com/personal-banking/century-interest-checking"
+    type: "labeled_features"
+    product_name: "Century Interest Checking"
+    category: "checking_premium"
+    content_selector: "main"
+
+  century_bank_platinum_checking:
+    name: "Century Bank (New Mexico)"
+    url: "https://www.mycenturybank.com/personal-banking/century-platinum-checking"
+    type: "labeled_features"
+    product_name: "Century Platinum Checking"
+    category: "checking_premium"
+    content_selector: "main"
+
+  century_bank_savings_cds_retirement:
+    name: "Century Bank (New Mexico)"
+    url: "https://www.mycenturybank.com/personal-banking/savings-cds-and-retirement"
+    type: "multi_card_page"
+    # One page holds 7 distinct products as Bootstrap `.card` divs, mixed in
+    # with unrelated cards (Private Banking, Access your account, etc.) --
+    # `products` is an explicit allowlist keyed by each card's <h2> text so
+    # only these 7 are ingested; card boundaries are per-product, not one
+    # product per URL, for this institution.
+    card_selector: ".card"
+    heading_selector: "h2"
+    products:
+      "High-Performance Savings":
+        product_name: "High-Performance Savings"
+        category: "savings_basic"
+      "Minor Savings Account":
+        product_name: "Minor Savings Account"
+        category: "savings_basic"
+      "High Performance MMDA":
+        product_name: "High Performance MMDA"
+        category: "money_market"
+      "Liberty Money MarkeT":
+        product_name: "Liberty Money Market"
+        category: "money_market"
+      "Personal Certificate of Deposit":
+        product_name: "Personal Certificate of Deposit"
+        category: "certificate_of_deposit"
+      "Market Rate IRA":
+        product_name: "Market Rate IRA"
+        category: "ira"
+      "Fixed Term IRA CD":
+        product_name: "Fixed Term IRA CD"
+        category: "ira"
+
+  # Liberty Checking and Liberty Savings appear on the rates page with no card
+  # on THIS page. Checked 2026-07-27: Liberty Checking has no page anywhere
+  # (every guessed URL 404s) -- skipped, no fee data exists to scrape.
+  # Liberty Savings DOES have a real page with real fee data
+  # (personal-banking/liberty-savings: $10/month service fee, waived above a
+  # $2,000 daily balance, $2,000 minimum opening deposit) -- but it's an
+  # orphan page, not linked from the sitemap or the rates page, only found by
+  # guessing the URL pattern from its sibling products' naming convention.
+  # Not wired up as a scraped product in this pass; flagged for a follow-up
+  # decision since an unlinked page could be retired without notice.
+
   secu_nm:
     name: "State Employees Credit Union of New Mexico"
     url: "https://www.secunm.org/fee-schedule.html"
@@ -143,6 +226,14 @@ institutions:
     product_name: "SECU NM Fee Schedule"
     category: "general_account_fees"
     table_header_hints: ["service", "fee"]
+    # Confirmed 2026-07-27: this page states "Effective 01/23/23", but SECU
+    # NM's Truth-in-Savings PDF (page 7's fee schedule section) has
+    # identical fee values under a DIFFERENT stated date, 07/14/2023. The
+    # scraper surfaces this as a warning every run rather than silently
+    # trusting either date -- see service_fee_table_scraper.py.
+    effective_date_pattern: 'Effective\s+(\d{1,2}/\d{1,2}/\d{2,4})'
+    known_conflicting_dates:
+      "the Truth-in-Savings PDF's fee schedule (page 7)": "07/14/2023"
     field_keywords:
       card_replacement_fee:
         - "atm/debit card re-issue"
@@ -184,3 +275,140 @@ institutions:
       # branching, uncollected funds) are deliberately left unmapped here
       # -- the scraper reports them as unmatched (see its warnings/
       # data/history.json) instead of forcing them into an existing field.
+
+  secu_nm_credit_cards:
+    name: "State Employees Credit Union of New Mexico"
+    url: "https://cdn.firstbranchcms.com/kcms-doc/29/68439/Credit-Card-Disclosure.pdf"
+    type: "shared_credit_card_disclosure"
+    # Corrected from the original 2-card list: there are 3 SECU NM Visa cards
+    # (Platinum 7.50%, Gold 9.25%, Classic 12.50% -- confirmed 2026-07-27 on
+    # the live rates table; fee-schedule.html's embedded credit-card table
+    # only shows 2, missing Classic). All three share ONE PDF disclosure for
+    # annual fee, cash advance, balance transfer, foreign transaction, and
+    # late payment fee -- there is no separate Schumer box per card, so
+    # those fields are recorded as asserted-universal (see
+    # scraper/shared_credit_card_scraper.py), while purchase_apr comes from
+    # the live rates table per-card. The PDF states it's "current as of
+    # September 30, 2021"; the scraper flags this as stale automatically.
+    # Category is credit_card_standard for all three: nothing in either
+    # source distinguishes them by feature set (secured/rewards/etc.), only
+    # by APR tier -- flag if a finer category split is wanted later.
+    rates_url: "https://www.secunm.org/loans/loans/credit-card.html"
+    products:
+      "Visa Platinum":
+        category: "credit_card_standard"
+      "Visa Gold":
+        category: "credit_card_standard"
+      "Visa Classic":
+        category: "credit_card_standard"
+
+  # Checking is 4 products, corrected from "3 Kasasa options" -- Regular
+  # Checking is real (confirmed 2026-07-27: accounts/checking/regular-
+  # checking.html, 200) but isn't featured on the rewards-focused compare
+  # page, only reachable via the main checking landing page's link list.
+  # "Money Manager" (a rate-table-only tiered savings/MM product) is
+  # correctly NOT included here -- it has no checking-account features and
+  # no product page of its own.
+  #
+  # Each of these asserts "no maintenance fee" as a blanket statement
+  # rather than a per-product line item -- e.g. the three Kasasa PDFs all
+  # say "There are no maintenance or activity fees/charges associated with
+  # this account... [except] a dormant account fee". That's real evidence,
+  # but weaker than an independent per-product confirmation, so it's
+  # recorded via assert_universal_fee (see scraper/asserted_fee_scraper.py)
+  # and shows in the report as "asserted universal", not
+  # "verified across all products".
+  secu_nm_kasasa_cash:
+    name: "State Employees Credit Union of New Mexico"
+    url: "https://www.secunm.org/_/kcms-doc/29/45754/Kasasa_Cash_and_Reward_Checking_Disclosure.pdf"
+    type: "asserted_fee"
+    source_format: "pdf"
+    product_name: "Kasasa Cash"
+    category: "checking_premium"
+    assertions:
+      - field: "monthly_maintenance_fee"
+        pattern: "There are no maintenance or activity (?:fees|charges) associated with this account[^.]*\\."
+        value: "None"
+
+  secu_nm_kasasa_cash_back:
+    name: "State Employees Credit Union of New Mexico"
+    url: "https://www.secunm.org/_/kcms-doc/29/45759/Kasasa-Cash-Back-Disclosure.pdf"
+    type: "asserted_fee"
+    source_format: "pdf"
+    product_name: "Kasasa Cash Back"
+    category: "checking_premium"
+    assertions:
+      - field: "monthly_maintenance_fee"
+        pattern: "There are no maintenance or activity (?:fees|charges) associated with this account[^.]*\\."
+        value: "None"
+
+  secu_nm_kasasa_tunes:
+    name: "State Employees Credit Union of New Mexico"
+    url: "https://www.secunm.org/_/kcms-doc/29/45767/Kasasa-Tunes-and-Perks-Plus-Checking-Disclosure.pdf"
+    type: "asserted_fee"
+    source_format: "pdf"
+    product_name: "Kasasa Tunes"
+    category: "checking_premium"
+    assertions:
+      - field: "monthly_maintenance_fee"
+        pattern: "There are no maintenance or activity (?:fees|charges) associated with this account[^.]*\\."
+        value: "None"
+
+  secu_nm_regular_checking:
+    name: "State Employees Credit Union of New Mexico"
+    url: "https://www.secunm.org/accounts/checking/regular-checking.html"
+    type: "asserted_fee"
+    source_format: "html"
+    content_selector: "main"
+    product_name: "Regular Checking"
+    category: "checking_basic"
+    assertions:
+      - field: "monthly_maintenance_fee"
+        # Negative lookahead guards against a conditional phrasing like
+        # "no monthly service fee with a minimum daily balance of $X" being
+        # misread as unconditional -- see Century Bank's checking scraper,
+        # which hit exactly this bug against real page text.
+        pattern: "no monthly service fee(?!\\s+with)"
+        value: "None"
+
+  secu_nm_tis_savings:
+    name: "State Employees Credit Union of New Mexico"
+    url: "https://www.secunm.org/_/kcms-doc/29/8947/Truth-in-Savings-Disclosure.pdf"
+    type: "tis_table"
+    # Positional (pdfplumber) extraction of the "Minimum Balance to Avoid a
+    # Service Fee" column -- see scraper/tis_table_scraper.py for why this
+    # source needs ruling-line-based extraction, not text extraction, and
+    # why every field from it is forced to low confidence regardless of
+    # how clean it looks.
+    #
+    # Scoped to only the savings-tier rows below. Deliberately NOT
+    # including: Kasasa Cash/Cash Back/Regular Checking (already covered by
+    # their own cleaner PDF/page sources above -- this table shows "None"
+    # for all of them too, so it would only be redundant corroboration, not
+    # new data); "Money Market Account*"/"Advantage+ Money Market
+    # Account***" (their balance-tier sub-rows show literal "$N/A"
+    # placeholder artifacts in this table, and neither name is an exact
+    # match for the "Money Manager" product this task named -- flagging
+    # that naming ambiguity rather than guessing which, if either, row it
+    # refers to).
+    table_page: 1
+    min_balance_column_index: 7
+    products:
+      "Share Savings**":
+        product_name: "Share Savings"
+        category: "savings_basic"
+      "Christmas Club Savings":
+        product_name: "Christmas Club Savings"
+        category: "savings_basic"
+      "Vacation Club Savings":
+        product_name: "Vacation Club Savings"
+        category: "savings_basic"
+      "Special Savings":
+        product_name: "Special Savings"
+        category: "savings_basic"
+      "UTMA/UGMA Savings":
+        product_name: "UTMA/UGMA Savings"
+        category: "savings_basic"
+      "IRA Savings - includes Roth, and Traditional":
+        product_name: "IRA Savings (Roth/Traditional)"
+        category: "ira"

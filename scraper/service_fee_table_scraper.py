@@ -1,4 +1,5 @@
 import logging
+import re
 from collections import defaultdict
 from bs4 import BeautifulSoup
 from .base import BaseScraper
@@ -132,5 +133,33 @@ class ServiceFeeTableScraper(BaseScraper):
             )
             logger.info(msg)
             self.warnings.append(msg)
+
+        # Effective-date conflict surfacing: this page may state its own
+        # "effective" date, and a config-supplied list of other documents
+        # covering the same data can state a *different* one (a real,
+        # observed situation for SECU NM: fee-schedule.html says 01/23/23,
+        # but its Truth-in-Savings PDF's own fee schedule section -- same
+        # values -- says 07/14/2023). Rather than silently trusting
+        # whichever date this page happens to show, the conflict is always
+        # surfaced as a warning so a human decides which is authoritative.
+        effective_date_pattern = self.config.get("effective_date_pattern")
+        if effective_date_pattern:
+            body_text = soup.get_text(separator=" ", strip=True)
+            date_match = re.search(effective_date_pattern, body_text, re.IGNORECASE)
+            if date_match:
+                effective_date = date_match.group(1)
+                logger.info(f"[{self.name}] Page states effective date: {effective_date}")
+                for other_source, other_date in self.config.get("known_conflicting_dates", {}).items():
+                    if other_date != effective_date:
+                        msg = (
+                            f"[{self.name}] Effective-date conflict: this page states '{effective_date}', "
+                            f"but {other_source} states '{other_date}' for what appears to be the same "
+                            f"fee schedule (values match) -- not silently resolved, verify which is "
+                            f"authoritative."
+                        )
+                        logger.warning(msg)
+                        self.warnings.append(msg)
+            else:
+                logger.info(f"[{self.name}] Could not find an effective date on the page matching the configured pattern.")
 
         return [self.finalize_card(card)]

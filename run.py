@@ -10,6 +10,11 @@ from scraper.pdf_scraper import PDFScraper
 from scraper.fee_schedule_scraper import StaticFeeScraper
 from scraper.lkcs_widget_scraper import LKCSFeeScraper
 from scraper.service_fee_table_scraper import ServiceFeeTableScraper
+from scraper.labeled_features_scraper import LabeledFeaturesScraper
+from scraper.multi_card_page_scraper import MultiCardPageScraper
+from scraper.shared_credit_card_scraper import SharedCreditCardDisclosureScraper
+from scraper.asserted_fee_scraper import AssertedFeeScraper
+from scraper.tis_table_scraper import TisTableScraper
 from attribution import merge_institution_cards, build_fee_facts, flatten_fee_facts
 from drift import load_previous_fee_facts, mark_drift
 from feedback import load_feedback_log, compute_flag_track_record, promote_confirmed_synonyms
@@ -28,6 +33,11 @@ SCRAPER_TYPES = {
     "static": StaticFeeScraper,
     "lkcs_widget": LKCSFeeScraper,
     "service_fee_table": ServiceFeeTableScraper,
+    "labeled_features": LabeledFeaturesScraper,
+    "multi_card_page": MultiCardPageScraper,
+    "shared_credit_card_disclosure": SharedCreditCardDisclosureScraper,
+    "asserted_fee": AssertedFeeScraper,
+    "tis_table": TisTableScraper,
 }
 
 
