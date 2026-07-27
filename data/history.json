@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-27T16:22:31.282758+00:00",
+  "generated_at": "2026-07-27T17:55:04.652633+00:00",
   "institutions": {
     "nusenda": {
       "name": "Nusenda Credit Union",
@@ -192,6 +192,116 @@
       ],
       "warnings": []
     },
+    "century_bank_checking": {
+      "name": "Century Bank (New Mexico)",
+      "cards": [
+        {
+          "card_name": "Century Checking",
+          "category": "checking_basic",
+          "monthly_maintenance_fee": "None",
+          "_field_confidence": {
+            "monthly_maintenance_fee": "high"
+          }
+        }
+      ],
+      "warnings": [
+        "[Century Bank (New Mexico) - Century Checking] Fee-adjacent facts found with no existing canonical field: Minimum opening balance: $25; Paper statement fee: $5 per cycle (e-statements free)"
+      ]
+    },
+    "century_bank_interest_checking": {
+      "name": "Century Bank (New Mexico)",
+      "cards": [
+        {
+          "card_name": "Century Interest Checking",
+          "category": "checking_premium",
+          "monthly_maintenance_fee": "$5/month, waived with a $500 minimum daily balance",
+          "_field_confidence": {
+            "monthly_maintenance_fee": "high"
+          }
+        }
+      ],
+      "warnings": [
+        "[Century Bank (New Mexico) - Century Interest Checking] Fee-adjacent facts found with no existing canonical field: Minimum opening balance: $100; Paper statement fee: $5 per cycle (e-statements free)"
+      ]
+    },
+    "century_bank_platinum_checking": {
+      "name": "Century Bank (New Mexico)",
+      "cards": [
+        {
+          "card_name": "Century Platinum Checking",
+          "category": "checking_premium",
+          "monthly_maintenance_fee": "$25/month, waived with a $10,000 minimum daily balance",
+          "_field_confidence": {
+            "monthly_maintenance_fee": "high"
+          }
+        }
+      ],
+      "warnings": [
+        "[Century Bank (New Mexico) - Century Platinum Checking] Fee-adjacent facts found with no existing canonical field: Minimum opening balance: $100"
+      ]
+    },
+    "century_bank_savings_cds_retirement": {
+      "name": "Century Bank (New Mexico)",
+      "cards": [
+        {
+          "card_name": "High-Performance Savings",
+          "category": "savings_basic",
+          "monthly_maintenance_fee": "$2/month, waived with a $100 minimum daily balance",
+          "_field_confidence": {
+            "monthly_maintenance_fee": "high"
+          }
+        },
+        {
+          "card_name": "Minor Savings Account",
+          "category": "savings_basic",
+          "monthly_maintenance_fee": "$2/month, waived with a $25 minimum daily balance",
+          "_field_confidence": {
+            "monthly_maintenance_fee": "high"
+          }
+        },
+        {
+          "card_name": "High Performance MMDA",
+          "category": "money_market",
+          "monthly_maintenance_fee": "$12/month, waived with a $5,000 minimum daily balance",
+          "_field_confidence": {
+            "monthly_maintenance_fee": "high"
+          }
+        },
+        {
+          "card_name": "Liberty Money Market",
+          "category": "money_market",
+          "monthly_maintenance_fee": "$15/month, waived with a $15,000 minimum daily balance",
+          "_field_confidence": {
+            "monthly_maintenance_fee": "high"
+          }
+        },
+        {
+          "card_name": "Personal Certificate of Deposit",
+          "category": "certificate_of_deposit",
+          "monthly_maintenance_fee": "None",
+          "_field_confidence": {
+            "monthly_maintenance_fee": "high"
+          }
+        },
+        {
+          "card_name": "Market Rate IRA",
+          "category": "ira",
+          "monthly_maintenance_fee": "$2/month, waived with a $100 minimum daily balance",
+          "_field_confidence": {
+            "monthly_maintenance_fee": "high"
+          }
+        },
+        {
+          "card_name": "Fixed Term IRA CD",
+          "category": "ira",
+          "monthly_maintenance_fee": "$2/month, waived with a $100 minimum daily balance",
+          "_field_confidence": {
+            "monthly_maintenance_fee": "high"
+          }
+        }
+      ],
+      "warnings": []
+    },
     "secu_nm": {
       "name": "State Employees Credit Union of New Mexico",
       "cards": [
@@ -225,8 +335,235 @@
         }
       ],
       "warnings": [
-        "[State Employees Credit Union of New Mexico] 22 fee row(s) did not match any known category (shown for review, not forced into an existing one): 'Closing Account Within First 90 Days': '$10.00'; 'Collection Items': '$20.00 (plus costs)'; 'Copies: Check Copies': '$3.00'; 'Copies: Monthly Statement Copies': '$3.00'; 'Copies: Both Available via Online Banking': 'FREE'; 'Counter Checks': '$2.00 per page'; 'Early Withdrawal \u2013 Certificate Builder': '$10.00'; 'Early Withdrawal \u2013 Christmas Club': '$5.00'; 'Escheatment Fee': '$50.00'; 'Excessive ATM Withdrawal Fee (10 free)': '$0.65 per after 10'; 'Excessive ATM Withdrawal Fee (10 free): Savings Withdrawal': '10 FREE per month'; 'Excessive ATM Withdrawal Fee (10 free): Checking Withdrawal': '10 FREE per month'; 'Garnishment or IRS Levy Fee': '$50.00'; 'Gift Cards: Members': '$2.50'; 'Gift Cards: Non-members': '$4.50'; 'Gift Cards: With Reward Checking, Kasasa Cash & Kasasa Cash Back': 'FREE'; 'Gift Cards: With Perks+ Checking & Kasasa Tunes': 'FREE'; 'Online Banking / Bill Pay': 'FREE'; 'Returned Mail Fee': '$5.00'; 'SECU Loan Pay (Free Online)': '$5.00'; 'Shared Branching Transactions': '$2.00 (5 FREE per month)'; 'Uncollected Funds Fee': '$25.00'"
+        "[State Employees Credit Union of New Mexico] 22 fee row(s) did not match any known category (shown for review, not forced into an existing one): 'Closing Account Within First 90 Days': '$10.00'; 'Collection Items': '$20.00 (plus costs)'; 'Copies: Check Copies': '$3.00'; 'Copies: Monthly Statement Copies': '$3.00'; 'Copies: Both Available via Online Banking': 'FREE'; 'Counter Checks': '$2.00 per page'; 'Early Withdrawal \u2013 Certificate Builder': '$10.00'; 'Early Withdrawal \u2013 Christmas Club': '$5.00'; 'Escheatment Fee': '$50.00'; 'Excessive ATM Withdrawal Fee (10 free)': '$0.65 per after 10'; 'Excessive ATM Withdrawal Fee (10 free): Savings Withdrawal': '10 FREE per month'; 'Excessive ATM Withdrawal Fee (10 free): Checking Withdrawal': '10 FREE per month'; 'Garnishment or IRS Levy Fee': '$50.00'; 'Gift Cards: Members': '$2.50'; 'Gift Cards: Non-members': '$4.50'; 'Gift Cards: With Reward Checking, Kasasa Cash & Kasasa Cash Back': 'FREE'; 'Gift Cards: With Perks+ Checking & Kasasa Tunes': 'FREE'; 'Online Banking / Bill Pay': 'FREE'; 'Returned Mail Fee': '$5.00'; 'SECU Loan Pay (Free Online)': '$5.00'; 'Shared Branching Transactions': '$2.00 (5 FREE per month)'; 'Uncollected Funds Fee': '$25.00'",
+        "[State Employees Credit Union of New Mexico] Effective-date conflict: this page states '01/23/23', but the Truth-in-Savings PDF's fee schedule (page 7) states '07/14/2023' for what appears to be the same fee schedule (values match) -- not silently resolved, verify which is authoritative."
       ]
+    },
+    "secu_nm_credit_cards": {
+      "name": "State Employees Credit Union of New Mexico",
+      "cards": [
+        {
+          "card_name": "Visa Platinum",
+          "category": "credit_card_standard",
+          "purchase_apr": "7.50%",
+          "annual_fee": "None",
+          "_asserted_universal": {
+            "annual_fee": {
+              "quote": "See Credit Card Disclosure (applies to all State ECU Visa credit cards, not per-card)",
+              "locator": "https://cdn.firstbranchcms.com/kcms-doc/29/68439/Credit-Card-Disclosure.pdf"
+            },
+            "balance_transfer_fee": {
+              "quote": "See Credit Card Disclosure (applies to all State ECU Visa credit cards, not per-card)",
+              "locator": "https://cdn.firstbranchcms.com/kcms-doc/29/68439/Credit-Card-Disclosure.pdf"
+            },
+            "cash_advance_fee": {
+              "quote": "See Credit Card Disclosure (applies to all State ECU Visa credit cards, not per-card)",
+              "locator": "https://cdn.firstbranchcms.com/kcms-doc/29/68439/Credit-Card-Disclosure.pdf"
+            },
+            "foreign_transaction_fee": {
+              "quote": "See Credit Card Disclosure (applies to all State ECU Visa credit cards, not per-card)",
+              "locator": "https://cdn.firstbranchcms.com/kcms-doc/29/68439/Credit-Card-Disclosure.pdf"
+            },
+            "late_payment_fee": {
+              "quote": "See Credit Card Disclosure (applies to all State ECU Visa credit cards, not per-card)",
+              "locator": "https://cdn.firstbranchcms.com/kcms-doc/29/68439/Credit-Card-Disclosure.pdf"
+            }
+          },
+          "balance_transfer_fee": "None",
+          "cash_advance_fee": "3% of advance or $25.00 max.",
+          "foreign_transaction_fee": "1% of foreign transaction amount.",
+          "late_payment_fee": "$10.00"
+        },
+        {
+          "card_name": "Visa Gold",
+          "category": "credit_card_standard",
+          "purchase_apr": "9.25%",
+          "annual_fee": "None",
+          "_asserted_universal": {
+            "annual_fee": {
+              "quote": "See Credit Card Disclosure (applies to all State ECU Visa credit cards, not per-card)",
+              "locator": "https://cdn.firstbranchcms.com/kcms-doc/29/68439/Credit-Card-Disclosure.pdf"
+            },
+            "balance_transfer_fee": {
+              "quote": "See Credit Card Disclosure (applies to all State ECU Visa credit cards, not per-card)",
+              "locator": "https://cdn.firstbranchcms.com/kcms-doc/29/68439/Credit-Card-Disclosure.pdf"
+            },
+            "cash_advance_fee": {
+              "quote": "See Credit Card Disclosure (applies to all State ECU Visa credit cards, not per-card)",
+              "locator": "https://cdn.firstbranchcms.com/kcms-doc/29/68439/Credit-Card-Disclosure.pdf"
+            },
+            "foreign_transaction_fee": {
+              "quote": "See Credit Card Disclosure (applies to all State ECU Visa credit cards, not per-card)",
+              "locator": "https://cdn.firstbranchcms.com/kcms-doc/29/68439/Credit-Card-Disclosure.pdf"
+            },
+            "late_payment_fee": {
+              "quote": "See Credit Card Disclosure (applies to all State ECU Visa credit cards, not per-card)",
+              "locator": "https://cdn.firstbranchcms.com/kcms-doc/29/68439/Credit-Card-Disclosure.pdf"
+            }
+          },
+          "balance_transfer_fee": "None",
+          "cash_advance_fee": "3% of advance or $25.00 max.",
+          "foreign_transaction_fee": "1% of foreign transaction amount.",
+          "late_payment_fee": "$10.00"
+        },
+        {
+          "card_name": "Visa Classic",
+          "category": "credit_card_standard",
+          "purchase_apr": "12.50%",
+          "annual_fee": "None",
+          "_asserted_universal": {
+            "annual_fee": {
+              "quote": "See Credit Card Disclosure (applies to all State ECU Visa credit cards, not per-card)",
+              "locator": "https://cdn.firstbranchcms.com/kcms-doc/29/68439/Credit-Card-Disclosure.pdf"
+            },
+            "balance_transfer_fee": {
+              "quote": "See Credit Card Disclosure (applies to all State ECU Visa credit cards, not per-card)",
+              "locator": "https://cdn.firstbranchcms.com/kcms-doc/29/68439/Credit-Card-Disclosure.pdf"
+            },
+            "cash_advance_fee": {
+              "quote": "See Credit Card Disclosure (applies to all State ECU Visa credit cards, not per-card)",
+              "locator": "https://cdn.firstbranchcms.com/kcms-doc/29/68439/Credit-Card-Disclosure.pdf"
+            },
+            "foreign_transaction_fee": {
+              "quote": "See Credit Card Disclosure (applies to all State ECU Visa credit cards, not per-card)",
+              "locator": "https://cdn.firstbranchcms.com/kcms-doc/29/68439/Credit-Card-Disclosure.pdf"
+            },
+            "late_payment_fee": {
+              "quote": "See Credit Card Disclosure (applies to all State ECU Visa credit cards, not per-card)",
+              "locator": "https://cdn.firstbranchcms.com/kcms-doc/29/68439/Credit-Card-Disclosure.pdf"
+            }
+          },
+          "balance_transfer_fee": "None",
+          "cash_advance_fee": "3% of advance or $25.00 max.",
+          "foreign_transaction_fee": "1% of foreign transaction amount.",
+          "late_payment_fee": "$10.00"
+        }
+      ],
+      "warnings": [
+        "[State Employees Credit Union of New Mexico] Credit card disclosure states it is \"current as of September 30, 2021\" -- that's 4 year(s) old. Transaction fee terms (annual fee, cash advance, balance transfer, foreign transaction, late payment) have not been independently reconfirmed since then; verify they're still accurate."
+      ]
+    },
+    "secu_nm_kasasa_cash": {
+      "name": "State Employees Credit Union of New Mexico",
+      "cards": [
+        {
+          "card_name": "Kasasa Cash",
+          "category": "checking_premium",
+          "monthly_maintenance_fee": "None",
+          "_asserted_universal": {
+            "monthly_maintenance_fee": {
+              "quote": "There are no maintenance or activity charges associated with this account as long as there is activity on the account.",
+              "locator": "https://www.secunm.org/_/kcms-doc/29/45754/Kasasa_Cash_and_Reward_Checking_Disclosure.pdf"
+            }
+          }
+        }
+      ],
+      "warnings": []
+    },
+    "secu_nm_kasasa_cash_back": {
+      "name": "State Employees Credit Union of New Mexico",
+      "cards": [
+        {
+          "card_name": "Kasasa Cash Back",
+          "category": "checking_premium",
+          "monthly_maintenance_fee": "None",
+          "_asserted_universal": {
+            "monthly_maintenance_fee": {
+              "quote": "There are no maintenance or activity fees associated with this account as long as there is activity on the account.",
+              "locator": "https://www.secunm.org/_/kcms-doc/29/45759/Kasasa-Cash-Back-Disclosure.pdf"
+            }
+          }
+        }
+      ],
+      "warnings": []
+    },
+    "secu_nm_kasasa_tunes": {
+      "name": "State Employees Credit Union of New Mexico",
+      "cards": [
+        {
+          "card_name": "Kasasa Tunes",
+          "category": "checking_premium",
+          "monthly_maintenance_fee": "None",
+          "_asserted_universal": {
+            "monthly_maintenance_fee": {
+              "quote": "There are no maintenance or activity fees associated with this account as long as there is activity on the account.",
+              "locator": "https://www.secunm.org/_/kcms-doc/29/45767/Kasasa-Tunes-and-Perks-Plus-Checking-Disclosure.pdf"
+            }
+          }
+        }
+      ],
+      "warnings": []
+    },
+    "secu_nm_regular_checking": {
+      "name": "State Employees Credit Union of New Mexico",
+      "cards": [
+        {
+          "card_name": "Regular Checking",
+          "category": "checking_basic",
+          "monthly_maintenance_fee": "None",
+          "_asserted_universal": {
+            "monthly_maintenance_fee": {
+              "quote": "no monthly service fee",
+              "locator": "https://www.secunm.org/accounts/checking/regular-checking.html"
+            }
+          }
+        }
+      ],
+      "warnings": []
+    },
+    "secu_nm_tis_savings": {
+      "name": "State Employees Credit Union of New Mexico",
+      "cards": [
+        {
+          "card_name": "Share Savings",
+          "category": "savings_basic",
+          "monthly_maintenance_fee": "None",
+          "_field_confidence": {
+            "monthly_maintenance_fee": "low"
+          }
+        },
+        {
+          "card_name": "Christmas Club Savings",
+          "category": "savings_basic",
+          "monthly_maintenance_fee": "None",
+          "_field_confidence": {
+            "monthly_maintenance_fee": "low"
+          }
+        },
+        {
+          "card_name": "Vacation Club Savings",
+          "category": "savings_basic",
+          "monthly_maintenance_fee": "None",
+          "_field_confidence": {
+            "monthly_maintenance_fee": "low"
+          }
+        },
+        {
+          "card_name": "Special Savings",
+          "category": "savings_basic",
+          "monthly_maintenance_fee": "None",
+          "_field_confidence": {
+            "monthly_maintenance_fee": "low"
+          }
+        },
+        {
+          "card_name": "UTMA/UGMA Savings",
+          "category": "savings_basic",
+          "monthly_maintenance_fee": "None",
+          "_field_confidence": {
+            "monthly_maintenance_fee": "low"
+          }
+        },
+        {
+          "card_name": "IRA Savings (Roth/Traditional)",
+          "category": "ira",
+          "monthly_maintenance_fee": "None",
+          "_field_confidence": {
+            "monthly_maintenance_fee": "low"
+          }
+        }
+      ],
+      "warnings": []
     }
   },
   "fee_facts": [
@@ -244,6 +581,9 @@
       "confidence": "high",
       "mechanism": "no_fee",
       "mechanism_label": "No fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -261,6 +601,9 @@
       "confidence": "high",
       "mechanism": "percentage",
       "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -278,6 +621,9 @@
       "confidence": "low",
       "mechanism": "percentage",
       "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -295,6 +641,9 @@
       "confidence": "high",
       "mechanism": "no_fee",
       "mechanism_label": "No fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -312,6 +661,9 @@
       "confidence": "high",
       "mechanism": "percentage",
       "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -329,6 +681,9 @@
       "confidence": "high",
       "mechanism": "percentage",
       "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -346,6 +701,9 @@
       "confidence": "high",
       "mechanism": "percentage",
       "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -363,6 +721,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -380,6 +741,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -397,6 +761,9 @@
       "confidence": "medium",
       "mechanism": "percentage",
       "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -414,6 +781,9 @@
       "confidence": "high",
       "mechanism": "no_fee",
       "mechanism_label": "No fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -432,6 +802,9 @@
       "confidence": "high",
       "mechanism": "no_fee",
       "mechanism_label": "No fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -450,6 +823,9 @@
       "confidence": "high",
       "mechanism": "percentage",
       "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -468,6 +844,9 @@
       "confidence": "low",
       "mechanism": "percentage",
       "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -486,6 +865,9 @@
       "confidence": "high",
       "mechanism": "no_fee",
       "mechanism_label": "No fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -504,6 +886,9 @@
       "confidence": "high",
       "mechanism": "percentage",
       "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -522,6 +907,9 @@
       "confidence": "high",
       "mechanism": "percentage",
       "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -540,6 +928,9 @@
       "confidence": "high",
       "mechanism": "percentage",
       "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -558,6 +949,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -576,6 +970,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -594,6 +991,9 @@
       "confidence": "medium",
       "mechanism": "percentage",
       "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -611,6 +1011,9 @@
       "confidence": "high",
       "mechanism": "unknown",
       "mechanism_label": "Unclear",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -628,6 +1031,9 @@
       "confidence": "high",
       "mechanism": "percentage",
       "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -645,6 +1051,9 @@
       "confidence": "high",
       "mechanism": "no_fee",
       "mechanism_label": "No fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -662,6 +1071,9 @@
       "confidence": "high",
       "mechanism": "percentage",
       "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -679,6 +1091,9 @@
       "confidence": "low",
       "mechanism": "percentage",
       "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -696,6 +1111,9 @@
       "confidence": "high",
       "mechanism": "no_fee",
       "mechanism_label": "No fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -713,6 +1131,9 @@
       "confidence": "high",
       "mechanism": "percentage",
       "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -730,6 +1151,9 @@
       "confidence": "high",
       "mechanism": "percentage",
       "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -747,6 +1171,9 @@
       "confidence": "high",
       "mechanism": "percentage",
       "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -764,6 +1191,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -781,6 +1211,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -798,6 +1231,9 @@
       "confidence": "medium",
       "mechanism": "no_fee",
       "mechanism_label": "No fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -815,6 +1251,9 @@
       "confidence": "high",
       "mechanism": "no_fee",
       "mechanism_label": "No fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -832,6 +1271,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -849,6 +1291,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -866,6 +1311,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -883,6 +1331,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -900,6 +1351,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -917,6 +1371,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -934,6 +1391,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -951,6 +1411,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -968,6 +1431,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -985,6 +1451,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -1002,6 +1471,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -1019,6 +1491,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -1036,6 +1511,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -1053,6 +1531,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -1070,6 +1551,9 @@
       "confidence": "high",
       "mechanism": "per_unit",
       "mechanism_label": "Per-unit / rate-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -1087,6 +1571,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -1104,6 +1591,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -1121,6 +1611,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -1138,6 +1631,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -1155,6 +1651,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -1172,6 +1671,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -1189,6 +1691,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -1206,6 +1711,9 @@
       "confidence": "high",
       "mechanism": "recurring",
       "mechanism_label": "Recurring (periodic)",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -1223,6 +1731,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -1240,6 +1751,9 @@
       "confidence": "high",
       "mechanism": "per_unit",
       "mechanism_label": "Per-unit / rate-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -1257,6 +1771,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -1274,6 +1791,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -1291,6 +1811,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -1308,6 +1831,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -1325,6 +1851,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -1342,6 +1871,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -1359,6 +1891,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -1376,6 +1911,9 @@
       "confidence": "high",
       "mechanism": "variable",
       "mechanism_label": "Variable / cost-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -1393,6 +1931,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -1410,6 +1951,190 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Century Bank (New Mexico)",
+      "product_name": "Century Checking",
+      "fee_type": "monthly_maintenance_fee",
+      "category": "checking_basic",
+      "category_label": "Basic Checking Account",
+      "value": "None",
+      "scope": "Century Checking",
+      "scope_products": [
+        "Century Checking"
+      ],
+      "confidence": "high",
+      "mechanism": "no_fee",
+      "mechanism_label": "No fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Century Bank (New Mexico)",
+      "product_name": "Century Interest Checking",
+      "fee_type": "monthly_maintenance_fee",
+      "category": "checking_premium",
+      "category_label": "Premium / Dividend Checking Account",
+      "value": "$5/month, waived with a $500 minimum daily balance",
+      "scope": "Century Interest Checking",
+      "scope_products": [
+        "Century Interest Checking"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Century Bank (New Mexico)",
+      "product_name": "Century Platinum Checking",
+      "fee_type": "monthly_maintenance_fee",
+      "category": "checking_premium",
+      "category_label": "Premium / Dividend Checking Account",
+      "value": "$25/month, waived with a $10,000 minimum daily balance",
+      "scope": "Century Platinum Checking",
+      "scope_products": [
+        "Century Platinum Checking"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Century Bank (New Mexico)",
+      "product_name": "High-Performance Savings",
+      "fee_type": "monthly_maintenance_fee",
+      "category": "savings_basic",
+      "category_label": "Basic Savings Account",
+      "value": "$2/month, waived with a $100 minimum daily balance",
+      "scope": "High-Performance Savings",
+      "scope_products": [
+        "High-Performance Savings"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Century Bank (New Mexico)",
+      "product_name": "Minor Savings Account",
+      "fee_type": "monthly_maintenance_fee",
+      "category": "savings_basic",
+      "category_label": "Basic Savings Account",
+      "value": "$2/month, waived with a $25 minimum daily balance",
+      "scope": "Minor Savings Account",
+      "scope_products": [
+        "Minor Savings Account"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Century Bank (New Mexico)",
+      "product_name": "High Performance MMDA",
+      "fee_type": "monthly_maintenance_fee",
+      "category": "money_market",
+      "category_label": "Money Market Account",
+      "value": "$12/month, waived with a $5,000 minimum daily balance",
+      "scope": "High Performance MMDA",
+      "scope_products": [
+        "High Performance MMDA"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Century Bank (New Mexico)",
+      "product_name": "Liberty Money Market",
+      "fee_type": "monthly_maintenance_fee",
+      "category": "money_market",
+      "category_label": "Money Market Account",
+      "value": "$15/month, waived with a $15,000 minimum daily balance",
+      "scope": "Liberty Money Market",
+      "scope_products": [
+        "Liberty Money Market"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Century Bank (New Mexico)",
+      "product_name": "Personal Certificate of Deposit",
+      "fee_type": "monthly_maintenance_fee",
+      "category": "certificate_of_deposit",
+      "category_label": "Certificate of Deposit",
+      "value": "None",
+      "scope": "Personal Certificate of Deposit",
+      "scope_products": [
+        "Personal Certificate of Deposit"
+      ],
+      "confidence": "high",
+      "mechanism": "no_fee",
+      "mechanism_label": "No fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Century Bank (New Mexico)",
+      "product_name": null,
+      "fee_type": "monthly_maintenance_fee",
+      "category": "ira",
+      "category_label": "IRA / Retirement Account",
+      "value": "$2/month, waived with a $100 minimum daily balance",
+      "scope": "verified across all products",
+      "scope_products": [
+        "Market Rate IRA",
+        "Fixed Term IRA CD"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -1427,6 +2152,9 @@
       "confidence": "high",
       "mechanism": "per_unit",
       "mechanism_label": "Per-unit / rate-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -1444,6 +2172,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -1461,6 +2192,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -1478,6 +2212,9 @@
       "confidence": "high",
       "mechanism": "recurring",
       "mechanism_label": "Recurring (periodic)",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -1495,6 +2232,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -1512,6 +2252,9 @@
       "confidence": "high",
       "mechanism": "unknown",
       "mechanism_label": "Unclear",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -1529,6 +2272,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -1546,6 +2292,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -1563,6 +2312,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -1580,6 +2332,9 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     },
@@ -1597,6 +2352,284 @@
       "confidence": "high",
       "mechanism": "flat",
       "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "State Employees Credit Union of New Mexico",
+      "product_name": "Visa Platinum",
+      "fee_type": "purchase_apr",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "7.50%",
+      "scope": "Visa Platinum",
+      "scope_products": [
+        "Visa Platinum"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "State Employees Credit Union of New Mexico",
+      "product_name": "Visa Gold",
+      "fee_type": "purchase_apr",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "9.25%",
+      "scope": "Visa Gold",
+      "scope_products": [
+        "Visa Gold"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "State Employees Credit Union of New Mexico",
+      "product_name": "Visa Classic",
+      "fee_type": "purchase_apr",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "12.50%",
+      "scope": "Visa Classic",
+      "scope_products": [
+        "Visa Classic"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "State Employees Credit Union of New Mexico",
+      "product_name": null,
+      "fee_type": "annual_fee",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "None",
+      "scope": "asserted universal (per Visa Platinum, Visa Gold, Visa Classic disclosures)",
+      "scope_products": [
+        "Visa Platinum",
+        "Visa Gold",
+        "Visa Classic"
+      ],
+      "confidence": "high",
+      "mechanism": "no_fee",
+      "mechanism_label": "No fee",
+      "verification": "asserted",
+      "source_quote": "See Credit Card Disclosure (applies to all State ECU Visa credit cards, not per-card)",
+      "source_locator": "https://cdn.firstbranchcms.com/kcms-doc/29/68439/Credit-Card-Disclosure.pdf",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "State Employees Credit Union of New Mexico",
+      "product_name": null,
+      "fee_type": "balance_transfer_fee",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "None",
+      "scope": "asserted universal (per Visa Platinum, Visa Gold, Visa Classic disclosures)",
+      "scope_products": [
+        "Visa Platinum",
+        "Visa Gold",
+        "Visa Classic"
+      ],
+      "confidence": "high",
+      "mechanism": "no_fee",
+      "mechanism_label": "No fee",
+      "verification": "asserted",
+      "source_quote": "See Credit Card Disclosure (applies to all State ECU Visa credit cards, not per-card)",
+      "source_locator": "https://cdn.firstbranchcms.com/kcms-doc/29/68439/Credit-Card-Disclosure.pdf",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "State Employees Credit Union of New Mexico",
+      "product_name": null,
+      "fee_type": "cash_advance_fee",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "3% of advance or $25.00 max.",
+      "scope": "asserted universal (per Visa Platinum, Visa Gold, Visa Classic disclosures)",
+      "scope_products": [
+        "Visa Platinum",
+        "Visa Gold",
+        "Visa Classic"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "verification": "asserted",
+      "source_quote": "See Credit Card Disclosure (applies to all State ECU Visa credit cards, not per-card)",
+      "source_locator": "https://cdn.firstbranchcms.com/kcms-doc/29/68439/Credit-Card-Disclosure.pdf",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "State Employees Credit Union of New Mexico",
+      "product_name": null,
+      "fee_type": "foreign_transaction_fee",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "1% of foreign transaction amount.",
+      "scope": "asserted universal (per Visa Platinum, Visa Gold, Visa Classic disclosures)",
+      "scope_products": [
+        "Visa Platinum",
+        "Visa Gold",
+        "Visa Classic"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "verification": "asserted",
+      "source_quote": "See Credit Card Disclosure (applies to all State ECU Visa credit cards, not per-card)",
+      "source_locator": "https://cdn.firstbranchcms.com/kcms-doc/29/68439/Credit-Card-Disclosure.pdf",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "State Employees Credit Union of New Mexico",
+      "product_name": null,
+      "fee_type": "late_payment_fee",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "$10.00",
+      "scope": "asserted universal (per Visa Platinum, Visa Gold, Visa Classic disclosures)",
+      "scope_products": [
+        "Visa Platinum",
+        "Visa Gold",
+        "Visa Classic"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "asserted",
+      "source_quote": "See Credit Card Disclosure (applies to all State ECU Visa credit cards, not per-card)",
+      "source_locator": "https://cdn.firstbranchcms.com/kcms-doc/29/68439/Credit-Card-Disclosure.pdf",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "State Employees Credit Union of New Mexico",
+      "product_name": "Kasasa Cash",
+      "fee_type": "monthly_maintenance_fee",
+      "category": "checking_premium",
+      "category_label": "Premium / Dividend Checking Account",
+      "value": "None",
+      "scope": "asserted universal (per Kasasa Cash disclosure)",
+      "scope_products": [
+        "Kasasa Cash"
+      ],
+      "confidence": "high",
+      "mechanism": "no_fee",
+      "mechanism_label": "No fee",
+      "verification": "asserted",
+      "source_quote": "There are no maintenance or activity charges associated with this account as long as there is activity on the account.",
+      "source_locator": "https://www.secunm.org/_/kcms-doc/29/45754/Kasasa_Cash_and_Reward_Checking_Disclosure.pdf",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "State Employees Credit Union of New Mexico",
+      "product_name": null,
+      "fee_type": "monthly_maintenance_fee",
+      "category": "checking_premium",
+      "category_label": "Premium / Dividend Checking Account",
+      "value": "None",
+      "scope": "asserted universal (per Kasasa Cash Back, Kasasa Tunes disclosures)",
+      "scope_products": [
+        "Kasasa Cash Back",
+        "Kasasa Tunes"
+      ],
+      "confidence": "high",
+      "mechanism": "no_fee",
+      "mechanism_label": "No fee",
+      "verification": "asserted",
+      "source_quote": "There are no maintenance or activity fees associated with this account as long as there is activity on the account.",
+      "source_locator": "https://www.secunm.org/_/kcms-doc/29/45759/Kasasa-Cash-Back-Disclosure.pdf",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "State Employees Credit Union of New Mexico",
+      "product_name": "Regular Checking",
+      "fee_type": "monthly_maintenance_fee",
+      "category": "checking_basic",
+      "category_label": "Basic Checking Account",
+      "value": "None",
+      "scope": "asserted universal (per Regular Checking disclosure)",
+      "scope_products": [
+        "Regular Checking"
+      ],
+      "confidence": "high",
+      "mechanism": "no_fee",
+      "mechanism_label": "No fee",
+      "verification": "asserted",
+      "source_quote": "no monthly service fee",
+      "source_locator": "https://www.secunm.org/accounts/checking/regular-checking.html",
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "State Employees Credit Union of New Mexico",
+      "product_name": null,
+      "fee_type": "monthly_maintenance_fee",
+      "category": "savings_basic",
+      "category_label": "Basic Savings Account",
+      "value": "None",
+      "scope": "verified across all products",
+      "scope_products": [
+        "Share Savings",
+        "Christmas Club Savings",
+        "Vacation Club Savings",
+        "Special Savings",
+        "UTMA/UGMA Savings"
+      ],
+      "confidence": "low",
+      "mechanism": "no_fee",
+      "mechanism_label": "No fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "State Employees Credit Union of New Mexico",
+      "product_name": "IRA Savings (Roth/Traditional)",
+      "fee_type": "monthly_maintenance_fee",
+      "category": "ira",
+      "category_label": "IRA / Retirement Account",
+      "value": "None",
+      "scope": "IRA Savings (Roth/Traditional)",
+      "scope_products": [
+        "IRA Savings (Roth/Traditional)"
+      ],
+      "confidence": "low",
+      "mechanism": "no_fee",
+      "mechanism_label": "No fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
       "changed_since_last_snapshot": false,
       "previous_value": null
     }
