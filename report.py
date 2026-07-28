@@ -4,6 +4,7 @@ from jinja2 import Environment, FileSystemLoader
 
 from feedback import flag_severity
 from scraper.categories import CATEGORIES
+import credit_card_matrix
 
 # Canonical fee categories shown in the report, in display order. Institutions
 # don't need to report every key -- rows with no data anywhere are dropped
@@ -50,7 +51,7 @@ def _fee_label(fee_key):
 
 
 def render_report(results, primary_institution, subject, facts_by_institution, track_records,
-                   consumer_card_matrix=None, secured_card_matrix=None, matrix_warnings=None):
+                   consumer_card_matrix=None, matrix_warnings=None):
     """Renders the comparison email body.
 
     results: {inst_key: {"name": str, "cards": [...], "warnings": [...]}}
@@ -59,10 +60,14 @@ def render_report(results, primary_institution, subject, facts_by_institution, t
     track_records: (specific, general) from feedback.compute_flag_track_record
         -- confirmed human verdict history used to calibrate how loudly a
         flag type is shown (see feedback.flag_severity).
-    consumer_card_matrix / secured_card_matrix / matrix_warnings: from
-        credit_card_matrix.build_matrix() -- a separate institution-level
-        credit card comparison, not routed through the per-product
-        category sections below (see that module's docstring for why).
+    consumer_card_matrix / matrix_warnings: from credit_card_matrix.build_matrix()
+        -- a single institution-level credit card comparison table, not
+        routed through the per-product category sections below (see that
+        module's docstring for why). Despite the name, it includes a
+        Secured-card APR row when that differs from an institution's
+        general rate -- credit_card_matrix.py folds secured into the same
+        table since every other fee is confirmed identical across an
+        institution's own card types.
 
     Fees are grouped into one section per product category (see
     scraper/categories.py) instead of one column per institution, so a
@@ -87,9 +92,23 @@ def render_report(results, primary_institution, subject, facts_by_institution, t
     institution_order = list(facts_by_institution.keys())
     institution_order.sort(key=lambda name: name != primary_institution)
 
-    category_institution_facts = OrderedDict((cat_key, OrderedDict()) for cat_key in CATEGORIES)
+    # Credit card categories are excluded here -- they get the single
+    # institution-level matrix below instead. None of these institutions'
+    # card products support a clean per-product comparison (a shared
+    # agreement/disclosure covers several cards identically at each bank),
+    # so a per-category breakdown (Rewards/Standard/Secured) just showed
+    # the same handful of fees three times over with "verified across all
+    # products" scope notes that added noise without adding information.
+    credit_card_categories = {
+        "credit_card_rewards", "credit_card_standard", "credit_card_secured", "credit_card_premium",
+    }
+    category_institution_facts = OrderedDict(
+        (cat_key, OrderedDict()) for cat_key in CATEGORIES if cat_key not in credit_card_categories
+    )
     for inst_name in institution_order:
         for fact in facts_by_institution.get(inst_name, []):
+            if fact["category"] in credit_card_categories:
+                continue
             category_institution_facts[fact["category"]].setdefault(inst_name, []).append(fact)
 
     sections = []
@@ -126,6 +145,7 @@ def render_report(results, primary_institution, subject, facts_by_institution, t
 
         rows = []
         low_confidence_values = 0
+        llm_assisted_values = 0
         total_values = 0
         for fee_key in fee_types_present:
             cells = []
@@ -145,6 +165,11 @@ def render_report(results, primary_institution, subject, facts_by_institution, t
                         low_confidence_values += 1
                         confidence_severity, confidence_stats = flag_severity(
                             "low_confidence", fee_key, specific_record, general_record
+                        )
+                    elif f["confidence"] == "llm_assisted":
+                        llm_assisted_values += 1
+                        confidence_severity, confidence_stats = flag_severity(
+                            "llm_assisted", fee_key, specific_record, general_record
                         )
 
                     drift_severity = "normal"
@@ -207,6 +232,12 @@ def render_report(results, primary_institution, subject, facts_by_institution, t
                 f" {low_confidence_values} of {total_values} value(s) in this table are "
                 "low-confidence extractions (conflicting matches on the source page) -- verify manually."
             )
+        if llm_assisted_values:
+            basis_note += (
+                f" {llm_assisted_values} of {total_values} value(s) in this table were extracted by an "
+                "AI fallback because normal pattern-matching found nothing on the source page -- not "
+                "independently verified, verify manually."
+            )
 
         sections.append({
             "label": label,
@@ -219,8 +250,7 @@ def render_report(results, primary_institution, subject, facts_by_institution, t
     env = Environment(loader=FileSystemLoader("templates"))
     template = env.get_template("report_email.html.j2")
 
-    consumer_matrix_view = _prepare_matrix_view(consumer_card_matrix, report_state)
-    secured_matrix_view = _prepare_matrix_view(secured_card_matrix, report_state)
+    credit_card_matrix_view = _prepare_matrix_view(consumer_card_matrix, report_state)
 
     return template.render(
         subject=subject,
@@ -230,16 +260,18 @@ def render_report(results, primary_institution, subject, facts_by_institution, t
         warnings=all_warnings,
         used_issuer_footnote=report_state["used_issuer_footnote"],
         used_not_disclosed_footnote=report_state["used_not_disclosed_footnote"],
-        consumer_matrix=consumer_matrix_view,
-        secured_matrix=secured_matrix_view,
+        credit_card_matrix=credit_card_matrix_view,
     )
 
 
 def _prepare_matrix_view(matrix, report_state):
     """Annotates a credit_card_matrix.build_matrix() row set for the
-    template: each cell becomes {value, not_stated, not_publicly_disclosed}
-    so "no data available" and "confirmed no fee" never render the same
-    way, and marks the report-wide footnote flags if the matrix uses them.
+    template: each cell becomes {value, muted, not_publicly_disclosed} so
+    every distinct "not a real value" state (unknown, not publicly
+    disclosed, no secured card, same as the row above) renders de-emphasized
+    but keeps its own specific wording rather than collapsing to one
+    generic label -- and marks the report-wide footnote flags if the
+    matrix uses them.
     """
     if not matrix or not matrix["rows"]:
         return None
@@ -247,17 +279,22 @@ def _prepare_matrix_view(matrix, report_state):
     institutions = matrix["institutions"]
     rows = []
     for row in matrix["rows"]:
-        not_stated_values = row.get("not_stated_values", set())
+        llm_cells = row.get("llm_cells") or [False] * len(row["cells"])
         cells = []
-        for value in row["cells"]:
+        for value, is_llm in zip(row["cells"], llm_cells):
             is_not_disclosed = value == NOT_PUBLICLY_DISCLOSED
-            is_not_stated = value in not_stated_values and not is_not_disclosed
+            is_muted = value in credit_card_matrix.MUTED_VALUES and not is_not_disclosed
             if is_not_disclosed:
                 report_state["used_not_disclosed_footnote"] = True
             cells.append({
                 "value": value,
-                "not_stated": is_not_stated,
+                "muted": is_muted,
                 "not_publicly_disclosed": is_not_disclosed,
+                # True when this cell's value came from the Gemini fallback
+                # rather than a regex match on the source page (see
+                # scraper/llm_fallback.py) -- always False for institutions
+                # that don't have the fallback wired in yet.
+                "llm_assisted": is_llm and not is_not_disclosed,
             })
         rows.append({"label": row["label"], "cells": cells})
 

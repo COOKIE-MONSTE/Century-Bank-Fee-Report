@@ -68,7 +68,7 @@ def scrape_all(config):
     return results
 
 
-def write_history(results, facts_by_institution):
+def write_history(results, facts_by_institution, credit_card_matrix_sources):
     os.makedirs("data", exist_ok=True)
     fee_facts = flatten_fee_facts(facts_by_institution)
     snapshot = {
@@ -81,6 +81,13 @@ def write_history(results, facts_by_institution):
         # instead of implying every fee applies institution-wide at equal
         # certainty.
         "fee_facts": fee_facts,
+        # Per-field source URL for every cell in the Credit Card Comparison
+        # matrix (see credit_card_matrix.py) -- not shown in the report
+        # itself (kept clean per user preference), but recorded here so
+        # sourcing is queryable and durable instead of living only in
+        # someone's memory of how this was built. See also
+        # memory/credit_card_matrix_sources.md for the human-readable index.
+        "credit_card_matrix_sources": credit_card_matrix_sources,
     }
     with open("data/history.json", "w", encoding="utf-8") as f:
         json.dump(snapshot, f, indent=2)
@@ -112,18 +119,18 @@ def main():
     mark_drift(facts_by_institution, previous_fee_facts)
     track_records = compute_flag_track_record(feedback_log)
 
-    # Credit cards get a separate institution-level comparison matrix
-    # rather than going through the per-product category pipeline above --
-    # see credit_card_matrix.py for why (none of these three institutions'
+    # Credit cards get a single institution-level comparison matrix rather
+    # than going through the per-product category pipeline above -- see
+    # credit_card_matrix.py for why (none of these three institutions'
     # card data supports a clean per-product comparison).
-    consumer_card_matrix, secured_card_matrix, matrix_warnings = build_matrix()
+    credit_card_matrix, matrix_warnings, credit_card_matrix_sources = build_matrix(config)
 
     html_body = render_report(
         results, primary_institution, subject, facts_by_institution, track_records,
-        consumer_card_matrix, secured_card_matrix, matrix_warnings,
+        credit_card_matrix, matrix_warnings,
     )
 
-    write_history(results, facts_by_institution)
+    write_history(results, facts_by_institution, credit_card_matrix_sources)
 
     if os.environ.get("DRY_RUN") == "1":
         os.makedirs("output", exist_ok=True)

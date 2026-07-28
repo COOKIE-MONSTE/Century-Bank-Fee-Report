@@ -22,7 +22,10 @@
 #   institution  - institution name as shown in the report
 #   category     - category key from scraper/categories.py (e.g. "credit_card_standard")
 #   fee_type     - field key from config.yaml / report.py (e.g. "balance_transfer_apr")
-#   flag_type    - "low_confidence" | "mechanism_mismatch" | "drift"
+#   flag_type    - "low_confidence" | "mechanism_mismatch" | "drift" | "llm_assisted"
+#                    ("llm_assisted" = the value came from the Gemini extraction
+#                    fallback, not a regex/CSS-selector match -- see
+#                    scraper/llm_fallback.py)
 #   verdict      - "real_error" | "false_alarm"
 #   note         - why (free text)
 #   synonym      - optional, only for verdict: real_error:

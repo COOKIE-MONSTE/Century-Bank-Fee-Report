@@ -21,9 +21,19 @@ from scraper.categories import label_for
 EMPTY_VALUES = {None, "", "Not disclosed"}
 
 # Keys on a card that describe the product/extraction itself rather than a fee.
-NON_FEE_KEYS = {"card_name", "category", "_field_confidence", "_asserted_universal", "_issuer"}
+NON_FEE_KEYS = {
+    "card_name", "category", "_field_confidence", "_asserted_universal", "_issuer",
+    "_matrix_extra", "_source_urls",
+}
 
-CONFIDENCE_RANK = {"low": 0, "medium": 1, "high": 2}
+# "llm_assisted" ranks below "low": it means deterministic extraction found
+# nothing at all and an LLM read the page instead (see
+# scraper/llm_fallback.py) -- a fundamentally different, weaker kind of
+# uncertainty than "low" (which means multiple deterministic matches
+# disagreed). Ranked lowest so the weakest-link combination in
+# _combine_confidence() below never lets an LLM-derived value hide behind
+# a more confident one.
+CONFIDENCE_RANK = {"llm_assisted": -1, "low": 0, "medium": 1, "high": 2}
 
 MECHANISM_LABELS = {
     "no_fee": "No fee",

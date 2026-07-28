@@ -78,10 +78,40 @@ class TcmIssuerScraper(BaseScraper):
                 urls["business"] = full_url
         return urls
 
+    # Human-readable descriptions of the 6 canonical fields, used only if
+    # regex extraction below finds nothing -- passed to the LLM fallback so
+    # it knows what to look for without this module handing it any regex
+    # or assuming anything about the document's exact wording.
+    _FIELD_DESCRIPTIONS = {
+        "late_payment_fee": "The Late Payment Fee(s) charged when a cardholder's payment is late. If there are different amounts for a first offense vs. repeat late payments, include both.",
+        "returned_item_fee": "The Returned Payment Fee charged when a cardholder's payment is returned unpaid (e.g. a bounced check or failed electronic payment).",
+        "stop_payment_fee": "The fee charged for a stop payment request on a Convenience Check.",
+        "cash_advance_fee": "The Cash Advance Fee charged per cash advance transaction (as a dollar amount and/or percentage of the advance).",
+        "balance_transfer_fee": "The Balance Transfer Fee charged per balance transfer (as a dollar amount and/or percentage of the transfer).",
+        "foreign_transaction_fee": "The Foreign Transaction Fee charged as a percentage of transactions made in a foreign currency or with a foreign merchant.",
+    }
+
     def _extract_agreement_fields(self, pdf_url, agreement_label):
+        """Returns (fields, extra, unmatched, llm_derived).
+
+        fields: the canonical card fee fields (late_payment_fee, etc.).
+        extra: fields that matter to credit_card_matrix.py's institution-
+            level matrix (paper statement, research fee, etc.) but aren't
+            part of the canonical per-product fee taxonomy -- kept
+            separate rather than added to `fields` so this scraper's
+            output doesn't quietly grow new canonical fields.
+        unmatched: the same `extra` values, pre-formatted as human-
+            readable notes for self.warnings (kept for backward
+            compatibility with the existing "fee-adjacent facts" warning).
+        llm_derived: set of field names in `fields` that came from the
+            Gemini fallback rather than regex -- scrape() uses this to tag
+            those fields' confidence as "llm_assisted" on the resulting
+            card, so the report never presents an AI guess with the same
+            confidence as a direct pattern match.
+        """
         response = self.fetch_url(pdf_url)
         if not response:
-            return {}, []
+            return {}, {}, [], set()
 
         try:
             reader = pypdf.PdfReader(io.BytesIO(response.content))
@@ -97,13 +127,14 @@ class TcmIssuerScraper(BaseScraper):
             msg = f"[{self.name}] Failed to parse {agreement_label} agreement PDF: {e}"
             logger.error(msg)
             self.warnings.append(msg)
-            return {}, []
+            return {}, {}, [], set()
 
         def dollar(pattern, anchor=None, window=600):
             m = _find_near(text, anchor, pattern, window) if anchor else re.search(pattern, text, re.IGNORECASE)
             return m.group(1) if m else None
 
         fields = {}
+        extra = {}
         unmatched = []
 
         late1 = dollar(r"\$([\d,]+(?:\.\d{2})?)\s*for a late payment if you have not been charged", "Late Payment Fee")
@@ -138,21 +169,47 @@ class TcmIssuerScraper(BaseScraper):
 
         min_finance = dollar(r"\$([\d.]+)\s*minimum FINANCE CHARGE")
         if min_finance:
+            extra["min_finance_charge"] = f"${min_finance}"
             unmatched.append(f"Minimum finance charge: ${min_finance}")
 
         paper_stmt = _find_near(text, "Paper Statement Fee", r"\$([\d.]+)\s*monthly")
         if paper_stmt:
+            extra["paper_statement"] = f"${paper_stmt.group(1)}/month"
             unmatched.append(f"Paper statement fee: ${paper_stmt.group(1)}/month")
 
         research = _find_near(text, "Research Fee", r"\$(\d+) for each photocopy.*?\$(\d+) for each duplicate")
         if research:
+            extra["research_copies"] = f"${research.group(1)}/photocopy, ${research.group(2)}/duplicate statement"
             unmatched.append(f"Research fee: ${research.group(1)}/photocopy, ${research.group(2)}/duplicate statement")
 
         expedited = _find_near(text, "Expedited Payment Fee", r"\$(\d+) for each\s*payment initiated by telephone")
         if expedited:
+            extra["expedited_payment"] = f"${expedited.group(1)}"
             unmatched.append(f"Expedited (phone) payment fee: ${expedited.group(1)}")
 
-        return fields, unmatched
+        effective = re.search(r"Effective Date:\s*([A-Za-z]+ \d{1,2},\s*\d{4})", text, re.IGNORECASE)
+        if effective:
+            extra["effective_date"] = effective.group(1)
+
+        # Regex-first, always -- this only runs for whichever of the 6
+        # canonical fields the patterns above didn't find. An LLM read is
+        # slower and costs API quota, so it's the exception path, not the
+        # default one, and every field it does supply is tagged
+        # "llm_assisted" (see scrape()) rather than trusted like a regex
+        # match.
+        llm_derived = set()
+        for field, description in self._FIELD_DESCRIPTIONS.items():
+            if field in fields:
+                continue
+            value = self.llm_extract_field(
+                text, description,
+                context=f"This is TCM Bank, N.A.'s {agreement_label} Cardholder Agreement.",
+            )
+            if value:
+                fields[field] = value
+                llm_derived.add(field)
+
+        return fields, extra, unmatched, llm_derived
 
     def scrape(self):
         agreement_urls = self._resolve_agreement_urls()
@@ -176,7 +233,7 @@ class TcmIssuerScraper(BaseScraper):
 
             if agreement_key not in agreement_cache:
                 agreement_cache[agreement_key] = self._extract_agreement_fields(pdf_url, agreement_key)
-            shared_fields, unmatched_notes = agreement_cache[agreement_key]
+            shared_fields, extra_fields, unmatched_notes, llm_derived = agreement_cache[agreement_key]
 
             card = {
                 "card_name": card_name,
@@ -186,6 +243,20 @@ class TcmIssuerScraper(BaseScraper):
                 "purchase_apr": NOT_PUBLICLY_DISCLOSED,
             }
             card.update(shared_fields)
+            if llm_derived:
+                card["_field_confidence"] = {field: "llm_assisted" for field in llm_derived}
+            # Not part of the canonical fee taxonomy -- only
+            # credit_card_matrix.py reads this (via NON_FEE_KEYS exclusion
+            # from the main attribution pipeline).
+            card["_matrix_extra"] = extra_fields
+            # Every field on this card came from the same agreement PDF --
+            # recorded per-card so a consumer of this data (e.g. the
+            # credit card matrix's source tracking) never has to guess
+            # which fetch produced which value.
+            card["_source_urls"] = {
+                field: pdf_url for field in list(shared_fields.keys()) + list(extra_fields.keys())
+                + ["annual_fee", "purchase_apr"]
+            }
 
             for field in ("late_payment_fee", "returned_item_fee", "stop_payment_fee", "cash_advance_fee",
                           "balance_transfer_fee", "foreign_transaction_fee"):

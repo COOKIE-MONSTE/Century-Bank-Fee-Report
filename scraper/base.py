@@ -4,6 +4,7 @@ import requests
 
 from . import categories
 from . import fee_taxonomy
+from . import llm_fallback
 
 logging.basicConfig(
     level=logging.INFO,
@@ -133,6 +134,26 @@ class BaseScraper:
         card[field] = value
         card.setdefault("_asserted_universal", {})[field] = {"quote": quote, "locator": locator}
         return card
+
+    def llm_extract_field(self, page_text, field_description, context=""):
+        """Fallback extraction via Gemini, for use only after a regex/CSS
+        selector attempt has already come up empty on a page that fetched
+        successfully -- never called as the primary extraction path (see
+        scraper/llm_fallback.py for the full reasoning).
+
+        Returns the extracted string, or None if the LLM couldn't find it,
+        isn't configured (no GEMINI_API_KEY), or the call failed -- any of
+        which should be treated exactly like today's "field not found"
+        case, not as an error. Logs why via self.warnings either way, so a
+        human reviewing the report can tell "field genuinely absent" apart
+        from "LLM fallback wasn't even available this run".
+        """
+        value, reason = llm_fallback.extract_field_via_llm(page_text, field_description, context)
+        if value is None:
+            msg = f"[{self.name}] LLM fallback for '{field_description}': {reason}"
+            logger.info(msg)
+            self.warnings.append(msg)
+        return value
 
     def log_field_warning(self, card_name, field_name):
         msg = f"[{self.name} - {card_name}] Field '{field_name}' could not be parsed."
