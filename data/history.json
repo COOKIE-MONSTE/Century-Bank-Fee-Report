@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-27T21:41:24.543357+00:00",
+  "generated_at": "2026-07-28T08:30:35.270005+00:00",
   "institutions": {
     "nusenda": {
       "name": "Nusenda Credit Union",
@@ -1162,8 +1162,8 @@
       "source_quote": null,
       "source_locator": null,
       "issuers": [],
-      "changed_since_last_snapshot": true,
-      "previous_value": "12.50% - 16.50%"
+      "changed_since_last_snapshot": false,
+      "previous_value": null
     },
     {
       "institution": "Nusenda Credit Union",
