@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-28T08:30:35.270005+00:00",
+  "generated_at": "2026-07-28T22:12:32.944590+00:00",
   "institutions": {
     "nusenda": {
       "name": "Nusenda Credit Union",
@@ -206,7 +206,29 @@
           "stop_payment_fee": "$29",
           "cash_advance_fee": "$5 or 3% of the advance, whichever is greater; no maximum",
           "balance_transfer_fee": "$5 or 3% of the transfer, whichever is greater; no maximum",
-          "foreign_transaction_fee": "1.0% of transaction amount"
+          "foreign_transaction_fee": "1.0% of transaction amount",
+          "_matrix_extra": {
+            "min_finance_charge": "$1.00",
+            "paper_statement": "$2.50/month",
+            "research_copies": "$3/photocopy, $4/duplicate statement",
+            "expedited_payment": "$10",
+            "effective_date": "March 31, 2026"
+          },
+          "_source_urls": {
+            "late_payment_fee": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+            "returned_item_fee": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+            "stop_payment_fee": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+            "cash_advance_fee": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+            "balance_transfer_fee": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+            "foreign_transaction_fee": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+            "min_finance_charge": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+            "paper_statement": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+            "research_copies": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+            "expedited_payment": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+            "effective_date": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+            "annual_fee": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+            "purchase_apr": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true"
+          }
         },
         {
           "card_name": "Cash Rewards Platinum",
@@ -219,7 +241,29 @@
           "stop_payment_fee": "$29",
           "cash_advance_fee": "$5 or 3% of the advance, whichever is greater; no maximum",
           "balance_transfer_fee": "$5 or 3% of the transfer, whichever is greater; no maximum",
-          "foreign_transaction_fee": "1.0% of transaction amount"
+          "foreign_transaction_fee": "1.0% of transaction amount",
+          "_matrix_extra": {
+            "min_finance_charge": "$1.00",
+            "paper_statement": "$2.50/month",
+            "research_copies": "$3/photocopy, $4/duplicate statement",
+            "expedited_payment": "$10",
+            "effective_date": "March 31, 2026"
+          },
+          "_source_urls": {
+            "late_payment_fee": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+            "returned_item_fee": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+            "stop_payment_fee": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+            "cash_advance_fee": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+            "balance_transfer_fee": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+            "foreign_transaction_fee": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+            "min_finance_charge": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+            "paper_statement": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+            "research_copies": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+            "expedited_payment": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+            "effective_date": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+            "annual_fee": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+            "purchase_apr": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true"
+          }
         },
         {
           "card_name": "Visa Signature Travel",
@@ -232,7 +276,29 @@
           "stop_payment_fee": "$29",
           "cash_advance_fee": "$5 or 3% of the advance, whichever is greater; no maximum",
           "balance_transfer_fee": "$5 or 3% of the transfer, whichever is greater; no maximum",
-          "foreign_transaction_fee": "1.0% of transaction amount"
+          "foreign_transaction_fee": "1.0% of transaction amount",
+          "_matrix_extra": {
+            "min_finance_charge": "$1.00",
+            "paper_statement": "$2.50/month",
+            "research_copies": "$3/photocopy, $4/duplicate statement",
+            "expedited_payment": "$10",
+            "effective_date": "March 31, 2026"
+          },
+          "_source_urls": {
+            "late_payment_fee": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+            "returned_item_fee": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+            "stop_payment_fee": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+            "cash_advance_fee": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+            "balance_transfer_fee": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+            "foreign_transaction_fee": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+            "min_finance_charge": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+            "paper_statement": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+            "research_copies": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+            "expedited_payment": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+            "effective_date": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+            "annual_fee": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+            "purchase_apr": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true"
+          }
         },
         {
           "card_name": "Visa Secured",
@@ -245,7 +311,29 @@
           "stop_payment_fee": "$29",
           "cash_advance_fee": "$5 or 3% of the advance, whichever is greater; no maximum",
           "balance_transfer_fee": "$5 or 3% of the transfer, whichever is greater; no maximum",
-          "foreign_transaction_fee": "1.0% of transaction amount"
+          "foreign_transaction_fee": "1.0% of transaction amount",
+          "_matrix_extra": {
+            "min_finance_charge": "$1.00",
+            "paper_statement": "$2.50/month",
+            "research_copies": "$3/photocopy, $4/duplicate statement",
+            "expedited_payment": "$10",
+            "effective_date": "March 31, 2026"
+          },
+          "_source_urls": {
+            "late_payment_fee": "https://www.tcmbank.com/documents/45248/903684/SecuredCardCardholderAgreement_March2026.pdf/98e65598-302f-26e1-3319-496289d404e7?version=2.0&t=1776433299988&download=true",
+            "returned_item_fee": "https://www.tcmbank.com/documents/45248/903684/SecuredCardCardholderAgreement_March2026.pdf/98e65598-302f-26e1-3319-496289d404e7?version=2.0&t=1776433299988&download=true",
+            "stop_payment_fee": "https://www.tcmbank.com/documents/45248/903684/SecuredCardCardholderAgreement_March2026.pdf/98e65598-302f-26e1-3319-496289d404e7?version=2.0&t=1776433299988&download=true",
+            "cash_advance_fee": "https://www.tcmbank.com/documents/45248/903684/SecuredCardCardholderAgreement_March2026.pdf/98e65598-302f-26e1-3319-496289d404e7?version=2.0&t=1776433299988&download=true",
+            "balance_transfer_fee": "https://www.tcmbank.com/documents/45248/903684/SecuredCardCardholderAgreement_March2026.pdf/98e65598-302f-26e1-3319-496289d404e7?version=2.0&t=1776433299988&download=true",
+            "foreign_transaction_fee": "https://www.tcmbank.com/documents/45248/903684/SecuredCardCardholderAgreement_March2026.pdf/98e65598-302f-26e1-3319-496289d404e7?version=2.0&t=1776433299988&download=true",
+            "min_finance_charge": "https://www.tcmbank.com/documents/45248/903684/SecuredCardCardholderAgreement_March2026.pdf/98e65598-302f-26e1-3319-496289d404e7?version=2.0&t=1776433299988&download=true",
+            "paper_statement": "https://www.tcmbank.com/documents/45248/903684/SecuredCardCardholderAgreement_March2026.pdf/98e65598-302f-26e1-3319-496289d404e7?version=2.0&t=1776433299988&download=true",
+            "research_copies": "https://www.tcmbank.com/documents/45248/903684/SecuredCardCardholderAgreement_March2026.pdf/98e65598-302f-26e1-3319-496289d404e7?version=2.0&t=1776433299988&download=true",
+            "expedited_payment": "https://www.tcmbank.com/documents/45248/903684/SecuredCardCardholderAgreement_March2026.pdf/98e65598-302f-26e1-3319-496289d404e7?version=2.0&t=1776433299988&download=true",
+            "effective_date": "https://www.tcmbank.com/documents/45248/903684/SecuredCardCardholderAgreement_March2026.pdf/98e65598-302f-26e1-3319-496289d404e7?version=2.0&t=1776433299988&download=true",
+            "annual_fee": "https://www.tcmbank.com/documents/45248/903684/SecuredCardCardholderAgreement_March2026.pdf/98e65598-302f-26e1-3319-496289d404e7?version=2.0&t=1776433299988&download=true",
+            "purchase_apr": "https://www.tcmbank.com/documents/45248/903684/SecuredCardCardholderAgreement_March2026.pdf/98e65598-302f-26e1-3319-496289d404e7?version=2.0&t=1776433299988&download=true"
+          }
         }
       ],
       "warnings": [
@@ -3358,5 +3446,52 @@
       "changed_since_last_snapshot": false,
       "previous_value": null
     }
-  ]
+  ],
+  "credit_card_matrix_sources": {
+    "Nusenda Credit Union": {
+      "annual_fee": "https://www.nusenda.org/loans-credit-cards/credit-cards/platinum-terms-and-conditions",
+      "purchase_apr": "https://www.nusenda.org/loans-credit-cards/credit-cards/platinum-terms-and-conditions",
+      "late_payment_fee": "https://www.nusenda.org/loans-credit-cards/credit-cards/platinum-terms-and-conditions",
+      "returned_item_fee": "https://www.nusenda.org/loans-credit-cards/credit-cards/platinum-terms-and-conditions",
+      "cash_advance_fee": "https://www.nusenda.org/loans-credit-cards/credit-cards/platinum-terms-and-conditions",
+      "foreign_transaction_fee": "https://www.nusenda.org/loans-credit-cards/credit-cards/platinum-terms-and-conditions",
+      "stop_payment": "https://www.nusenda.org/news-resources/rates-fees",
+      "apr_ceiling": "https://www.nusenda.org/docs/default-source/addendums/visa-9-75-11-10-25--16-75.pdf?sfvrsn=66e73a2a_1",
+      "penalty_apr": "https://www.nusenda.org/docs/default-source/addendums/visa-9-75-11-10-25--16-75.pdf?sfvrsn=66e73a2a_1",
+      "min_finance_charge": "https://www.nusenda.org/docs/default-source/addendums/visa-9-75-11-10-25--16-75.pdf?sfvrsn=66e73a2a_1",
+      "reward_structure": "https://www.nusenda.org/loans-credit-cards/credit-cards/platinum-terms-and-conditions",
+      "card_promotions": "https://www.nusenda.org/loans-credit-cards/credit-cards/platinum-terms-and-conditions"
+    },
+    "Century Bank (New Mexico)": {
+      "late_payment_fee": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+      "returned_item_fee": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+      "stop_payment_fee": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+      "cash_advance_fee": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+      "balance_transfer_fee": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+      "foreign_transaction_fee": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+      "min_finance_charge": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+      "paper_statement": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+      "research_copies": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+      "expedited_payment": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+      "effective_date": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+      "annual_fee": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+      "purchase_apr": "https://www.tcmbank.com/documents/45248/903684/ConsumerCardholderAgreement_March2026.pdf/b1f044f5-3105-33f6-3683-ba82bae63522?version=2.0&t=1776433009789&download=true",
+      "reward_structure": "https://www.mycenturybank.com/personal-banking/loans-and-credit/personal-credit-cards",
+      "card_promotions": "https://www.mycenturybank.com/personal-banking/loans-and-credit/personal-credit-cards"
+    },
+    "State Employees Credit Union of New Mexico": {
+      "annual_fee": "https://cdn.firstbranchcms.com/kcms-doc/29/68439/Credit-Card-Disclosure.pdf",
+      "cash_advance_fee": "https://cdn.firstbranchcms.com/kcms-doc/29/68439/Credit-Card-Disclosure.pdf",
+      "balance_transfer_fee": "https://cdn.firstbranchcms.com/kcms-doc/29/68439/Credit-Card-Disclosure.pdf",
+      "foreign_transaction_fee": "https://cdn.firstbranchcms.com/kcms-doc/29/68439/Credit-Card-Disclosure.pdf",
+      "late_payment_fee": "https://cdn.firstbranchcms.com/kcms-doc/29/68439/Credit-Card-Disclosure.pdf",
+      "over_limit": "https://cdn.firstbranchcms.com/kcms-doc/29/68439/Credit-Card-Disclosure.pdf",
+      "min_payment": "https://cdn.firstbranchcms.com/kcms-doc/29/68439/Credit-Card-Disclosure.pdf",
+      "grace_period": "https://cdn.firstbranchcms.com/kcms-doc/29/68439/Credit-Card-Disclosure.pdf",
+      "reward_structure": "https://cdn.firstbranchcms.com/kcms-doc/29/68439/Credit-Card-Disclosure.pdf",
+      "card_promotions": "https://www.secunm.org/",
+      "effective_date": "https://cdn.firstbranchcms.com/kcms-doc/29/68439/Credit-Card-Disclosure.pdf",
+      "apr_purchases": "https://www.secunm.org/loans/loans/credit-card.html"
+    }
+  }
 }
