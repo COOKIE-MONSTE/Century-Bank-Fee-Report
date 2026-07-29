@@ -20,4 +20,12 @@ class StaticFeeScraper(BaseScraper):
         # account tier, so it's tagged as general_account_fees unless
         # config.yaml overrides it with a more specific category.
         fees["category"] = self.config.get("category", "general_account_fees")
+        # Optional single institution-level note (e.g. "this institution
+        # doesn't publish a general Fee Schedule online, these values are
+        # all confirmed-absent rather than found") -- deliberately one
+        # warning for the whole entry, not one per field, since every field
+        # here shares the same underlying reason.
+        warning = self.config.get("warning")
+        if warning:
+            self.warnings.append(warning)
         return [self.finalize_card(fees)]

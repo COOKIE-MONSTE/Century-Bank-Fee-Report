@@ -455,3 +455,207 @@ institutions:
       "IRA Savings - includes Roth, and Traditional":
         product_name: "IRA Savings (Roth/Traditional)"
         category: "ira"
+
+  # First National 1870 is a trade-name division of Sunflower Bank, N.A.
+  # (Member FDIC, NMLS #709491) -- it has no separate charter and files no
+  # separate call report, so "name" is set to make that explicit everywhere
+  # it appears in the report rather than implying it's its own bank.
+  #
+  # firstnational1870.com blocks programmatic requests with a Cloudflare
+  # Managed Challenge on every /personal/* and /terms-and-agreements/* page
+  # (confirmed 2026-07-29: both a plain `requests` fetch with a real
+  # browser User-Agent, and a separate headless fetch tool, got a 403
+  # "Managed Challenge" page -- not a one-off, a GitHub Actions runner
+  # would hit the identical block every run). sunflowerbank.com serves
+  # character-identical documents from the same CMS/asset GUIDs (confirmed
+  # by diffing both hosts' Pinnacle/Elevation TISA PDFs and the credit
+  # card TILA table) and is NOT behind that challenge, so every HTML
+  # source below uses that host instead. This is a hosting/bot-protection
+  # difference only, not a regional pricing difference -- see the next
+  # paragraph.
+  #
+  # Fees do NOT vary by region: firstnational1870.com (the New Mexico
+  # brand) and sunflowerbank.com (the KS/CO/TX/AZ brand) run off one CMS
+  # and serve the same fee schedule bank-wide. The only place either
+  # brand's pages say "may vary by location" is a CD-rate footnote --
+  # that's about interest rates/APYs, never fees, and doesn't apply here.
+  # The Account Agreement is governed by Colorado law even for NM
+  # customers, for the same reason.
+  #
+  # There is no general Fee Schedule published on either host -- every
+  # Truth-in-Savings disclosure instead says one is "provided to you at
+  # the time you open an account... and upon request." Confirmed absent
+  # 2026-07-29 (checked both hosts and the /terms-and-agreements hub).
+  # That's a real comparison finding, not just a scraping gap -- see
+  # fn1870_not_disclosed below, which represents it explicitly rather than
+  # leaving the 14 affected fields looking merely unscraped.
+  fn1870_credit_cards:
+    name: "First National 1870 (Sunflower Bank, N.A.)"
+    url: "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards"
+    type: "schumer_box"
+    # One TILA/Schumer-box table covers Classic, Gold and Platinum Visa
+    # Rewards identically -- structurally the same situation as Century
+    # Bank's TCM agreement covering multiple cards, so this feeds
+    # credit_card_matrix.py rather than a per-tier comparison. Cards are
+    # issued by Sunflower Bank, N.A. directly under its own Visa license --
+    # no TCM, no third-party issuer, so no issuer footnote applies here.
+    #
+    # This page publishes NO effective date anywhere (confirmed 2026-07-29
+    # -- searched for "as of"/"effective"/date-pattern text, found none).
+    # It's the only institution in this report whose card source doesn't
+    # state one; drift.py is the sole signal that terms changed.
+    #
+    # Purchase APR and Balance Transfer APR share ONE table row/value --
+    # both fields are assigned from it, but they are not two independent
+    # confirmations of the same number.
+    field_keywords:
+      annual_fee:
+        - "annual fees"
+      purchase_apr:
+        - "annual percentage rate (apr) for purchases and balance transfers"
+      balance_transfer_apr:
+        - "annual percentage rate (apr) for purchases and balance transfers"
+      cash_advance_apr:
+        - "apr for cash advances"
+      balance_transfer_fee:
+        - "balance transfer"
+      cash_advance_fee:
+        - "cash advances"
+      foreign_transaction_fee:
+        - "foreign transaction"
+      late_payment_fee:
+        - "late payment"
+      returned_item_fee:
+        - "returned payment"
+    range_fields: ["purchase_apr", "balance_transfer_apr"]
+    first_percentage_fields: ["cash_advance_apr"]
+    # Matrix-only fields (not part of the canonical per-product field set --
+    # see credit_card_matrix.py's MATRIX_ROWS) that ride along on
+    # `_matrix_extra` the same way TcmIssuerScraper's do.
+    matrix_extra_keywords:
+      min_finance_charge:
+        - "minimum interest charge"
+      grace_period:
+        - "how to avoid paying interest on purchases"
+      expedited_payment:
+        - "expedited delivery fee"
+    products:
+      "Classic":
+        product_name: "Visa Classic"
+        category: "credit_card_standard"
+      "Gold":
+        product_name: "Visa Gold"
+        category: "credit_card_rewards"
+      "Platinum":
+        product_name: "Visa Platinum Rewards"
+        category: "credit_card_rewards"
+
+  fn1870_checking:
+    name: "First National 1870 (Sunflower Bank, N.A.)"
+    url: "https://www.sunflowerbank.com/personal/checking-accounts"
+    type: "comparison_table"
+    # "Minimum Balance Required to Open" and "Paper Statement" have no
+    # existing canonical field (paper statement fee here is a DEPOSIT
+    # account fee, unrelated to any credit-card field of a similar name) --
+    # reported as informational facts per product rather than forced into
+    # an existing field, matching Century Bank's checking-page scrapers.
+    field_keywords:
+      monthly_maintenance_fee:
+        - "monthly account maintenance fee"
+    field_value_templates:
+      monthly_maintenance_fee: "{value}/month"
+    informational_keywords:
+      - "minimum balance required to open"
+      - "paper statement"
+    products:
+      "Pinnacle Checking":
+        category: "checking_premium"
+      "Elevation Checking":
+        category: "checking_general"
+      "Foundation Checking":
+        category: "checking_general"
+      "SunNet\xae Checking":
+        category: "checking_basic"
+      "Achievement Checking":
+        category: "checking_basic"
+
+  fn1870_savings:
+    name: "First National 1870 (Sunflower Bank, N.A.)"
+    url: "https://www.sunflowerbank.com/personal/savings-accounts"
+    type: "comparison_table"
+    # Savings maintenance fees are QUARTERLY ($5/qtr) while the money
+    # market is MONTHLY ($8/mo) -- the page's own "Account Maintenance Fee"
+    # row already states the fee as a full sentence including the period
+    # ("...per quarterly statement cycle..." / "...per monthly statement
+    # cycle..."), so unlike fn1870_checking this needs no value template:
+    # taking that row verbatim already preserves the distinction the
+    # mechanism-mismatch check needs.
+    field_keywords:
+      monthly_maintenance_fee:
+        - "account maintenance fee"
+    informational_keywords:
+      - "minimum balance required to open"
+      - "activity fee per item"
+    products:
+      "SunNet\xae Savings":
+        category: "savings_basic"
+      "Essential Savings":
+        category: "savings_basic"
+      "Supreme Money Market":
+        category: "money_market"
+
+  fn1870_overdraft:
+    name: "First National 1870 (Sunflower Bank, N.A.)"
+    url: "https://www.sunflowerbank.com/terms-and-agreements/understanding-overdraft-privilege"
+    type: "regex_value"
+    product_name: "First National 1870 -- Overdraft Privilege"
+    category: "general_account_fees"
+    # The only public source for the overdraft/NSF amount. The page states
+    # both the consumer AND business fee in one sentence -- "a fee
+    # (currently $29.00 for consumer accounts and $36.00 for business
+    # accounts)" -- so the pattern is anchored on the literal phrase "for
+    # consumer accounts" immediately after the dollar amount, which the
+    # business figure can never satisfy.
+    field_patterns:
+      overdraft_fee: '(\$[\d,]+(?:\.\d{2})?)\s+for consumer accounts'
+
+  fn1870_not_disclosed:
+    name: "First National 1870 (Sunflower Bank, N.A.)"
+    type: "static"
+    product_name: "First National 1870 -- Fee Schedule Not Publicly Available"
+    category: "general_account_fees"
+    # Every Truth-in-Savings disclosure on both firstnational1870.com and
+    # sunflowerbank.com states the general Fee Schedule is "provided to you
+    # at the time you open an account... and upon request" rather than
+    # published online -- confirmed absent 2026-07-27 by searching both
+    # hosts and the /terms-and-agreements hub. Every value below uses the
+    # NOT_PUBLICLY_DISCLOSED sentinel (matching tcm_issuer_scraper.py's
+    # constant of the same name) rather than the generic "Not disclosed"
+    # placeholder: that distinction -- "confirmed to not exist publicly"
+    # vs. "field not found" -- is exactly right here, and this is the
+    # first institution where it applies at this scale. Closing this gap
+    # requires phoning 888.827.5564 or visiting a branch to request the
+    # Fee Schedule, then transcribing it here with the retrieval date
+    # recorded, the same way Century Bank's hand-transcribed schedule is
+    # handled.
+    warning: >
+      First National 1870 does not publish a general Fee Schedule online.
+      Its Truth-in-Savings disclosures state the schedule is "provided to
+      you at the time you open an account... and upon request." 14 fee
+      types in this report cannot be sourced publicly for this
+      institution. Verified 2026-07-29.
+    fees:
+      stop_payment_fee: "Not publicly disclosed"
+      returned_deposit_item_fee: "Not publicly disclosed"
+      wire_transfer_incoming_fee: "Not publicly disclosed"
+      wire_transfer_outgoing_domestic_fee: "Not publicly disclosed"
+      wire_transfer_outgoing_international_fee: "Not publicly disclosed"
+      cashiers_check_fee: "Not publicly disclosed"
+      check_cashing_non_member_fee: "Not publicly disclosed"
+      atm_out_of_network_fee: "Not publicly disclosed"
+      account_research_fee: "Not publicly disclosed"
+      currency_exchange_fee: "Not publicly disclosed"
+      safe_deposit_late_payment_fee: "Not publicly disclosed"
+      safe_deposit_drill_fee: "Not publicly disclosed"
+      card_replacement_fee: "Not publicly disclosed"
+      card_replacement_rush_fee: "Not publicly disclosed"

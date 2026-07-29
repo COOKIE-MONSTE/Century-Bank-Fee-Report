@@ -16,6 +16,9 @@ from scraper.shared_credit_card_scraper import SharedCreditCardDisclosureScraper
 from scraper.asserted_fee_scraper import AssertedFeeScraper
 from scraper.tis_table_scraper import TisTableScraper
 from scraper.tcm_issuer_scraper import TcmIssuerScraper
+from scraper.schumer_box_scraper import SchumerBoxScraper
+from scraper.comparison_table_scraper import ComparisonTableScraper
+from scraper.regex_value_scraper import RegexValueScraper
 from attribution import merge_institution_cards, build_fee_facts, flatten_fee_facts
 from drift import load_previous_fee_facts, mark_drift
 from feedback import load_feedback_log, compute_flag_track_record, promote_confirmed_synonyms
@@ -41,6 +44,9 @@ SCRAPER_TYPES = {
     "asserted_fee": AssertedFeeScraper,
     "tis_table": TisTableScraper,
     "tcm_issuer": TcmIssuerScraper,
+    "schumer_box": SchumerBoxScraper,
+    "comparison_table": ComparisonTableScraper,
+    "regex_value": RegexValueScraper,
 }
 
 
@@ -121,8 +127,8 @@ def main():
 
     # Credit cards get a single institution-level comparison matrix rather
     # than going through the per-product category pipeline above -- see
-    # credit_card_matrix.py for why (none of these three institutions'
-    # card data supports a clean per-product comparison).
+    # credit_card_matrix.py for why (none of these institutions' card data
+    # supports a clean per-product comparison).
     credit_card_matrix, matrix_warnings, credit_card_matrix_sources = build_matrix(config)
 
     html_body = render_report(

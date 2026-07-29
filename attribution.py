@@ -77,7 +77,12 @@ def classify_mechanism(value):
         return "no_fee"
     if "actual cost" in text or "at cost" in text:
         return "variable"
-    if re.search(r"\bper\s+(month|year|annum|statement)\b", text):
+    # Allows one adjective between "per" and the period noun (e.g. "per
+    # quarterly statement cycle", "per monthly statement cycle") -- a bare
+    # `per statement` pattern missed these entirely, which mislabeled a
+    # genuinely recurring fee as "flat" just because its period was
+    # qualified rather than named directly.
+    if re.search(r"\bper\s+(?:\w+\s+)?(month|year|annum|statement)\b", text):
         return "recurring"
     if re.search(r"\bper\s+(hour|item|occurrence|incident|transaction)\b", text):
         return "per_unit"

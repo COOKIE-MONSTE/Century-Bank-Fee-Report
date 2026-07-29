@@ -1,17 +1,18 @@
 """Builds the Part 4 institution-level credit card comparison matrix.
 
-None of Century Bank, Nusenda, or SECU NM supports a clean per-card
-comparison: Century's one TCM agreement covers 3 consumer cards
-identically, SECU NM's one disclosure covers all 3 of its cards
-identically, and Nusenda's APR-tier addenda don't map to card names
-without guessing. So credit cards get a deliberately different comparison
-unit from the rest of the report -- one row per fee type, one column per
-institution, APR expressed as a range across an institution's own tiers
-rather than per-product -- built here as its own section, not routed
-through the per-product category/attribution pipeline the rest of the
-report uses (that model assumes clean product-level differentiation,
-which the underlying data for these three institutions' cards doesn't
-actually have).
+None of Century Bank, Nusenda, SECU NM, or First National 1870 supports a
+clean per-card comparison: Century's one TCM agreement covers 3 consumer
+cards identically, SECU NM's one disclosure covers all 3 of its cards
+identically, First National 1870's one TILA table covers its Classic/Gold/
+Platinum Rewards tiers identically, and Nusenda's APR-tier addenda don't
+map to card names without guessing. So credit cards get a deliberately
+different comparison unit from the rest of the report -- one row per fee
+type, one column per institution, APR expressed as a range across an
+institution's own tiers rather than per-product -- built here as its own
+section, not routed through the per-product category/attribution pipeline
+the rest of the report uses (that model assumes clean product-level
+differentiation, which the underlying data for these institutions' cards
+doesn't actually have).
 
 A cell is one of two states, never conflated:
   - a real value (possibly "None" if a source affirmatively states no fee)
@@ -56,6 +57,7 @@ from scraper.tcm_issuer_scraper import TcmIssuerScraper, NOT_PUBLICLY_DISCLOSED
 from scraper.html_scraper import HTMLScraper
 from scraper.lkcs_widget_scraper import LKCSFeeScraper
 from scraper.shared_credit_card_scraper import SharedCreditCardDisclosureScraper
+from scraper.schumer_box_scraper import SchumerBoxScraper
 
 logger = logging.getLogger("FeeComparisonScraper")
 
@@ -431,7 +433,7 @@ def _secu_nm_consumer_row(warnings):
 
     text = _fetch_pdf_text(pdf_url, warnings, "SECU NM Credit Card Disclosure (over-limit/min payment/grace/rewards)")
     if not text:
-        return {key: NOT_STATED for key, _ in MATRIX_ROWS}, sources
+        return {key: NOT_STATED for key, _ in MATRIX_ROWS}, sources, set()
 
     def find(pattern):
         m = re.search(pattern, text, re.IGNORECASE)
@@ -515,6 +517,117 @@ def _secu_nm_consumer_row(warnings):
     return values, sources, set()
 
 
+def _fn1870_rewards_and_promos(warnings):
+    """Reward structure and promotions aren't part of the Schumer box table
+    -- they're only described in prose on the card overview page (a
+    separate URL from the TILA table), so this is a second targeted fetch,
+    the same pattern as Century's and Nusenda's equivalents. Confirmed
+    2026-07-29: no numeric earn rate is published anywhere, only a
+    qualitative "redeem points for merchandise/travel" description --
+    captured verbatim rather than summarized into a number that isn't
+    actually stated.
+    """
+    url = "https://www.sunflowerbank.com/personal/loans-credit/credit-cards"
+    try:
+        r = requests.get(url, headers=HEADERS, timeout=20)
+        r.raise_for_status()
+        soup = BeautifulSoup(r.content, "html.parser")
+        main = soup.select_one("main") or soup
+        text = " ".join(main.get_text(separator=" ", strip=True).split())
+    except Exception as e:
+        msg = f"[Credit card matrix] Failed to fetch First National 1870 card overview page for rewards/promotions: {e}"
+        logger.error(msg)
+        warnings.append(msg)
+        return NOT_STATED, NOT_STATED, None
+
+    reward_m = re.search(
+        r"Every net retail purchase you charge gets you closer to redeeming points[^.!]*[.!]", text,
+    )
+    reward_structure = reward_m.group(0) if reward_m else NOT_STATED
+
+    # Same conservative keyword check as Nusenda's/SECU's equivalents --
+    # flags for human review rather than asserting confidently either way.
+    promo_found = re.search(r"bonus|sign-up|sign up|welcome offer", text, re.IGNORECASE)
+    card_promotions = (
+        f"Possible promotion detected near: \"{text[max(0, promo_found.start()-40):promo_found.start()+80]}\" "
+        "-- verify manually."
+        if promo_found else "None advertised"
+    )
+    return reward_structure, card_promotions, url
+
+
+def _fn1870_consumer_row(warnings, config):
+    """First National 1870's consumer-card aggregate. Reuses
+    SchumerBoxScraper (the same class the main pipeline uses) for the
+    Classic/Gold/Platinum TILA table -- one disclosure covers all three
+    identically, confirmed no per-tier fee differentiation is published
+    anywhere, so any one of the three scraped cards is representative.
+    """
+    fn1870_cfg = config["institutions"]["fn1870_credit_cards"]
+    scraper = SchumerBoxScraper(name=fn1870_cfg["name"], url=fn1870_cfg["url"], config=fn1870_cfg)
+    try:
+        cards = scraper.scrape()
+    except Exception as e:
+        msg = f"[Credit card matrix] Failed to scrape First National 1870 credit cards: {e}"
+        logger.error(msg)
+        warnings.append(msg)
+        cards = []
+    _extend_real_warnings(warnings, scraper.warnings)
+
+    if not cards:
+        return {key: NOT_STATED for key, _ in MATRIX_ROWS}, {}, set()
+
+    card = cards[0]
+    matrix_extra = card.get("_matrix_extra", {})
+    sources = dict(card.get("_source_urls", {}))
+
+    reward_structure, card_promotions, rewards_url = _fn1870_rewards_and_promos(warnings)
+    if rewards_url:
+        sources["reward_structure"] = rewards_url
+        sources["card_promotions"] = rewards_url
+
+    purchase_apr = card.get("purchase_apr")
+
+    values = {
+        "annual_fee": card.get("annual_fee", NOT_STATED),
+        "apr_purchases": f"{purchase_apr} (variable, WSJ Prime)" if purchase_apr else NOT_STATED,
+        "apr_ceiling": NOT_STATED,
+        "penalty_apr": NOT_STATED,
+        "late_payment": card.get("late_payment_fee", NOT_STATED),
+        "returned_payment": card.get("returned_item_fee", NOT_STATED),
+        "cash_advance": card.get("cash_advance_fee", NOT_STATED),
+        "balance_transfer": card.get("balance_transfer_fee", NOT_STATED),
+        "foreign_transaction": card.get("foreign_transaction_fee", NOT_STATED),
+        "over_limit": NOT_STATED,
+        # $2.00 "Paper Statement" on the comparison-table page is the
+        # DEPOSIT account fee, not a credit card fee -- deliberately not
+        # reused here.
+        "paper_statement": NOT_STATED,
+        # Stop Payment and Research/Copies aren't on the Schumer box, and
+        # they're 2 of the same 14 fields config.yaml's fn1870_not_disclosed
+        # entry already establishes are confirmed absent from any public
+        # First National 1870 Fee Schedule -- this reflects that same
+        # confirmed-absent finding rather than a separate "not found on
+        # this page" claim.
+        "stop_payment": NOT_PUBLICLY_DISCLOSED,
+        "expedited_payment": matrix_extra.get("expedited_payment", NOT_STATED),
+        "research_copies": NOT_PUBLICLY_DISCLOSED,
+        "min_finance_charge": matrix_extra.get("min_finance_charge", NOT_STATED),
+        "min_payment": NOT_STATED,
+        "grace_period": matrix_extra.get("grace_period", NOT_STATED),
+        "reward_structure": reward_structure,
+        "card_promotions": card_promotions,
+        # The Schumer box page publishes no effective date anywhere
+        # (confirmed 2026-07-29) -- the only card source in this report
+        # that doesn't; drift.py is the sole signal that terms changed.
+        "effective_date": NOT_STATED,
+    }
+
+    # No LLM fallback wired into SchumerBoxScraper -- always empty for now,
+    # same as Nusenda's and SECU NM's rows.
+    return values, sources, set()
+
+
 def build_matrix(config):
     """Returns (matrix, warnings, sources_by_institution).
 
@@ -532,19 +645,25 @@ def build_matrix(config):
     century, century_sources, century_llm = _century_consumer_row(warnings)
     nusenda, nusenda_sources, nusenda_llm = _nusenda_consumer_row(warnings, config)
     secu, secu_sources, secu_llm = _secu_nm_consumer_row(warnings)
+    fn1870, fn1870_sources, fn1870_llm = _fn1870_consumer_row(warnings, config)
 
     nusenda_secured_card = nusenda.pop("_secured_card", None)
 
-    institutions = ["Nusenda Credit Union", "Century Bank (New Mexico)", "State Employees Credit Union of New Mexico"]
+    institutions = [
+        "Nusenda Credit Union", "Century Bank (New Mexico)",
+        "State Employees Credit Union of New Mexico", "First National 1870 (Sunflower Bank, N.A.)",
+    ]
     data_by_institution = {
         "Nusenda Credit Union": nusenda,
         "Century Bank (New Mexico)": century,
         "State Employees Credit Union of New Mexico": secu,
+        "First National 1870 (Sunflower Bank, N.A.)": fn1870,
     }
     sources_by_institution = {
         "Nusenda Credit Union": nusenda_sources,
         "Century Bank (New Mexico)": century_sources,
         "State Employees Credit Union of New Mexico": secu_sources,
+        "First National 1870 (Sunflower Bank, N.A.)": fn1870_sources,
     }
     # Per-institution sets of matrix row keys whose value came from an LLM
     # fallback rather than a regex match -- see _CANONICAL_TO_MATRIX_KEY
@@ -553,6 +672,7 @@ def build_matrix(config):
         "Nusenda Credit Union": nusenda_llm,
         "Century Bank (New Mexico)": century_llm,
         "State Employees Credit Union of New Mexico": secu_llm,
+        "First National 1870 (Sunflower Bank, N.A.)": fn1870_llm,
     }
 
     century_secured = _century_secured_row(warnings) or {}
@@ -572,6 +692,9 @@ def build_matrix(config):
         "Nusenda Credit Union": nusenda_secured,
         "Century Bank (New Mexico)": century_secured,
         "State Employees Credit Union of New Mexico": {},
+        # First National 1870's overview page names only Classic/Gold/
+        # Platinum Rewards tiers -- no secured card product exists to check.
+        "First National 1870 (Sunflower Bank, N.A.)": {},
     }
 
     rows = []
