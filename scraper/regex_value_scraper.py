@@ -27,6 +27,22 @@ class RegexValueScraper(BaseScraper):
     should be anchored precisely enough to reject nearby unrelated numbers
     on the same page/sentence -- see fn1870_overdraft's config comment for
     a concrete case where two dollar amounts share one sentence.
+
+    `field_fixed_values` is for detector-only patterns: when a field's
+    pattern is really just checking whether a phrase is present (e.g. "No
+    monthly fee") rather than extracting a number, listing that field here
+    replaces the captured text with a fixed canonical value (typically
+    "None") once the pattern matches -- so the field reads the same way
+    every other institution's confirmed-no-fee values do, and so
+    attribution.py's classify_mechanism() recognizes it as a real no-fee
+    value instead of unclassifiable prose.
+
+    `asserted_field_patterns` behaves like `field_patterns` but records the
+    result via BaseScraper.assert_universal_fee() instead of a plain
+    assignment -- for a written catch-all statement (e.g. "No fees for
+    cashier's checks and money orders") that overrides what a general fee
+    schedule would otherwise say for this one product, rather than an
+    ordinary per-product line item.
     """
 
     def __init__(self, name, url, config):
@@ -48,12 +64,24 @@ class RegexValueScraper(BaseScraper):
         }
         field_confidence = {}
         source_urls = {}
+        fixed_values = self.config.get("field_fixed_values", {})
 
         for field, pattern in self.config.get("field_patterns", {}).items():
             m = re.search(pattern, text, re.IGNORECASE)
             if m:
-                card[field] = self.clean_value(m.group(1))
+                value = fixed_values.get(field, m.group(1))
+                card[field] = self.clean_value(value)
                 field_confidence[field] = "high"
+                source_urls[field] = self.url
+            else:
+                self.log_field_warning(card["card_name"], field)
+
+        for field, pattern in self.config.get("asserted_field_patterns", {}).items():
+            m = re.search(pattern, text, re.IGNORECASE)
+            if m:
+                value = fixed_values.get(field, m.group(1))
+                quote = " ".join(m.group(0).split())
+                self.assert_universal_fee(card, field, self.clean_value(value), quote=quote, locator=self.url)
                 source_urls[field] = self.url
             else:
                 self.log_field_warning(card["card_name"], field)

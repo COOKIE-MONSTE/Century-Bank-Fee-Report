@@ -19,6 +19,8 @@ from scraper.tcm_issuer_scraper import TcmIssuerScraper
 from scraper.schumer_box_scraper import SchumerBoxScraper
 from scraper.comparison_table_scraper import ComparisonTableScraper
 from scraper.regex_value_scraper import RegexValueScraper
+from scraper.line_item_fee_scraper import LineItemFeeScraper
+from scraper.product_column_table_scraper import ProductColumnTableScraper
 from attribution import merge_institution_cards, build_fee_facts, flatten_fee_facts
 from drift import load_previous_fee_facts, mark_drift
 from feedback import load_feedback_log, compute_flag_track_record, promote_confirmed_synonyms
@@ -47,6 +49,8 @@ SCRAPER_TYPES = {
     "schumer_box": SchumerBoxScraper,
     "comparison_table": ComparisonTableScraper,
     "regex_value": RegexValueScraper,
+    "line_item_fee": LineItemFeeScraper,
+    "product_column_table": ProductColumnTableScraper,
 }
 
 

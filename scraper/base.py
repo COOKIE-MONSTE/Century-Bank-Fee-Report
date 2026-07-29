@@ -135,6 +135,29 @@ class BaseScraper:
         card.setdefault("_asserted_universal", {})[field] = {"quote": quote, "locator": locator}
         return card
 
+    def apply_field_aliases(self, card):
+        """Copies an already-extracted field's value into another
+        canonical field name, per config's `field_aliases:
+        {new_field: source_field}`.
+
+        For a source that publishes only ONE fee figure covering what
+        this report tracks as two distinct fields -- e.g. a "Wire
+        Transfer: Domestic $X" line with no separate incoming rate stated
+        anywhere, confirmed by checking the page for "incoming"/
+        "received" wording and finding none. This is opt-in per
+        institution via config, never a default assumption: most
+        institutions in this report DO distinguish incoming from
+        outgoing, and this only applies where a human has confirmed the
+        specific source genuinely doesn't.
+        """
+        confidence = card.get("_field_confidence", {})
+        for new_field, source_field in self.config.get("field_aliases", {}).items():
+            if source_field in card and new_field not in card:
+                card[new_field] = card[source_field]
+                if source_field in confidence:
+                    confidence[new_field] = confidence[source_field]
+        return card
+
     def llm_extract_field(self, page_text, field_description, context=""):
         """Fallback extraction via Gemini, for use only after a regex/CSS
         selector attempt has already come up empty on a page that fetched

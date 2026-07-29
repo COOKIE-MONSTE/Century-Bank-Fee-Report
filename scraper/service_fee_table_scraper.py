@@ -124,6 +124,7 @@ class ServiceFeeTableScraper(BaseScraper):
                 self.warnings.append(msg)
 
         card["_field_confidence"] = field_confidence
+        self.apply_field_aliases(card)
 
         if unmatched:
             preview = "; ".join(f"{label!r}: {value!r}" for label, value in unmatched)

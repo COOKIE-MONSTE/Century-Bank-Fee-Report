@@ -111,6 +111,15 @@ institutions:
         - "rush handling"
       monthly_maintenance_fee:
         - "minimum average balance"
+    # This page publishes ONE combined wire fee per direction ("Wire
+    # Transfer, Domestic" / "Wire Transfer, International") with no
+    # separate incoming rate anywhere -- confirmed 2026-07-29 by checking
+    # the live widget for "incoming"/"received" wording and finding none.
+    # Mirrors the outgoing domestic rate into the incoming field rather
+    # than leaving it "Not stated" when the source really does say the
+    # same rate applies either way.
+    field_aliases:
+      wire_transfer_incoming_fee: wire_transfer_outgoing_domestic_fee
 
   century_bank:
     name: "Century Bank (New Mexico)"
@@ -318,6 +327,15 @@ institutions:
       # branching, uncollected funds) are deliberately left unmapped here
       # -- the scraper reports them as unmatched (see its warnings/
       # data/history.json) instead of forcing them into an existing field.
+    # This page publishes ONE combined wire fee per direction ("Wire
+    # Transfer: Domestic" / "International") with no separate incoming
+    # rate anywhere -- confirmed 2026-07-29 by checking the live page for
+    # "incoming"/"received"/"inbound" wording and finding none. Mirrors
+    # the outgoing domestic rate into the incoming field rather than
+    # leaving it "Not stated" when the source really does say the same
+    # rate applies either way.
+    field_aliases:
+      wire_transfer_incoming_fee: wire_transfer_outgoing_domestic_fee
 
   secu_nm_credit_cards:
     name: "State Employees Credit Union of New Mexico"
@@ -425,11 +443,13 @@ institutions:
     # how clean it looks.
     #
     # Scoped to only the savings-tier rows below. Deliberately NOT
-    # including: Kasasa Cash/Cash Back/Regular Checking (already covered by
-    # their own cleaner PDF/page sources above -- this table shows "None"
-    # for all of them too, so it would only be redundant corroboration, not
-    # new data); "Money Market Account*"/"Advantage+ Money Market
-    # Account***" (their balance-tier sub-rows show literal "$N/A"
+    # including: Kasasa Cash/Cash Back/Regular Checking/IRA (already
+    # covered by their own cleaner PDF/page sources above and below -- this
+    # table shows "None" for all of them too, so it would only be redundant
+    # corroboration, not new data; the IRA product page confirmed 2026-07-29
+    # states the same "no monthly/annual maintenance fees" more directly,
+    # see secu_nm_ira below); "Money Market Account*"/"Advantage+ Money
+    # Market Account***" (their balance-tier sub-rows show literal "$N/A"
     # placeholder artifacts in this table, and neither name is an exact
     # match for the "Money Manager" product this task named -- flagging
     # that naming ambiguity rather than guessing which, if either, row it
@@ -452,9 +472,24 @@ institutions:
       "UTMA/UGMA Savings":
         product_name: "UTMA/UGMA Savings"
         category: "savings_basic"
-      "IRA Savings - includes Roth, and Traditional":
-        product_name: "IRA Savings (Roth/Traditional)"
-        category: "ira"
+
+  secu_nm_ira:
+    name: "State Employees Credit Union of New Mexico"
+    url: "https://www.secunm.org/accounts/savings/individual-retirement-accounts-iras.html"
+    type: "asserted_fee"
+    source_format: "html"
+    content_selector: "main"
+    product_name: "IRA (Traditional/Roth)"
+    category: "ira"
+    # Replaces the low-confidence Truth-in-Savings-PDF extraction that
+    # used to cover this product (see secu_nm_tis_savings above) -- this
+    # dedicated product page states the same fact directly and
+    # unconditionally, covering both the Traditional and Roth options
+    # described on the page (one written claim, not per-product).
+    assertions:
+      - field: "monthly_maintenance_fee"
+        pattern: "No monthly or annual maintenance fees"
+        value: "None"
 
   # First National 1870 is a trade-name division of Sunflower Bank, N.A.
   # (Member FDIC, NMLS #709491) -- it has no separate charter and files no
@@ -659,3 +694,261 @@ institutions:
       safe_deposit_drill_fee: "Not publicly disclosed"
       card_replacement_fee: "Not publicly disclosed"
       card_replacement_rush_fee: "Not publicly disclosed"
+
+  # Enterprise Bank & Trust (New Mexico) -- Enterprise Financial Services
+  # Corp, Clayton MO, routing #081006162, on www.enterprisebank.com ONLY.
+  #
+  # At least three unrelated banks also trade as some variant of
+  # "Enterprise Bank": enterprisebankpgh.com (Enterprise Bank, Pittsburgh
+  # PA -- has its own "Schedule of Fees" and "Simplicity Consumer
+  # Checking" that are easy to confuse with this institution's, and are
+  # MORE RECENT, making them tempting if anyone re-researches this by
+  # hand), ebsc.bank / enterprise.bank (Enterprise Bank, SC/other), and
+  # enterprisebanking.com (Enterprise Bank & Trust Co., Lowell MA). Every
+  # URL below must be on www.enterprisebank.com -- if a future edit adds a
+  # URL on any other host for this institution, that's the single easiest
+  # way to poison this dataset.
+  #
+  # Unlike First National 1870, Enterprise genuinely regionalizes pricing.
+  # Confirmed 2026-07-29: Interest Checking is $5/mo below $500 for the NM
+  # ZIP group vs. $12/mo below $1,500 non-NM (/personal/wc-interest-checking).
+  # Every checking/savings URL below is deliberately the NM-slugged
+  # individual product page (nm-primary-benefits-checking-account,
+  # extra-benefits-checking-account-eba, maximum-benefits-checking-account-mba,
+  # interest-checking-nm, savings-nm) rather than the shared /personal/checking
+  # aggregator page -- that page mixes FOUR regions' product blocks in its
+  # raw HTML with no server-side ZIP selection, so parsing it risks
+  # silently reporting a different region's pricing as New Mexico's. Each
+  # NM product already has its own dedicated, unambiguous URL, so there's
+  # no need to parse the ambiguous aggregator at all.
+  enterprise_bank_fee_schedule:
+    name: "Enterprise Bank & Trust (New Mexico)"
+    url: "https://www.enterprisebank.com/scheduleoffees"
+    type: "line_item_fee"
+    category: "general_account_fees"
+    product_name: "Enterprise Bank & Trust -- Schedule of Fees"
+    # /scheduleoffees 302s to sites/default/files/2019-05/2019-05-15.pdf.
+    # Do NOT replace this with either linked-from-the-site URL --
+    # https://wvw.enterprisebank.com/schedule-of-fees(-consumer) is a
+    # typo'd hostname ("wvw", not "www") and is dead, and correcting the
+    # typo doesn't help either: www.enterprisebank.com/schedule-of-fees-consumer
+    # returns an empty body. This redirect endpoint is the only working path.
+    # Confirmed ?l=nm / ?l=st / ?l=consumer all serve the byte-identical
+    # file -- the l= parameter is vestigial, this is one bank-wide schedule.
+    #
+    # Also do not source anything from sites/default/files/2019-02/Fee%20Schedule.pdf
+    # (an earlier, superseded revision that still resolves) -- it disagrees
+    # with the current 2019-05-15 file on several lines (e.g. it still
+    # lists a $4.00 paper statement fee that no longer exists).
+    #
+    # Combined consumer + commercial document -- business-only lines
+    # (Money Service Business fee, Fed Cash Handling, Advanced Credit Cash
+    # Handling, bulk coin/currency, night deposit bag, uncollected funds,
+    # garnishments, collection items, every EBDIRECT-originated variant)
+    # are deliberately NOT in field_keywords/combined_fields below, so
+    # they're never looked up and can't leak into consumer comparisons.
+    field_keywords:
+      overdraft_fee:
+        - "Overdrafts Paid"
+      returned_item_fee:
+        - "NSF's Returned"
+      returned_deposit_item_fee:
+        - "Deposited Items Returned Unpaid"
+      stop_payment_fee:
+        - "Stop Payments"
+      wire_transfer_outgoing_domestic_fee:
+        - "Domestic Wire Transfers (Outgoing)"
+      wire_transfer_outgoing_international_fee:
+        - "Foreign Wire Transfers (Outgoing)"
+      cashiers_check_fee:
+        - "Cashier's Check"
+      account_research_fee:
+        - "Account Research/Assistance"
+      card_replacement_fee:
+        - "ATM/Debit Card Replacement"
+      card_replacement_rush_fee:
+        - "Special Handling for Debit Cards"
+      dormant_account_fee:
+        - "Dormant Fee"
+      safe_deposit_drill_fee:
+        - "Safe Deposit Box Drilling & Key Replacement"
+    # Fields with no matching split in this document's own field list --
+    # combined here into one string rather than picking just one number
+    # and silently dropping the other.
+    combined_fields:
+      wire_transfer_incoming_fee:
+        parts:
+          - label: "Domestic Wire Transfers (Incoming)"
+            prefix: "Domestic: "
+          - label: "Foreign Wire Transfers (Incoming)"
+            prefix: "Foreign: "
+        join: " / "
+      check_cashing_non_member_fee:
+        parts:
+          - label: "Check Cashing (ck<500) Non Customer"
+            prefix: "Under $500: "
+          - label: "Check Cashing (ck>500) Non Customer"
+            prefix: "Over $500: "
+        join: "; "
+    # "Safe Deposit Box Drilling & Key Replacement" literally reads "Fees
+    # vary by location" -- a direct admission of regional variation, not a
+    # centrally-set figure, so it's recorded as NOT_PUBLICLY_DISCLOSED
+    # rather than the literal phrase (see line_item_fee_scraper.py).
+    not_publicly_disclosed_fields:
+      - "safe_deposit_drill_fee"
+
+  enterprise_bank_not_disclosed:
+    name: "Enterprise Bank & Trust (New Mexico)"
+    type: "static"
+    product_name: "Enterprise Bank & Trust -- Not Publicly Disclosed"
+    category: "general_account_fees"
+    # Card-level cash advance/balance transfer/foreign transaction/late
+    # payment/returned payment fees are handled on the credit card entry
+    # below (fixed_not_disclosed_fields) since those are genuinely
+    # card-specific concepts here, not general account fees. These three
+    # are the remaining FIELD_LABELS keys with no source anywhere:
+    # Allpoint network access is free but the OUT-of-network ATM amount
+    # isn't published, and neither is a currency exchange fee or a safe
+    # deposit box LATE PAYMENT fee (distinct from the drilling fee above,
+    # which at least gets a "varies by location" acknowledgment).
+    fees:
+      atm_out_of_network_fee: "Not publicly disclosed"
+      currency_exchange_fee: "Not publicly disclosed"
+      safe_deposit_late_payment_fee: "Not publicly disclosed"
+
+  enterprise_bank_nm_primary_checking:
+    name: "Enterprise Bank & Trust (New Mexico)"
+    url: "https://www.enterprisebank.com/personal/nm-primary-benefits-checking-account"
+    type: "regex_value"
+    product_name: "Primary Benefits Account"
+    category: "checking_basic"
+    field_patterns:
+      monthly_maintenance_fee: '(No monthly fee)'
+    # Detector-only pattern (see regex_value_scraper.py) -- once matched,
+    # record the canonical "None" rather than the raw feature-list phrase,
+    # so classify_mechanism() recognizes it as a confirmed no-fee value.
+    field_fixed_values:
+      monthly_maintenance_fee: "None"
+
+  enterprise_bank_nm_eba_checking:
+    name: "Enterprise Bank & Trust (New Mexico)"
+    url: "https://www.enterprisebank.com/personal/extra-benefits-checking-account-eba"
+    type: "regex_value"
+    product_name: "Extra Benefits Account (EBA)"
+    category: "checking_general"
+    # Dual-condition waiver ("OR" between two different balance types) --
+    # the full sentence is captured rather than reduced to "$15.00", or
+    # the comparison against other institutions' single-condition waivers
+    # would be misleading.
+    field_patterns:
+      monthly_maintenance_fee: '(If your average daily balance falls below \$[\d,]+ or your relationship balance is less than \$[\d,]+, a monthly service charge of \$[\d.]+ applies\.)'
+
+  enterprise_bank_nm_mba_checking:
+    name: "Enterprise Bank & Trust (New Mexico)"
+    url: "https://www.enterprisebank.com/personal/maximum-benefits-checking-account-mba"
+    type: "regex_value"
+    product_name: "Maximum Benefits Account (MBA)"
+    category: "checking_premium"
+    field_patterns:
+      monthly_maintenance_fee: '(If your average daily balance falls below \$[\d,]+ or your relationship balance is less than \$[\d,]+, a monthly service charge of \$[\d.]+ applies\.)'
+    # "No fees for cashier's checks and money orders" is a written
+    # catch-all statement specific to THIS product, overriding what the
+    # general Schedule of Fees charges ($5.00) -- recorded via
+    # assert_universal_fee (asserted, not an ordinary line item) rather
+    # than plain assignment.
+    asserted_field_patterns:
+      cashiers_check_fee: "(No fees for cashier.s checks and money orders)"
+    field_fixed_values:
+      cashiers_check_fee: "None"
+
+  enterprise_bank_nm_interest_checking:
+    name: "Enterprise Bank & Trust (New Mexico)"
+    url: "https://www.enterprisebank.com/personal/interest-checking-nm"
+    type: "regex_value"
+    product_name: "Interest Checking"
+    category: "checking_general"
+    # Genuinely NM-specific pricing: $5/mo below $500. The non-NM
+    # equivalent (/personal/wc-interest-checking, not scraped here) is
+    # $12/mo below $1,500 -- confirmed 2026-07-29, do not swap these.
+    field_patterns:
+      monthly_maintenance_fee: '(You must maintain a minimum balance[^.]*\.)'
+
+  enterprise_bank_liberty_checking:
+    name: "Enterprise Bank & Trust (New Mexico)"
+    url: "https://www.enterprisebank.com/personal/liberty-checking"
+    type: "regex_value"
+    product_name: "Liberty Checking"
+    category: "checking_general"
+    # For clients 50+ or active/retired military/first responders. States
+    # "No monthly fee" directly on the page -- confirmed 2026-07-29.
+    field_patterns:
+      monthly_maintenance_fee: '(No monthly fee)'
+    field_fixed_values:
+      monthly_maintenance_fee: "None"
+
+  enterprise_bank_nm_savings:
+    name: "Enterprise Bank & Trust (New Mexico)"
+    url: "https://www.enterprisebank.com/personal/savings-nm"
+    type: "regex_value"
+    product_name: "Personal Savings"
+    category: "savings_basic"
+    # No money market or CD page with published figures exists for the NM
+    # ZIP group -- not invented here.
+    field_patterns:
+      monthly_maintenance_fee: '(No monthly fees)'
+    field_fixed_values:
+      monthly_maintenance_fee: "None"
+
+  enterprise_bank_credit_cards:
+    name: "Enterprise Bank & Trust (New Mexico)"
+    url: "https://www.enterprisebank.com/personal/credit-cards"
+    type: "product_column_table"
+    # Unlike Century Bank / SECU NM / First National 1870 (one shared
+    # disclosure per institution), Enterprise genuinely differentiates per
+    # card: three distinct annual fees ($0/$0/$50) and two distinct APR
+    # bands. This is a real per-product comparison, so it feeds the
+    # attribution pipeline with three separate cards instead of only the
+    # institution-level matrix.
+    #
+    # Page footnote: "Rate Information is accurate as of 06/27/2022" --
+    # self-declared, 4 years old as of this writing. staleness_pattern
+    # below warns about this the same way SECU NM's card disclosure does.
+    staleness_pattern: 'accurate as of\s+(\d{1,2}/\d{1,2}/\d{4})'
+    field_keywords:
+      annual_fee:
+        - "Annual Fees"
+      purchase_apr:
+        - "Annual Percentage Rate (APR) for Purchases and Balance Transfers"
+      balance_transfer_apr:
+        - "Annual Percentage Rate (APR) for Purchases and Balance Transfers"
+      intro_offers:
+        - "Annual Percentage Rate (APR) for Purchases and Balance Transfers"
+      cash_advance_apr:
+        - "APR for Cash Advances"
+      rewards_structure:
+        - "Rewards"
+    # One row's cell holds an intro-APR sentence AND the standing APR
+    # range together -- each field below pulls just its own portion out of
+    # that same raw cell text instead of the whole paragraph.
+    field_extract_patterns:
+      purchase_apr: 'After that, APR will be ([\d.]+%\s*-\s*[\d.]+%)'
+      balance_transfer_apr: 'After that, APR will be ([\d.]+%\s*-\s*[\d.]+%)'
+      intro_offers: '(0\.00% introductory APR[^.]*\.)'
+      cash_advance_apr: '^([\d.]+%)'
+    # Not published anywhere for these cards -- confirmed 2026-07-29.
+    fixed_not_disclosed_fields:
+      - "cash_advance_fee"
+      - "balance_transfer_fee"
+      - "foreign_transaction_fee"
+      - "late_payment_fee"
+      - "returned_item_fee"
+    products:
+      "Visa Non-Rewards Card":
+        product_name: "Visa Non-Rewards"
+        category: "credit_card_standard"
+      "Visa Rewards Card":
+        product_name: "Visa Rewards"
+        category: "credit_card_rewards"
+      "Visa Rewards Plus Card":
+        product_name: "Visa Rewards Plus"
+        category: "credit_card_rewards"

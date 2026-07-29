@@ -14,6 +14,17 @@ the rest of the report uses (that model assumes clean product-level
 differentiation, which the underlying data for these institutions' cards
 doesn't actually have).
 
+Enterprise Bank & Trust is the one exception: it genuinely differentiates
+per tier (three annual fees, two APR bands), so unlike the others it DOES
+also feed the per-product attribution pipeline as three separate cards
+(see config.yaml's enterprise_bank_credit_cards, type "product_column_table").
+It's still included here too, combined into one column, so every
+institution in this report is comparable side by side in the same table --
+_enterprise_bank_consumer_row() below does that combining (e.g. an APR
+range spanning all three tiers, annual fees listed per tier rather than
+collapsed to one number) instead of picking one card as representative,
+which is what the other institutions' rows do.
+
 A cell is one of two states, never conflated:
   - a real value (possibly "None" if a source affirmatively states no fee)
   - NOT_STATED: the available source doesn't address this fee at all --
@@ -58,6 +69,8 @@ from scraper.html_scraper import HTMLScraper
 from scraper.lkcs_widget_scraper import LKCSFeeScraper
 from scraper.shared_credit_card_scraper import SharedCreditCardDisclosureScraper
 from scraper.schumer_box_scraper import SchumerBoxScraper
+from scraper.line_item_fee_scraper import LineItemFeeScraper
+from scraper.product_column_table_scraper import ProductColumnTableScraper
 
 logger = logging.getLogger("FeeComparisonScraper")
 
@@ -628,6 +641,109 @@ def _fn1870_consumer_row(warnings, config):
     return values, sources, set()
 
 
+def _enterprise_bank_consumer_row(warnings, config):
+    """Enterprise Bank & Trust (New Mexico)'s card aggregate. Unlike the
+    other institutions in this matrix, Enterprise genuinely differentiates
+    terms per tier (three annual fees, two APR bands, no shared
+    disclosure) -- reuses ProductColumnTableScraper (the same class the
+    main pipeline uses) for all three cards, then combines them into the
+    matrix's one-column-per-institution shape rather than picking one card
+    as "representative" the way the shared-disclosure institutions' rows
+    do.
+    """
+    eb_cfg = config["institutions"]["enterprise_bank_credit_cards"]
+    scraper = ProductColumnTableScraper(name=eb_cfg["name"], url=eb_cfg["url"], config=eb_cfg)
+    try:
+        cards = scraper.scrape()
+    except Exception as e:
+        msg = f"[Credit card matrix] Failed to scrape Enterprise Bank credit cards: {e}"
+        logger.error(msg)
+        warnings.append(msg)
+        cards = []
+    _extend_real_warnings(warnings, scraper.warnings)
+
+    if not cards:
+        return {key: NOT_STATED for key, _ in MATRIX_ROWS}, {}, set()
+
+    sources = {field: eb_cfg["url"] for field in ("annual_fee", "apr_purchases", "reward_structure", "card_promotions")}
+
+    # Stop Payment isn't a credit-card-specific concept here -- it's on
+    # the institution-wide Schedule of Fees the main pipeline already
+    # scrapes, reused directly rather than left "Not stated" just because
+    # it isn't on the card comparison page (same pattern as Nusenda's
+    # retail-fee reuse above).
+    stop_payment = NOT_STATED
+    schedule_cfg = config["institutions"].get("enterprise_bank_fee_schedule")
+    if schedule_cfg:
+        schedule_scraper = LineItemFeeScraper(name=schedule_cfg["name"], url=schedule_cfg["url"], config=schedule_cfg)
+        try:
+            schedule_cards = schedule_scraper.scrape()
+            _extend_real_warnings(warnings, schedule_scraper.warnings)
+            if schedule_cards and schedule_cards[0].get("stop_payment_fee"):
+                stop_payment = schedule_cards[0]["stop_payment_fee"]
+                sources["stop_payment"] = schedule_cfg["url"]
+        except Exception as e:
+            msg = f"[Credit card matrix] Failed to scrape Enterprise Bank fee schedule for stop payment: {e}"
+            logger.error(msg)
+            warnings.append(msg)
+
+    annual_fee_parts, apr_lows, apr_highs, reward_parts, promo_parts = [], [], [], [], []
+    effective_date = None
+    for card in cards:
+        name = card.get("card_name", "Unknown")
+        annual_fee_parts.append(f"{card.get('annual_fee', NOT_STATED)} ({name})")
+        m = re.search(r"([\d.]+)%\s*-\s*([\d.]+)%", card.get("purchase_apr", ""))
+        if m:
+            apr_lows.append(float(m.group(1)))
+            apr_highs.append(float(m.group(2)))
+        reward_parts.append(f"{name}: {card.get('rewards_structure', NOT_STATED)}")
+        if card.get("intro_offers"):
+            promo_parts.append(f"{name}: {card['intro_offers']}")
+        if not effective_date:
+            effective_date = card.get("_matrix_extra", {}).get("effective_date")
+
+    annual_fee = " / ".join(annual_fee_parts) if annual_fee_parts else NOT_STATED
+    apr_purchases = (
+        f"{min(apr_lows):.2f}% - {max(apr_highs):.2f}% (varies by tier -- see Data Quality Notes)"
+        if apr_lows and apr_highs else NOT_STATED
+    )
+    reward_structure = " ".join(reward_parts) if reward_parts else NOT_STATED
+    card_promotions = " ".join(promo_parts) if promo_parts else NOT_STATED
+
+    values = {
+        "annual_fee": annual_fee,
+        "apr_purchases": apr_purchases,
+        "apr_ceiling": NOT_STATED,
+        "penalty_apr": NOT_STATED,
+        "late_payment": NOT_PUBLICLY_DISCLOSED,
+        "returned_payment": NOT_PUBLICLY_DISCLOSED,
+        "cash_advance": NOT_PUBLICLY_DISCLOSED,
+        "balance_transfer": NOT_PUBLICLY_DISCLOSED,
+        "foreign_transaction": NOT_PUBLICLY_DISCLOSED,
+        "over_limit": NOT_STATED,
+        "paper_statement": NOT_STATED,
+        "stop_payment": stop_payment,
+        "expedited_payment": NOT_STATED,
+        "research_copies": NOT_STATED,
+        "min_finance_charge": NOT_STATED,
+        "min_payment": NOT_STATED,
+        "grace_period": NOT_STATED,
+        "reward_structure": reward_structure,
+        "card_promotions": card_promotions,
+        # The page's own footnote states this directly (see
+        # ProductColumnTableScraper's staleness check) -- not the run
+        # date, and not hardcoded here: read live off whichever card
+        # scraped it, so this self-corrects if the bank updates the page.
+        "effective_date": (
+            f"{effective_date} (stale -- see Data Quality Notes)" if effective_date else NOT_STATED
+        ),
+    }
+    if effective_date:
+        sources["effective_date"] = eb_cfg["url"]
+
+    return values, sources, set()
+
+
 def build_matrix(config):
     """Returns (matrix, warnings, sources_by_institution).
 
@@ -646,24 +762,28 @@ def build_matrix(config):
     nusenda, nusenda_sources, nusenda_llm = _nusenda_consumer_row(warnings, config)
     secu, secu_sources, secu_llm = _secu_nm_consumer_row(warnings)
     fn1870, fn1870_sources, fn1870_llm = _fn1870_consumer_row(warnings, config)
+    enterprise, enterprise_sources, enterprise_llm = _enterprise_bank_consumer_row(warnings, config)
 
     nusenda_secured_card = nusenda.pop("_secured_card", None)
 
     institutions = [
         "Nusenda Credit Union", "Century Bank (New Mexico)",
         "State Employees Credit Union of New Mexico", "First National 1870 (Sunflower Bank, N.A.)",
+        "Enterprise Bank & Trust (New Mexico)",
     ]
     data_by_institution = {
         "Nusenda Credit Union": nusenda,
         "Century Bank (New Mexico)": century,
         "State Employees Credit Union of New Mexico": secu,
         "First National 1870 (Sunflower Bank, N.A.)": fn1870,
+        "Enterprise Bank & Trust (New Mexico)": enterprise,
     }
     sources_by_institution = {
         "Nusenda Credit Union": nusenda_sources,
         "Century Bank (New Mexico)": century_sources,
         "State Employees Credit Union of New Mexico": secu_sources,
         "First National 1870 (Sunflower Bank, N.A.)": fn1870_sources,
+        "Enterprise Bank & Trust (New Mexico)": enterprise_sources,
     }
     # Per-institution sets of matrix row keys whose value came from an LLM
     # fallback rather than a regex match -- see _CANONICAL_TO_MATRIX_KEY
@@ -673,6 +793,7 @@ def build_matrix(config):
         "Century Bank (New Mexico)": century_llm,
         "State Employees Credit Union of New Mexico": secu_llm,
         "First National 1870 (Sunflower Bank, N.A.)": fn1870_llm,
+        "Enterprise Bank & Trust (New Mexico)": enterprise_llm,
     }
 
     century_secured = _century_secured_row(warnings) or {}
@@ -695,6 +816,9 @@ def build_matrix(config):
         # First National 1870's overview page names only Classic/Gold/
         # Platinum Rewards tiers -- no secured card product exists to check.
         "First National 1870 (Sunflower Bank, N.A.)": {},
+        # Enterprise's three tiers (Non-Rewards/Rewards/Rewards Plus) are
+        # all unsecured Visa cards -- no secured product exists to check.
+        "Enterprise Bank & Trust (New Mexico)": {},
     }
 
     rows = []

@@ -52,7 +52,7 @@ EXPECTATIONS = [
     ("secu_nm_kasasa_tunes", "Kasasa Tunes", "monthly_maintenance_fee", "None"),
     ("secu_nm_regular_checking", "Regular Checking", "monthly_maintenance_fee", "None"),
     ("secu_nm_tis_savings", "Share Savings", "monthly_maintenance_fee", "None"),
-    ("secu_nm_tis_savings", "IRA Savings (Roth/Traditional)", "monthly_maintenance_fee", "None"),
+    ("secu_nm_ira", "IRA (Traditional/Roth)", "monthly_maintenance_fee", "None"),
     # Addendum 2: Century Bank (TCM Bank, N.A. issuer) + Nusenda Secured APR fix.
     ("century_bank_credit_cards", "Rewards Platinum", "annual_fee", "Not publicly disclosed"),
     ("century_bank_credit_cards", "Rewards Platinum", "cash_advance_fee",

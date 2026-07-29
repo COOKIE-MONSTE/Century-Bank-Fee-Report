@@ -1,10 +1,18 @@
 import logging
+import re
+
 import requests
 from bs4 import BeautifulSoup
 from .base import BaseScraper
 from . import categories
 
 logger = logging.getLogger("FeeComparisonScraper")
+
+# Some rows state the fee's period in the TYPE label rather than the
+# amount itself -- e.g. "Dormant Account (per month)" / "$5.00" -- which
+# left the extracted value reading as a flat one-time charge with no way
+# for attribution.classify_mechanism() to tell it's actually recurring.
+_PERIOD_QUALIFIER = re.compile(r"\(per\s+(month|hour|year|day|item|transaction)\)", re.IGNORECASE)
 
 
 class LKCSFeeScraper(BaseScraper):
@@ -90,6 +98,9 @@ class LKCSFeeScraper(BaseScraper):
                     piece = cells[-1].strip()
                 if not piece:
                     continue
+                period_m = _PERIOD_QUALIFIER.search(type_text)
+                if period_m and period_m.group(1).lower() not in piece.lower():
+                    piece = f"{piece} per {period_m.group(1).lower()}"
                 grouped.setdefault(field, [])
                 if piece not in grouped[field]:
                     grouped[field].append(piece)
@@ -100,6 +111,7 @@ class LKCSFeeScraper(BaseScraper):
             card = {"card_name": product_name, "category": category}
             for field, pieces in grouped.items():
                 card[field] = self.clean_value("; ".join(pieces))
+            self.apply_field_aliases(card)
             cards.append(self.finalize_card(card))
 
         return cards
