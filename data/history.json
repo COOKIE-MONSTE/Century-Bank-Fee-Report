@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-29T08:37:09.031643+00:00",
+  "generated_at": "2026-07-29T18:20:49.823440+00:00",
   "institutions": {
     "nusenda": {
       "name": "Nusenda Credit Union",
@@ -131,16 +131,17 @@
           "atm_out_of_network_fee": "$1.50",
           "cashiers_check_fee": "$2.50",
           "check_cashing_non_member_fee": "$4.00",
-          "dormant_account_fee": "$5.00",
+          "dormant_account_fee": "$5.00 per month",
           "overdraft_fee": "$10.00",
-          "account_research_fee": "$20.00",
+          "account_research_fee": "$20.00 per hour",
           "returned_deposit_item_fee": "$5.00",
           "card_replacement_rush_fee": "$25.00",
           "safe_deposit_drill_fee": "$75.00",
-          "safe_deposit_late_payment_fee": "$10.00",
+          "safe_deposit_late_payment_fee": "$10.00 per month",
           "stop_payment_fee": "$25.00",
           "wire_transfer_outgoing_domestic_fee": "$14.00",
-          "wire_transfer_outgoing_international_fee": "$37.00"
+          "wire_transfer_outgoing_international_fee": "$37.00",
+          "wire_transfer_incoming_fee": "$14.00"
         },
         {
           "card_name": "Checking Account Fees",
@@ -481,8 +482,10 @@
             "returned_item_fee": "high",
             "stop_payment_fee": "high",
             "wire_transfer_outgoing_domestic_fee": "high",
-            "wire_transfer_outgoing_international_fee": "high"
-          }
+            "wire_transfer_outgoing_international_fee": "high",
+            "wire_transfer_incoming_fee": "high"
+          },
+          "wire_transfer_incoming_fee": "$15.00"
         }
       ],
       "warnings": [
@@ -704,17 +707,541 @@
           "_field_confidence": {
             "monthly_maintenance_fee": "low"
           }
-        },
+        }
+      ],
+      "warnings": []
+    },
+    "secu_nm_ira": {
+      "name": "State Employees Credit Union of New Mexico",
+      "cards": [
         {
-          "card_name": "IRA Savings (Roth/Traditional)",
+          "card_name": "IRA (Traditional/Roth)",
           "category": "ira",
           "monthly_maintenance_fee": "None",
-          "_field_confidence": {
-            "monthly_maintenance_fee": "low"
+          "_asserted_universal": {
+            "monthly_maintenance_fee": {
+              "quote": "No monthly or annual maintenance fees",
+              "locator": "https://www.secunm.org/accounts/savings/individual-retirement-accounts-iras.html"
+            }
           }
         }
       ],
       "warnings": []
+    },
+    "fn1870_credit_cards": {
+      "name": "First National 1870 (Sunflower Bank, N.A.)",
+      "cards": [
+        {
+          "purchase_apr": "11.80% - 13.45%",
+          "balance_transfer_apr": "11.80% - 13.45%",
+          "cash_advance_apr": "23.49%",
+          "annual_fee": "NONE",
+          "balance_transfer_fee": "Up to $5.00 or 5.0% of the amount transferred, whichever is greater",
+          "cash_advance_fee": "$10.00 or 3.0% of the amount advanced, whichever is greater",
+          "foreign_transaction_fee": "1.0% of the purchase amount",
+          "late_payment_fee": "Up to $25.00",
+          "returned_item_fee": "Up to $25.00",
+          "card_name": "Visa Classic",
+          "category": "credit_card_standard",
+          "_field_confidence": {
+            "purchase_apr": "high",
+            "balance_transfer_apr": "high",
+            "cash_advance_apr": "high",
+            "annual_fee": "high",
+            "balance_transfer_fee": "high",
+            "cash_advance_fee": "high",
+            "foreign_transaction_fee": "high",
+            "late_payment_fee": "high",
+            "returned_item_fee": "high"
+          },
+          "_matrix_extra": {
+            "grace_period": "Your due date is at least 25 days after the close of each billing cycle. We will not charge you interest on Purchases and Balance Transfers if you pay your entire balance by the due date each month. We will begin charging interest on Cash Advances on the transaction date. There is no grace period on Cash Advances.",
+            "min_finance_charge": "If you are charged interest, the charge will be no less than $0.01 .",
+            "expedited_payment": "$15.00"
+          },
+          "_source_urls": {
+            "purchase_apr": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+            "balance_transfer_apr": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+            "cash_advance_apr": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+            "annual_fee": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+            "balance_transfer_fee": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+            "cash_advance_fee": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+            "foreign_transaction_fee": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+            "late_payment_fee": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+            "returned_item_fee": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+            "grace_period": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+            "min_finance_charge": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+            "expedited_payment": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards"
+          }
+        },
+        {
+          "purchase_apr": "11.80% - 13.45%",
+          "balance_transfer_apr": "11.80% - 13.45%",
+          "cash_advance_apr": "23.49%",
+          "annual_fee": "NONE",
+          "balance_transfer_fee": "Up to $5.00 or 5.0% of the amount transferred, whichever is greater",
+          "cash_advance_fee": "$10.00 or 3.0% of the amount advanced, whichever is greater",
+          "foreign_transaction_fee": "1.0% of the purchase amount",
+          "late_payment_fee": "Up to $25.00",
+          "returned_item_fee": "Up to $25.00",
+          "card_name": "Visa Gold",
+          "category": "credit_card_rewards",
+          "_field_confidence": {
+            "purchase_apr": "high",
+            "balance_transfer_apr": "high",
+            "cash_advance_apr": "high",
+            "annual_fee": "high",
+            "balance_transfer_fee": "high",
+            "cash_advance_fee": "high",
+            "foreign_transaction_fee": "high",
+            "late_payment_fee": "high",
+            "returned_item_fee": "high"
+          },
+          "_matrix_extra": {
+            "grace_period": "Your due date is at least 25 days after the close of each billing cycle. We will not charge you interest on Purchases and Balance Transfers if you pay your entire balance by the due date each month. We will begin charging interest on Cash Advances on the transaction date. There is no grace period on Cash Advances.",
+            "min_finance_charge": "If you are charged interest, the charge will be no less than $0.01 .",
+            "expedited_payment": "$15.00"
+          },
+          "_source_urls": {
+            "purchase_apr": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+            "balance_transfer_apr": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+            "cash_advance_apr": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+            "annual_fee": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+            "balance_transfer_fee": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+            "cash_advance_fee": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+            "foreign_transaction_fee": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+            "late_payment_fee": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+            "returned_item_fee": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+            "grace_period": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+            "min_finance_charge": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+            "expedited_payment": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards"
+          }
+        },
+        {
+          "purchase_apr": "11.80% - 13.45%",
+          "balance_transfer_apr": "11.80% - 13.45%",
+          "cash_advance_apr": "23.49%",
+          "annual_fee": "NONE",
+          "balance_transfer_fee": "Up to $5.00 or 5.0% of the amount transferred, whichever is greater",
+          "cash_advance_fee": "$10.00 or 3.0% of the amount advanced, whichever is greater",
+          "foreign_transaction_fee": "1.0% of the purchase amount",
+          "late_payment_fee": "Up to $25.00",
+          "returned_item_fee": "Up to $25.00",
+          "card_name": "Visa Platinum Rewards",
+          "category": "credit_card_rewards",
+          "_field_confidence": {
+            "purchase_apr": "high",
+            "balance_transfer_apr": "high",
+            "cash_advance_apr": "high",
+            "annual_fee": "high",
+            "balance_transfer_fee": "high",
+            "cash_advance_fee": "high",
+            "foreign_transaction_fee": "high",
+            "late_payment_fee": "high",
+            "returned_item_fee": "high"
+          },
+          "_matrix_extra": {
+            "grace_period": "Your due date is at least 25 days after the close of each billing cycle. We will not charge you interest on Purchases and Balance Transfers if you pay your entire balance by the due date each month. We will begin charging interest on Cash Advances on the transaction date. There is no grace period on Cash Advances.",
+            "min_finance_charge": "If you are charged interest, the charge will be no less than $0.01 .",
+            "expedited_payment": "$15.00"
+          },
+          "_source_urls": {
+            "purchase_apr": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+            "balance_transfer_apr": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+            "cash_advance_apr": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+            "annual_fee": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+            "balance_transfer_fee": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+            "cash_advance_fee": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+            "foreign_transaction_fee": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+            "late_payment_fee": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+            "returned_item_fee": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+            "grace_period": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+            "min_finance_charge": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+            "expedited_payment": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards"
+          }
+        }
+      ],
+      "warnings": []
+    },
+    "fn1870_checking": {
+      "name": "First National 1870 (Sunflower Bank, N.A.)",
+      "cards": [
+        {
+          "card_name": "Pinnacle Checking",
+          "category": "checking_premium",
+          "_field_confidence": {
+            "monthly_maintenance_fee": "high"
+          },
+          "monthly_maintenance_fee": "$13/month"
+        },
+        {
+          "card_name": "Elevation Checking",
+          "category": "checking_general",
+          "_field_confidence": {
+            "monthly_maintenance_fee": "high"
+          },
+          "monthly_maintenance_fee": "$9/month"
+        },
+        {
+          "card_name": "Foundation Checking",
+          "category": "checking_general",
+          "_field_confidence": {
+            "monthly_maintenance_fee": "high"
+          },
+          "monthly_maintenance_fee": "$10/month"
+        },
+        {
+          "card_name": "SunNet\u00ae Checking",
+          "category": "checking_basic",
+          "_field_confidence": {
+            "monthly_maintenance_fee": "high"
+          },
+          "monthly_maintenance_fee": "$9/month"
+        },
+        {
+          "card_name": "Achievement Checking",
+          "category": "checking_basic",
+          "_field_confidence": {
+            "monthly_maintenance_fee": "high"
+          },
+          "monthly_maintenance_fee": "$5/month"
+        }
+      ],
+      "warnings": [
+        "[First National 1870 (Sunflower Bank, N.A.) - Pinnacle Checking] Fee-adjacent facts found with no existing canonical field: Minimum Balance Required to Open: $100; Paper Statement: $2",
+        "[First National 1870 (Sunflower Bank, N.A.) - Elevation Checking] Fee-adjacent facts found with no existing canonical field: Minimum Balance Required to Open: $100; Paper Statement: $2",
+        "[First National 1870 (Sunflower Bank, N.A.) - Foundation Checking] Fee-adjacent facts found with no existing canonical field: Minimum Balance Required to Open: $100; Paper Statement: $2",
+        "[First National 1870 (Sunflower Bank, N.A.) - SunNet\u00ae Checking] Fee-adjacent facts found with no existing canonical field: Minimum Balance Required to Open: $100; Paper Statement: $2",
+        "[First National 1870 (Sunflower Bank, N.A.) - Achievement Checking] Fee-adjacent facts found with no existing canonical field: Minimum Balance Required to Open: $25; Paper Statement: $2"
+      ]
+    },
+    "fn1870_savings": {
+      "name": "First National 1870 (Sunflower Bank, N.A.)",
+      "cards": [
+        {
+          "card_name": "SunNet\u00ae Savings",
+          "category": "savings_basic",
+          "_field_confidence": {
+            "monthly_maintenance_fee": "high"
+          },
+          "monthly_maintenance_fee": "$5.00 per quarterly statement cycle if the minimum daily balance is not maintained."
+        },
+        {
+          "card_name": "Essential Savings",
+          "category": "savings_basic",
+          "_field_confidence": {
+            "monthly_maintenance_fee": "high"
+          },
+          "monthly_maintenance_fee": "$5.00 per quarterly statement cycle if the minimum daily balance is not maintained."
+        },
+        {
+          "card_name": "Supreme Money Market",
+          "category": "money_market",
+          "_field_confidence": {
+            "monthly_maintenance_fee": "high"
+          },
+          "monthly_maintenance_fee": "$8.00 per monthly statement cycle if the minimum daily balance is not maintained."
+        }
+      ],
+      "warnings": [
+        "[First National 1870 (Sunflower Bank, N.A.) - SunNet\u00ae Savings] Fee-adjacent facts found with no existing canonical field: Minimum Balance Required to Open: $100; Activity Fee Per Item: $1 per debit in excess of 10 debits per quarterly statement cycle",
+        "[First National 1870 (Sunflower Bank, N.A.) - Essential Savings] Fee-adjacent facts found with no existing canonical field: Minimum Balance Required to Open: $100; Activity Fee Per Item: $1 per debit in excess of 10 debits per quarterly statement cycle",
+        "[First National 1870 (Sunflower Bank, N.A.) - Supreme Money Market] Fee-adjacent facts found with no existing canonical field: Minimum Balance Required to Open: $100; Activity Fee Per Item: $6 per debit in excess of 10 debits per monthly statement cycle"
+      ]
+    },
+    "fn1870_overdraft": {
+      "name": "First National 1870 (Sunflower Bank, N.A.)",
+      "cards": [
+        {
+          "card_name": "First National 1870 -- Overdraft Privilege",
+          "category": "general_account_fees",
+          "overdraft_fee": "$29.00",
+          "_field_confidence": {
+            "overdraft_fee": "high"
+          },
+          "_source_urls": {
+            "overdraft_fee": "https://www.sunflowerbank.com/terms-and-agreements/understanding-overdraft-privilege"
+          }
+        }
+      ],
+      "warnings": []
+    },
+    "fn1870_not_disclosed": {
+      "name": "First National 1870 (Sunflower Bank, N.A.)",
+      "cards": [
+        {
+          "stop_payment_fee": "Not publicly disclosed",
+          "returned_deposit_item_fee": "Not publicly disclosed",
+          "wire_transfer_incoming_fee": "Not publicly disclosed",
+          "wire_transfer_outgoing_domestic_fee": "Not publicly disclosed",
+          "wire_transfer_outgoing_international_fee": "Not publicly disclosed",
+          "cashiers_check_fee": "Not publicly disclosed",
+          "check_cashing_non_member_fee": "Not publicly disclosed",
+          "atm_out_of_network_fee": "Not publicly disclosed",
+          "account_research_fee": "Not publicly disclosed",
+          "currency_exchange_fee": "Not publicly disclosed",
+          "safe_deposit_late_payment_fee": "Not publicly disclosed",
+          "safe_deposit_drill_fee": "Not publicly disclosed",
+          "card_replacement_fee": "Not publicly disclosed",
+          "card_replacement_rush_fee": "Not publicly disclosed",
+          "card_name": "First National 1870 -- Fee Schedule Not Publicly Available",
+          "category": "general_account_fees"
+        }
+      ],
+      "warnings": [
+        "First National 1870 does not publish a general Fee Schedule online. Its Truth-in-Savings disclosures state the schedule is \"provided to you at the time you open an account... and upon request.\" 14 fee types in this report cannot be sourced publicly for this institution. Verified 2026-07-29.\n"
+      ]
+    },
+    "enterprise_bank_fee_schedule": {
+      "name": "Enterprise Bank & Trust (New Mexico)",
+      "cards": [
+        {
+          "card_name": "Enterprise Bank & Trust -- Schedule of Fees",
+          "category": "general_account_fees",
+          "overdraft_fee": "$30.00",
+          "returned_item_fee": "$30.00",
+          "returned_deposit_item_fee": "$7.50",
+          "stop_payment_fee": "$30.00",
+          "wire_transfer_outgoing_domestic_fee": "$25.00",
+          "wire_transfer_outgoing_international_fee": "$40.00",
+          "cashiers_check_fee": "$5.00",
+          "account_research_fee": "$25.00 per hour",
+          "card_replacement_fee": "$5.00",
+          "card_replacement_rush_fee": "$55 2-day expedite & $75 next day",
+          "dormant_account_fee": "$10.00 per month",
+          "safe_deposit_drill_fee": "Not publicly disclosed",
+          "wire_transfer_incoming_fee": "Domestic: $10.00 / Foreign: $12.50",
+          "check_cashing_non_member_fee": "Under $500: $5.00; Over $500: 1% of the amount",
+          "_field_confidence": {
+            "overdraft_fee": "high",
+            "returned_item_fee": "high",
+            "returned_deposit_item_fee": "high",
+            "stop_payment_fee": "high",
+            "wire_transfer_outgoing_domestic_fee": "high",
+            "wire_transfer_outgoing_international_fee": "high",
+            "cashiers_check_fee": "high",
+            "account_research_fee": "high",
+            "card_replacement_fee": "high",
+            "card_replacement_rush_fee": "high",
+            "dormant_account_fee": "high",
+            "safe_deposit_drill_fee": "high",
+            "wire_transfer_incoming_fee": "high",
+            "check_cashing_non_member_fee": "high"
+          }
+        }
+      ],
+      "warnings": [
+        "[Enterprise Bank & Trust (New Mexico)] Schedule of Fees is dated 5/15/2019 (printed on the document itself) -- that's 7 year(s) old. It's still the current schedule the bank publishes (nothing newer is served), but these fee amounts have not been independently reconfirmed since then; verify they're still accurate."
+      ]
+    },
+    "enterprise_bank_not_disclosed": {
+      "name": "Enterprise Bank & Trust (New Mexico)",
+      "cards": [
+        {
+          "atm_out_of_network_fee": "Not publicly disclosed",
+          "currency_exchange_fee": "Not publicly disclosed",
+          "safe_deposit_late_payment_fee": "Not publicly disclosed",
+          "card_name": "Enterprise Bank & Trust -- Not Publicly Disclosed",
+          "category": "general_account_fees"
+        }
+      ],
+      "warnings": []
+    },
+    "enterprise_bank_nm_primary_checking": {
+      "name": "Enterprise Bank & Trust (New Mexico)",
+      "cards": [
+        {
+          "card_name": "Primary Benefits Account",
+          "category": "checking_basic",
+          "monthly_maintenance_fee": "None",
+          "_field_confidence": {
+            "monthly_maintenance_fee": "high"
+          },
+          "_source_urls": {
+            "monthly_maintenance_fee": "https://www.enterprisebank.com/personal/nm-primary-benefits-checking-account"
+          }
+        }
+      ],
+      "warnings": []
+    },
+    "enterprise_bank_nm_eba_checking": {
+      "name": "Enterprise Bank & Trust (New Mexico)",
+      "cards": [
+        {
+          "card_name": "Extra Benefits Account (EBA)",
+          "category": "checking_general",
+          "monthly_maintenance_fee": "If your average daily balance falls below $2,500 or your relationship balance is less than $10,000, a monthly service charge of $15.00 applies.",
+          "_field_confidence": {
+            "monthly_maintenance_fee": "high"
+          },
+          "_source_urls": {
+            "monthly_maintenance_fee": "https://www.enterprisebank.com/personal/extra-benefits-checking-account-eba"
+          }
+        }
+      ],
+      "warnings": []
+    },
+    "enterprise_bank_nm_mba_checking": {
+      "name": "Enterprise Bank & Trust (New Mexico)",
+      "cards": [
+        {
+          "card_name": "Maximum Benefits Account (MBA)",
+          "category": "checking_premium",
+          "monthly_maintenance_fee": "If your average daily balance falls below $10,000 or your relationship balance is less than $25,000, a monthly service charge of $20.00 applies.",
+          "cashiers_check_fee": "None",
+          "_asserted_universal": {
+            "cashiers_check_fee": {
+              "quote": "No fees for cashier\u2019s checks and money orders",
+              "locator": "https://www.enterprisebank.com/personal/maximum-benefits-checking-account-mba"
+            }
+          },
+          "_field_confidence": {
+            "monthly_maintenance_fee": "high"
+          },
+          "_source_urls": {
+            "monthly_maintenance_fee": "https://www.enterprisebank.com/personal/maximum-benefits-checking-account-mba",
+            "cashiers_check_fee": "https://www.enterprisebank.com/personal/maximum-benefits-checking-account-mba"
+          }
+        }
+      ],
+      "warnings": []
+    },
+    "enterprise_bank_nm_interest_checking": {
+      "name": "Enterprise Bank & Trust (New Mexico)",
+      "cards": [
+        {
+          "card_name": "Interest Checking",
+          "category": "checking_general",
+          "monthly_maintenance_fee": "You must maintain a minimum balance of $500 to avoid a $5 monthly service charge.",
+          "_field_confidence": {
+            "monthly_maintenance_fee": "high"
+          },
+          "_source_urls": {
+            "monthly_maintenance_fee": "https://www.enterprisebank.com/personal/interest-checking-nm"
+          }
+        }
+      ],
+      "warnings": []
+    },
+    "enterprise_bank_liberty_checking": {
+      "name": "Enterprise Bank & Trust (New Mexico)",
+      "cards": [
+        {
+          "card_name": "Liberty Checking",
+          "category": "checking_general",
+          "monthly_maintenance_fee": "None",
+          "_field_confidence": {
+            "monthly_maintenance_fee": "high"
+          },
+          "_source_urls": {
+            "monthly_maintenance_fee": "https://www.enterprisebank.com/personal/liberty-checking"
+          }
+        }
+      ],
+      "warnings": []
+    },
+    "enterprise_bank_nm_savings": {
+      "name": "Enterprise Bank & Trust (New Mexico)",
+      "cards": [
+        {
+          "card_name": "Personal Savings",
+          "category": "savings_basic",
+          "monthly_maintenance_fee": "None",
+          "_field_confidence": {
+            "monthly_maintenance_fee": "high"
+          },
+          "_source_urls": {
+            "monthly_maintenance_fee": "https://www.enterprisebank.com/personal/savings-nm"
+          }
+        }
+      ],
+      "warnings": []
+    },
+    "enterprise_bank_credit_cards": {
+      "name": "Enterprise Bank & Trust (New Mexico)",
+      "cards": [
+        {
+          "card_name": "Visa Non-Rewards",
+          "category": "credit_card_standard",
+          "_field_confidence": {
+            "annual_fee": "high",
+            "rewards_structure": "high",
+            "purchase_apr": "high",
+            "balance_transfer_apr": "high",
+            "intro_offers": "high",
+            "cash_advance_apr": "high"
+          },
+          "annual_fee": "$0",
+          "rewards_structure": "No",
+          "purchase_apr": "10.99% - 21.99%",
+          "balance_transfer_apr": "10.99% - 21.99%",
+          "intro_offers": "0.00% introductory APR for the first 12 billing cycles on purchases and balance transfers.",
+          "cash_advance_apr": "24.99%",
+          "cash_advance_fee": "Not publicly disclosed",
+          "balance_transfer_fee": "Not publicly disclosed",
+          "foreign_transaction_fee": "Not publicly disclosed",
+          "late_payment_fee": "Not publicly disclosed",
+          "returned_item_fee": "Not publicly disclosed",
+          "_matrix_extra": {
+            "effective_date": "06/27/2022"
+          }
+        },
+        {
+          "card_name": "Visa Rewards",
+          "category": "credit_card_rewards",
+          "_field_confidence": {
+            "annual_fee": "high",
+            "rewards_structure": "high",
+            "purchase_apr": "high",
+            "balance_transfer_apr": "high",
+            "intro_offers": "high",
+            "cash_advance_apr": "high"
+          },
+          "annual_fee": "$0",
+          "rewards_structure": "Earn 1.25 points for every net $1 in spend",
+          "purchase_apr": "15.49% - 23.99%",
+          "balance_transfer_apr": "15.49% - 23.99%",
+          "intro_offers": "0.00% introductory APR for the first 6 billing cycles on purchases and balance transfers.",
+          "cash_advance_apr": "24.99%",
+          "cash_advance_fee": "Not publicly disclosed",
+          "balance_transfer_fee": "Not publicly disclosed",
+          "foreign_transaction_fee": "Not publicly disclosed",
+          "late_payment_fee": "Not publicly disclosed",
+          "returned_item_fee": "Not publicly disclosed",
+          "_matrix_extra": {
+            "effective_date": "06/27/2022"
+          }
+        },
+        {
+          "card_name": "Visa Rewards Plus",
+          "category": "credit_card_rewards",
+          "_field_confidence": {
+            "annual_fee": "high",
+            "rewards_structure": "high",
+            "purchase_apr": "high",
+            "balance_transfer_apr": "high",
+            "intro_offers": "high",
+            "cash_advance_apr": "high"
+          },
+          "annual_fee": "$50",
+          "rewards_structure": "Earn 1.50 points for every net $1 in spend",
+          "purchase_apr": "15.49% - 23.99%",
+          "balance_transfer_apr": "15.49% - 23.99%",
+          "intro_offers": "0.00% introductory APR for the first 6 billing cycles on purchases and balance transfers.",
+          "cash_advance_apr": "24.99%",
+          "cash_advance_fee": "Not publicly disclosed",
+          "balance_transfer_fee": "Not publicly disclosed",
+          "foreign_transaction_fee": "Not publicly disclosed",
+          "late_payment_fee": "Not publicly disclosed",
+          "returned_item_fee": "Not publicly disclosed",
+          "_matrix_extra": {
+            "effective_date": "06/27/2022"
+          }
+        }
+      ],
+      "warnings": [
+        "[Enterprise Bank & Trust (New Mexico)] Credit card page states rate information is accurate as of 06/27/2022 -- that's 4 year(s) old. Card terms have not been independently reconfirmed since then; verify they're still accurate."
+      ]
     }
   },
   "fee_facts": [
@@ -1532,20 +2059,20 @@
       "fee_type": "dormant_account_fee",
       "category": "general_account_fees",
       "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
-      "value": "$5.00",
+      "value": "$5.00 per month",
       "scope": "General Fees",
       "scope_products": [
         "General Fees"
       ],
       "confidence": "high",
-      "mechanism": "flat",
-      "mechanism_label": "Flat fee",
+      "mechanism": "recurring",
+      "mechanism_label": "Recurring (periodic)",
       "verification": "empirical",
       "source_quote": null,
       "source_locator": null,
       "issuers": [],
-      "changed_since_last_snapshot": false,
-      "previous_value": null
+      "changed_since_last_snapshot": true,
+      "previous_value": "$5.00"
     },
     {
       "institution": "Nusenda Credit Union",
@@ -1574,20 +2101,20 @@
       "fee_type": "account_research_fee",
       "category": "general_account_fees",
       "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
-      "value": "$20.00",
+      "value": "$20.00 per hour",
       "scope": "General Fees",
       "scope_products": [
         "General Fees"
       ],
       "confidence": "high",
-      "mechanism": "flat",
-      "mechanism_label": "Flat fee",
+      "mechanism": "per_unit",
+      "mechanism_label": "Per-unit / rate-based",
       "verification": "empirical",
       "source_quote": null,
       "source_locator": null,
       "issuers": [],
-      "changed_since_last_snapshot": false,
-      "previous_value": null
+      "changed_since_last_snapshot": true,
+      "previous_value": "$20.00"
     },
     {
       "institution": "Nusenda Credit Union",
@@ -1658,20 +2185,20 @@
       "fee_type": "safe_deposit_late_payment_fee",
       "category": "general_account_fees",
       "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
-      "value": "$10.00",
+      "value": "$10.00 per month",
       "scope": "General Fees",
       "scope_products": [
         "General Fees"
       ],
       "confidence": "high",
-      "mechanism": "flat",
-      "mechanism_label": "Flat fee",
+      "mechanism": "recurring",
+      "mechanism_label": "Recurring (periodic)",
       "verification": "empirical",
       "source_quote": null,
       "source_locator": null,
       "issuers": [],
-      "changed_since_last_snapshot": false,
-      "previous_value": null
+      "changed_since_last_snapshot": true,
+      "previous_value": "$10.00"
     },
     {
       "institution": "Nusenda Credit Union",
@@ -1722,6 +2249,27 @@
       "category": "general_account_fees",
       "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
       "value": "$37.00",
+      "scope": "General Fees",
+      "scope_products": [
+        "General Fees"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "General Fees",
+      "fee_type": "wire_transfer_incoming_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$14.00",
       "scope": "General Fees",
       "scope_products": [
         "General Fees"
@@ -3160,6 +3708,27 @@
     },
     {
       "institution": "State Employees Credit Union of New Mexico",
+      "product_name": "SECU NM Fee Schedule",
+      "fee_type": "wire_transfer_incoming_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$15.00",
+      "scope": "SECU NM Fee Schedule",
+      "scope_products": [
+        "SECU NM Fee Schedule"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "State Employees Credit Union of New Mexico",
       "product_name": "Visa Platinum",
       "fee_type": "purchase_apr",
       "category": "credit_card_standard",
@@ -3427,18 +3996,1885 @@
     },
     {
       "institution": "State Employees Credit Union of New Mexico",
-      "product_name": "IRA Savings (Roth/Traditional)",
+      "product_name": "IRA (Traditional/Roth)",
       "fee_type": "monthly_maintenance_fee",
       "category": "ira",
       "category_label": "IRA / Retirement Account",
       "value": "None",
-      "scope": "IRA Savings (Roth/Traditional)",
+      "scope": "asserted universal (per IRA (Traditional/Roth) disclosure)",
       "scope_products": [
-        "IRA Savings (Roth/Traditional)"
+        "IRA (Traditional/Roth)"
       ],
-      "confidence": "low",
+      "confidence": "high",
       "mechanism": "no_fee",
       "mechanism_label": "No fee",
+      "verification": "asserted",
+      "source_quote": "No monthly or annual maintenance fees",
+      "source_locator": "https://www.secunm.org/accounts/savings/individual-retirement-accounts-iras.html",
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": "Visa Classic",
+      "fee_type": "purchase_apr",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "11.80% - 13.45%",
+      "scope": "Visa Classic",
+      "scope_products": [
+        "Visa Classic"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": "Visa Classic",
+      "fee_type": "balance_transfer_apr",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "11.80% - 13.45%",
+      "scope": "Visa Classic",
+      "scope_products": [
+        "Visa Classic"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": "Visa Classic",
+      "fee_type": "cash_advance_apr",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "23.49%",
+      "scope": "Visa Classic",
+      "scope_products": [
+        "Visa Classic"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": "Visa Classic",
+      "fee_type": "annual_fee",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "NONE",
+      "scope": "Visa Classic",
+      "scope_products": [
+        "Visa Classic"
+      ],
+      "confidence": "high",
+      "mechanism": "no_fee",
+      "mechanism_label": "No fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": "Visa Classic",
+      "fee_type": "balance_transfer_fee",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "Up to $5.00 or 5.0% of the amount transferred, whichever is greater",
+      "scope": "Visa Classic",
+      "scope_products": [
+        "Visa Classic"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": "Visa Classic",
+      "fee_type": "cash_advance_fee",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "$10.00 or 3.0% of the amount advanced, whichever is greater",
+      "scope": "Visa Classic",
+      "scope_products": [
+        "Visa Classic"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": "Visa Classic",
+      "fee_type": "foreign_transaction_fee",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "1.0% of the purchase amount",
+      "scope": "Visa Classic",
+      "scope_products": [
+        "Visa Classic"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": "Visa Classic",
+      "fee_type": "late_payment_fee",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "Up to $25.00",
+      "scope": "Visa Classic",
+      "scope_products": [
+        "Visa Classic"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": "Visa Classic",
+      "fee_type": "returned_item_fee",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "Up to $25.00",
+      "scope": "Visa Classic",
+      "scope_products": [
+        "Visa Classic"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": null,
+      "fee_type": "purchase_apr",
+      "category": "credit_card_rewards",
+      "category_label": "Rewards Credit Card",
+      "value": "11.80% - 13.45%",
+      "scope": "verified across all products",
+      "scope_products": [
+        "Visa Gold",
+        "Visa Platinum Rewards"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": null,
+      "fee_type": "balance_transfer_apr",
+      "category": "credit_card_rewards",
+      "category_label": "Rewards Credit Card",
+      "value": "11.80% - 13.45%",
+      "scope": "verified across all products",
+      "scope_products": [
+        "Visa Gold",
+        "Visa Platinum Rewards"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": null,
+      "fee_type": "cash_advance_apr",
+      "category": "credit_card_rewards",
+      "category_label": "Rewards Credit Card",
+      "value": "23.49%",
+      "scope": "verified across all products",
+      "scope_products": [
+        "Visa Gold",
+        "Visa Platinum Rewards"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": null,
+      "fee_type": "annual_fee",
+      "category": "credit_card_rewards",
+      "category_label": "Rewards Credit Card",
+      "value": "NONE",
+      "scope": "verified across all products",
+      "scope_products": [
+        "Visa Gold",
+        "Visa Platinum Rewards"
+      ],
+      "confidence": "high",
+      "mechanism": "no_fee",
+      "mechanism_label": "No fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": null,
+      "fee_type": "balance_transfer_fee",
+      "category": "credit_card_rewards",
+      "category_label": "Rewards Credit Card",
+      "value": "Up to $5.00 or 5.0% of the amount transferred, whichever is greater",
+      "scope": "verified across all products",
+      "scope_products": [
+        "Visa Gold",
+        "Visa Platinum Rewards"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": null,
+      "fee_type": "cash_advance_fee",
+      "category": "credit_card_rewards",
+      "category_label": "Rewards Credit Card",
+      "value": "$10.00 or 3.0% of the amount advanced, whichever is greater",
+      "scope": "verified across all products",
+      "scope_products": [
+        "Visa Gold",
+        "Visa Platinum Rewards"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": null,
+      "fee_type": "foreign_transaction_fee",
+      "category": "credit_card_rewards",
+      "category_label": "Rewards Credit Card",
+      "value": "1.0% of the purchase amount",
+      "scope": "verified across all products",
+      "scope_products": [
+        "Visa Gold",
+        "Visa Platinum Rewards"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": null,
+      "fee_type": "late_payment_fee",
+      "category": "credit_card_rewards",
+      "category_label": "Rewards Credit Card",
+      "value": "Up to $25.00",
+      "scope": "verified across all products",
+      "scope_products": [
+        "Visa Gold",
+        "Visa Platinum Rewards"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": null,
+      "fee_type": "returned_item_fee",
+      "category": "credit_card_rewards",
+      "category_label": "Rewards Credit Card",
+      "value": "Up to $25.00",
+      "scope": "verified across all products",
+      "scope_products": [
+        "Visa Gold",
+        "Visa Platinum Rewards"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": "Pinnacle Checking",
+      "fee_type": "monthly_maintenance_fee",
+      "category": "checking_premium",
+      "category_label": "Premium / Dividend Checking Account",
+      "value": "$13/month",
+      "scope": "Pinnacle Checking",
+      "scope_products": [
+        "Pinnacle Checking"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": "Elevation Checking",
+      "fee_type": "monthly_maintenance_fee",
+      "category": "checking_general",
+      "category_label": "Checking Account (tier unspecified)",
+      "value": "$9/month",
+      "scope": "Elevation Checking",
+      "scope_products": [
+        "Elevation Checking"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": "Foundation Checking",
+      "fee_type": "monthly_maintenance_fee",
+      "category": "checking_general",
+      "category_label": "Checking Account (tier unspecified)",
+      "value": "$10/month",
+      "scope": "Foundation Checking",
+      "scope_products": [
+        "Foundation Checking"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": "SunNet\u00ae Checking",
+      "fee_type": "monthly_maintenance_fee",
+      "category": "checking_basic",
+      "category_label": "Basic Checking Account",
+      "value": "$9/month",
+      "scope": "SunNet\u00ae Checking",
+      "scope_products": [
+        "SunNet\u00ae Checking"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": "Achievement Checking",
+      "fee_type": "monthly_maintenance_fee",
+      "category": "checking_basic",
+      "category_label": "Basic Checking Account",
+      "value": "$5/month",
+      "scope": "Achievement Checking",
+      "scope_products": [
+        "Achievement Checking"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": null,
+      "fee_type": "monthly_maintenance_fee",
+      "category": "savings_basic",
+      "category_label": "Basic Savings Account",
+      "value": "$5.00 per quarterly statement cycle if the minimum daily balance is not maintained.",
+      "scope": "verified across all products",
+      "scope_products": [
+        "SunNet\u00ae Savings",
+        "Essential Savings"
+      ],
+      "confidence": "high",
+      "mechanism": "recurring",
+      "mechanism_label": "Recurring (periodic)",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": "Supreme Money Market",
+      "fee_type": "monthly_maintenance_fee",
+      "category": "money_market",
+      "category_label": "Money Market Account",
+      "value": "$8.00 per monthly statement cycle if the minimum daily balance is not maintained.",
+      "scope": "Supreme Money Market",
+      "scope_products": [
+        "Supreme Money Market"
+      ],
+      "confidence": "high",
+      "mechanism": "recurring",
+      "mechanism_label": "Recurring (periodic)",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": "First National 1870 -- Overdraft Privilege",
+      "fee_type": "overdraft_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$29.00",
+      "scope": "First National 1870 -- Overdraft Privilege",
+      "scope_products": [
+        "First National 1870 -- Overdraft Privilege"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": "First National 1870 -- Fee Schedule Not Publicly Available",
+      "fee_type": "stop_payment_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "Not publicly disclosed",
+      "scope": "First National 1870 -- Fee Schedule Not Publicly Available",
+      "scope_products": [
+        "First National 1870 -- Fee Schedule Not Publicly Available"
+      ],
+      "confidence": "high",
+      "mechanism": "unknown",
+      "mechanism_label": "Unclear",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": "First National 1870 -- Fee Schedule Not Publicly Available",
+      "fee_type": "returned_deposit_item_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "Not publicly disclosed",
+      "scope": "First National 1870 -- Fee Schedule Not Publicly Available",
+      "scope_products": [
+        "First National 1870 -- Fee Schedule Not Publicly Available"
+      ],
+      "confidence": "high",
+      "mechanism": "unknown",
+      "mechanism_label": "Unclear",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": "First National 1870 -- Fee Schedule Not Publicly Available",
+      "fee_type": "wire_transfer_incoming_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "Not publicly disclosed",
+      "scope": "First National 1870 -- Fee Schedule Not Publicly Available",
+      "scope_products": [
+        "First National 1870 -- Fee Schedule Not Publicly Available"
+      ],
+      "confidence": "high",
+      "mechanism": "unknown",
+      "mechanism_label": "Unclear",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": "First National 1870 -- Fee Schedule Not Publicly Available",
+      "fee_type": "wire_transfer_outgoing_domestic_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "Not publicly disclosed",
+      "scope": "First National 1870 -- Fee Schedule Not Publicly Available",
+      "scope_products": [
+        "First National 1870 -- Fee Schedule Not Publicly Available"
+      ],
+      "confidence": "high",
+      "mechanism": "unknown",
+      "mechanism_label": "Unclear",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": "First National 1870 -- Fee Schedule Not Publicly Available",
+      "fee_type": "wire_transfer_outgoing_international_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "Not publicly disclosed",
+      "scope": "First National 1870 -- Fee Schedule Not Publicly Available",
+      "scope_products": [
+        "First National 1870 -- Fee Schedule Not Publicly Available"
+      ],
+      "confidence": "high",
+      "mechanism": "unknown",
+      "mechanism_label": "Unclear",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": "First National 1870 -- Fee Schedule Not Publicly Available",
+      "fee_type": "cashiers_check_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "Not publicly disclosed",
+      "scope": "First National 1870 -- Fee Schedule Not Publicly Available",
+      "scope_products": [
+        "First National 1870 -- Fee Schedule Not Publicly Available"
+      ],
+      "confidence": "high",
+      "mechanism": "unknown",
+      "mechanism_label": "Unclear",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": "First National 1870 -- Fee Schedule Not Publicly Available",
+      "fee_type": "check_cashing_non_member_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "Not publicly disclosed",
+      "scope": "First National 1870 -- Fee Schedule Not Publicly Available",
+      "scope_products": [
+        "First National 1870 -- Fee Schedule Not Publicly Available"
+      ],
+      "confidence": "high",
+      "mechanism": "unknown",
+      "mechanism_label": "Unclear",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": "First National 1870 -- Fee Schedule Not Publicly Available",
+      "fee_type": "atm_out_of_network_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "Not publicly disclosed",
+      "scope": "First National 1870 -- Fee Schedule Not Publicly Available",
+      "scope_products": [
+        "First National 1870 -- Fee Schedule Not Publicly Available"
+      ],
+      "confidence": "high",
+      "mechanism": "unknown",
+      "mechanism_label": "Unclear",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": "First National 1870 -- Fee Schedule Not Publicly Available",
+      "fee_type": "account_research_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "Not publicly disclosed",
+      "scope": "First National 1870 -- Fee Schedule Not Publicly Available",
+      "scope_products": [
+        "First National 1870 -- Fee Schedule Not Publicly Available"
+      ],
+      "confidence": "high",
+      "mechanism": "unknown",
+      "mechanism_label": "Unclear",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": "First National 1870 -- Fee Schedule Not Publicly Available",
+      "fee_type": "currency_exchange_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "Not publicly disclosed",
+      "scope": "First National 1870 -- Fee Schedule Not Publicly Available",
+      "scope_products": [
+        "First National 1870 -- Fee Schedule Not Publicly Available"
+      ],
+      "confidence": "high",
+      "mechanism": "unknown",
+      "mechanism_label": "Unclear",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": "First National 1870 -- Fee Schedule Not Publicly Available",
+      "fee_type": "safe_deposit_late_payment_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "Not publicly disclosed",
+      "scope": "First National 1870 -- Fee Schedule Not Publicly Available",
+      "scope_products": [
+        "First National 1870 -- Fee Schedule Not Publicly Available"
+      ],
+      "confidence": "high",
+      "mechanism": "unknown",
+      "mechanism_label": "Unclear",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": "First National 1870 -- Fee Schedule Not Publicly Available",
+      "fee_type": "safe_deposit_drill_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "Not publicly disclosed",
+      "scope": "First National 1870 -- Fee Schedule Not Publicly Available",
+      "scope_products": [
+        "First National 1870 -- Fee Schedule Not Publicly Available"
+      ],
+      "confidence": "high",
+      "mechanism": "unknown",
+      "mechanism_label": "Unclear",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": "First National 1870 -- Fee Schedule Not Publicly Available",
+      "fee_type": "card_replacement_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "Not publicly disclosed",
+      "scope": "First National 1870 -- Fee Schedule Not Publicly Available",
+      "scope_products": [
+        "First National 1870 -- Fee Schedule Not Publicly Available"
+      ],
+      "confidence": "high",
+      "mechanism": "unknown",
+      "mechanism_label": "Unclear",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": "First National 1870 -- Fee Schedule Not Publicly Available",
+      "fee_type": "card_replacement_rush_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "Not publicly disclosed",
+      "scope": "First National 1870 -- Fee Schedule Not Publicly Available",
+      "scope_products": [
+        "First National 1870 -- Fee Schedule Not Publicly Available"
+      ],
+      "confidence": "high",
+      "mechanism": "unknown",
+      "mechanism_label": "Unclear",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Enterprise Bank & Trust -- Schedule of Fees",
+      "fee_type": "overdraft_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$30.00",
+      "scope": "Enterprise Bank & Trust -- Schedule of Fees",
+      "scope_products": [
+        "Enterprise Bank & Trust -- Schedule of Fees"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Enterprise Bank & Trust -- Schedule of Fees",
+      "fee_type": "returned_item_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$30.00",
+      "scope": "Enterprise Bank & Trust -- Schedule of Fees",
+      "scope_products": [
+        "Enterprise Bank & Trust -- Schedule of Fees"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Enterprise Bank & Trust -- Schedule of Fees",
+      "fee_type": "returned_deposit_item_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$7.50",
+      "scope": "Enterprise Bank & Trust -- Schedule of Fees",
+      "scope_products": [
+        "Enterprise Bank & Trust -- Schedule of Fees"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Enterprise Bank & Trust -- Schedule of Fees",
+      "fee_type": "stop_payment_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$30.00",
+      "scope": "Enterprise Bank & Trust -- Schedule of Fees",
+      "scope_products": [
+        "Enterprise Bank & Trust -- Schedule of Fees"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Enterprise Bank & Trust -- Schedule of Fees",
+      "fee_type": "wire_transfer_outgoing_domestic_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$25.00",
+      "scope": "Enterprise Bank & Trust -- Schedule of Fees",
+      "scope_products": [
+        "Enterprise Bank & Trust -- Schedule of Fees"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Enterprise Bank & Trust -- Schedule of Fees",
+      "fee_type": "wire_transfer_outgoing_international_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$40.00",
+      "scope": "Enterprise Bank & Trust -- Schedule of Fees",
+      "scope_products": [
+        "Enterprise Bank & Trust -- Schedule of Fees"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Enterprise Bank & Trust -- Schedule of Fees",
+      "fee_type": "cashiers_check_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$5.00",
+      "scope": "Enterprise Bank & Trust -- Schedule of Fees",
+      "scope_products": [
+        "Enterprise Bank & Trust -- Schedule of Fees"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Enterprise Bank & Trust -- Schedule of Fees",
+      "fee_type": "account_research_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$25.00 per hour",
+      "scope": "Enterprise Bank & Trust -- Schedule of Fees",
+      "scope_products": [
+        "Enterprise Bank & Trust -- Schedule of Fees"
+      ],
+      "confidence": "high",
+      "mechanism": "per_unit",
+      "mechanism_label": "Per-unit / rate-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Enterprise Bank & Trust -- Schedule of Fees",
+      "fee_type": "card_replacement_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$5.00",
+      "scope": "Enterprise Bank & Trust -- Schedule of Fees",
+      "scope_products": [
+        "Enterprise Bank & Trust -- Schedule of Fees"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Enterprise Bank & Trust -- Schedule of Fees",
+      "fee_type": "card_replacement_rush_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$55 2-day expedite & $75 next day",
+      "scope": "Enterprise Bank & Trust -- Schedule of Fees",
+      "scope_products": [
+        "Enterprise Bank & Trust -- Schedule of Fees"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Enterprise Bank & Trust -- Schedule of Fees",
+      "fee_type": "dormant_account_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$10.00 per month",
+      "scope": "Enterprise Bank & Trust -- Schedule of Fees",
+      "scope_products": [
+        "Enterprise Bank & Trust -- Schedule of Fees"
+      ],
+      "confidence": "high",
+      "mechanism": "recurring",
+      "mechanism_label": "Recurring (periodic)",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Enterprise Bank & Trust -- Schedule of Fees",
+      "fee_type": "safe_deposit_drill_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "Not publicly disclosed",
+      "scope": "Enterprise Bank & Trust -- Schedule of Fees",
+      "scope_products": [
+        "Enterprise Bank & Trust -- Schedule of Fees"
+      ],
+      "confidence": "high",
+      "mechanism": "unknown",
+      "mechanism_label": "Unclear",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Enterprise Bank & Trust -- Schedule of Fees",
+      "fee_type": "wire_transfer_incoming_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "Domestic: $10.00 / Foreign: $12.50",
+      "scope": "Enterprise Bank & Trust -- Schedule of Fees",
+      "scope_products": [
+        "Enterprise Bank & Trust -- Schedule of Fees"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Enterprise Bank & Trust -- Schedule of Fees",
+      "fee_type": "check_cashing_non_member_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "Under $500: $5.00; Over $500: 1% of the amount",
+      "scope": "Enterprise Bank & Trust -- Schedule of Fees",
+      "scope_products": [
+        "Enterprise Bank & Trust -- Schedule of Fees"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Enterprise Bank & Trust -- Not Publicly Disclosed",
+      "fee_type": "atm_out_of_network_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "Not publicly disclosed",
+      "scope": "Enterprise Bank & Trust -- Not Publicly Disclosed",
+      "scope_products": [
+        "Enterprise Bank & Trust -- Not Publicly Disclosed"
+      ],
+      "confidence": "high",
+      "mechanism": "unknown",
+      "mechanism_label": "Unclear",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Enterprise Bank & Trust -- Not Publicly Disclosed",
+      "fee_type": "currency_exchange_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "Not publicly disclosed",
+      "scope": "Enterprise Bank & Trust -- Not Publicly Disclosed",
+      "scope_products": [
+        "Enterprise Bank & Trust -- Not Publicly Disclosed"
+      ],
+      "confidence": "high",
+      "mechanism": "unknown",
+      "mechanism_label": "Unclear",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Enterprise Bank & Trust -- Not Publicly Disclosed",
+      "fee_type": "safe_deposit_late_payment_fee",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "Not publicly disclosed",
+      "scope": "Enterprise Bank & Trust -- Not Publicly Disclosed",
+      "scope_products": [
+        "Enterprise Bank & Trust -- Not Publicly Disclosed"
+      ],
+      "confidence": "high",
+      "mechanism": "unknown",
+      "mechanism_label": "Unclear",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Primary Benefits Account",
+      "fee_type": "monthly_maintenance_fee",
+      "category": "checking_basic",
+      "category_label": "Basic Checking Account",
+      "value": "None",
+      "scope": "Primary Benefits Account",
+      "scope_products": [
+        "Primary Benefits Account"
+      ],
+      "confidence": "high",
+      "mechanism": "no_fee",
+      "mechanism_label": "No fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Extra Benefits Account (EBA)",
+      "fee_type": "monthly_maintenance_fee",
+      "category": "checking_general",
+      "category_label": "Checking Account (tier unspecified)",
+      "value": "If your average daily balance falls below $2,500 or your relationship balance is less than $10,000, a monthly service charge of $15.00 applies.",
+      "scope": "Extra Benefits Account (EBA)",
+      "scope_products": [
+        "Extra Benefits Account (EBA)"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Interest Checking",
+      "fee_type": "monthly_maintenance_fee",
+      "category": "checking_general",
+      "category_label": "Checking Account (tier unspecified)",
+      "value": "You must maintain a minimum balance of $500 to avoid a $5 monthly service charge.",
+      "scope": "Interest Checking",
+      "scope_products": [
+        "Interest Checking"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Liberty Checking",
+      "fee_type": "monthly_maintenance_fee",
+      "category": "checking_general",
+      "category_label": "Checking Account (tier unspecified)",
+      "value": "None",
+      "scope": "Liberty Checking",
+      "scope_products": [
+        "Liberty Checking"
+      ],
+      "confidence": "high",
+      "mechanism": "no_fee",
+      "mechanism_label": "No fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Maximum Benefits Account (MBA)",
+      "fee_type": "monthly_maintenance_fee",
+      "category": "checking_premium",
+      "category_label": "Premium / Dividend Checking Account",
+      "value": "If your average daily balance falls below $10,000 or your relationship balance is less than $25,000, a monthly service charge of $20.00 applies.",
+      "scope": "Maximum Benefits Account (MBA)",
+      "scope_products": [
+        "Maximum Benefits Account (MBA)"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Maximum Benefits Account (MBA)",
+      "fee_type": "cashiers_check_fee",
+      "category": "checking_premium",
+      "category_label": "Premium / Dividend Checking Account",
+      "value": "None",
+      "scope": "asserted universal (per Maximum Benefits Account (MBA) disclosure)",
+      "scope_products": [
+        "Maximum Benefits Account (MBA)"
+      ],
+      "confidence": "high",
+      "mechanism": "no_fee",
+      "mechanism_label": "No fee",
+      "verification": "asserted",
+      "source_quote": "No fees for cashier\u2019s checks and money orders",
+      "source_locator": "https://www.enterprisebank.com/personal/maximum-benefits-checking-account-mba",
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Personal Savings",
+      "fee_type": "monthly_maintenance_fee",
+      "category": "savings_basic",
+      "category_label": "Basic Savings Account",
+      "value": "None",
+      "scope": "Personal Savings",
+      "scope_products": [
+        "Personal Savings"
+      ],
+      "confidence": "high",
+      "mechanism": "no_fee",
+      "mechanism_label": "No fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Visa Non-Rewards",
+      "fee_type": "annual_fee",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "$0",
+      "scope": "Visa Non-Rewards",
+      "scope_products": [
+        "Visa Non-Rewards"
+      ],
+      "confidence": "high",
+      "mechanism": "no_fee",
+      "mechanism_label": "No fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Visa Non-Rewards",
+      "fee_type": "rewards_structure",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "No",
+      "scope": "Visa Non-Rewards",
+      "scope_products": [
+        "Visa Non-Rewards"
+      ],
+      "confidence": "high",
+      "mechanism": "unknown",
+      "mechanism_label": "Unclear",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Visa Non-Rewards",
+      "fee_type": "purchase_apr",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "10.99% - 21.99%",
+      "scope": "Visa Non-Rewards",
+      "scope_products": [
+        "Visa Non-Rewards"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Visa Non-Rewards",
+      "fee_type": "balance_transfer_apr",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "10.99% - 21.99%",
+      "scope": "Visa Non-Rewards",
+      "scope_products": [
+        "Visa Non-Rewards"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Visa Non-Rewards",
+      "fee_type": "intro_offers",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "0.00% introductory APR for the first 12 billing cycles on purchases and balance transfers.",
+      "scope": "Visa Non-Rewards",
+      "scope_products": [
+        "Visa Non-Rewards"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Visa Non-Rewards",
+      "fee_type": "cash_advance_apr",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "24.99%",
+      "scope": "Visa Non-Rewards",
+      "scope_products": [
+        "Visa Non-Rewards"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Visa Non-Rewards",
+      "fee_type": "cash_advance_fee",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "Not publicly disclosed",
+      "scope": "Visa Non-Rewards",
+      "scope_products": [
+        "Visa Non-Rewards"
+      ],
+      "confidence": "high",
+      "mechanism": "unknown",
+      "mechanism_label": "Unclear",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Visa Non-Rewards",
+      "fee_type": "balance_transfer_fee",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "Not publicly disclosed",
+      "scope": "Visa Non-Rewards",
+      "scope_products": [
+        "Visa Non-Rewards"
+      ],
+      "confidence": "high",
+      "mechanism": "unknown",
+      "mechanism_label": "Unclear",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Visa Non-Rewards",
+      "fee_type": "foreign_transaction_fee",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "Not publicly disclosed",
+      "scope": "Visa Non-Rewards",
+      "scope_products": [
+        "Visa Non-Rewards"
+      ],
+      "confidence": "high",
+      "mechanism": "unknown",
+      "mechanism_label": "Unclear",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Visa Non-Rewards",
+      "fee_type": "late_payment_fee",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "Not publicly disclosed",
+      "scope": "Visa Non-Rewards",
+      "scope_products": [
+        "Visa Non-Rewards"
+      ],
+      "confidence": "high",
+      "mechanism": "unknown",
+      "mechanism_label": "Unclear",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Visa Non-Rewards",
+      "fee_type": "returned_item_fee",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "Not publicly disclosed",
+      "scope": "Visa Non-Rewards",
+      "scope_products": [
+        "Visa Non-Rewards"
+      ],
+      "confidence": "high",
+      "mechanism": "unknown",
+      "mechanism_label": "Unclear",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Visa Rewards",
+      "fee_type": "annual_fee",
+      "category": "credit_card_rewards",
+      "category_label": "Rewards Credit Card",
+      "value": "$0",
+      "scope": "Visa Rewards",
+      "scope_products": [
+        "Visa Rewards"
+      ],
+      "confidence": "high",
+      "mechanism": "no_fee",
+      "mechanism_label": "No fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Visa Rewards Plus",
+      "fee_type": "annual_fee",
+      "category": "credit_card_rewards",
+      "category_label": "Rewards Credit Card",
+      "value": "$50",
+      "scope": "Visa Rewards Plus",
+      "scope_products": [
+        "Visa Rewards Plus"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Visa Rewards",
+      "fee_type": "rewards_structure",
+      "category": "credit_card_rewards",
+      "category_label": "Rewards Credit Card",
+      "value": "Earn 1.25 points for every net $1 in spend",
+      "scope": "Visa Rewards",
+      "scope_products": [
+        "Visa Rewards"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Visa Rewards Plus",
+      "fee_type": "rewards_structure",
+      "category": "credit_card_rewards",
+      "category_label": "Rewards Credit Card",
+      "value": "Earn 1.50 points for every net $1 in spend",
+      "scope": "Visa Rewards Plus",
+      "scope_products": [
+        "Visa Rewards Plus"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": null,
+      "fee_type": "purchase_apr",
+      "category": "credit_card_rewards",
+      "category_label": "Rewards Credit Card",
+      "value": "15.49% - 23.99%",
+      "scope": "verified across all products",
+      "scope_products": [
+        "Visa Rewards",
+        "Visa Rewards Plus"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": null,
+      "fee_type": "balance_transfer_apr",
+      "category": "credit_card_rewards",
+      "category_label": "Rewards Credit Card",
+      "value": "15.49% - 23.99%",
+      "scope": "verified across all products",
+      "scope_products": [
+        "Visa Rewards",
+        "Visa Rewards Plus"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": null,
+      "fee_type": "intro_offers",
+      "category": "credit_card_rewards",
+      "category_label": "Rewards Credit Card",
+      "value": "0.00% introductory APR for the first 6 billing cycles on purchases and balance transfers.",
+      "scope": "verified across all products",
+      "scope_products": [
+        "Visa Rewards",
+        "Visa Rewards Plus"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": null,
+      "fee_type": "cash_advance_apr",
+      "category": "credit_card_rewards",
+      "category_label": "Rewards Credit Card",
+      "value": "24.99%",
+      "scope": "verified across all products",
+      "scope_products": [
+        "Visa Rewards",
+        "Visa Rewards Plus"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": null,
+      "fee_type": "cash_advance_fee",
+      "category": "credit_card_rewards",
+      "category_label": "Rewards Credit Card",
+      "value": "Not publicly disclosed",
+      "scope": "verified across all products",
+      "scope_products": [
+        "Visa Rewards",
+        "Visa Rewards Plus"
+      ],
+      "confidence": "high",
+      "mechanism": "unknown",
+      "mechanism_label": "Unclear",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": null,
+      "fee_type": "balance_transfer_fee",
+      "category": "credit_card_rewards",
+      "category_label": "Rewards Credit Card",
+      "value": "Not publicly disclosed",
+      "scope": "verified across all products",
+      "scope_products": [
+        "Visa Rewards",
+        "Visa Rewards Plus"
+      ],
+      "confidence": "high",
+      "mechanism": "unknown",
+      "mechanism_label": "Unclear",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": null,
+      "fee_type": "foreign_transaction_fee",
+      "category": "credit_card_rewards",
+      "category_label": "Rewards Credit Card",
+      "value": "Not publicly disclosed",
+      "scope": "verified across all products",
+      "scope_products": [
+        "Visa Rewards",
+        "Visa Rewards Plus"
+      ],
+      "confidence": "high",
+      "mechanism": "unknown",
+      "mechanism_label": "Unclear",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": null,
+      "fee_type": "late_payment_fee",
+      "category": "credit_card_rewards",
+      "category_label": "Rewards Credit Card",
+      "value": "Not publicly disclosed",
+      "scope": "verified across all products",
+      "scope_products": [
+        "Visa Rewards",
+        "Visa Rewards Plus"
+      ],
+      "confidence": "high",
+      "mechanism": "unknown",
+      "mechanism_label": "Unclear",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": null,
+      "fee_type": "returned_item_fee",
+      "category": "credit_card_rewards",
+      "category_label": "Rewards Credit Card",
+      "value": "Not publicly disclosed",
+      "scope": "verified across all products",
+      "scope_products": [
+        "Visa Rewards",
+        "Visa Rewards Plus"
+      ],
+      "confidence": "high",
+      "mechanism": "unknown",
+      "mechanism_label": "Unclear",
       "verification": "empirical",
       "source_quote": null,
       "source_locator": null,
@@ -3492,6 +5928,30 @@
       "card_promotions": "https://www.secunm.org/",
       "effective_date": "https://cdn.firstbranchcms.com/kcms-doc/29/68439/Credit-Card-Disclosure.pdf",
       "apr_purchases": "https://www.secunm.org/loans/loans/credit-card.html"
+    },
+    "First National 1870 (Sunflower Bank, N.A.)": {
+      "purchase_apr": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+      "balance_transfer_apr": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+      "cash_advance_apr": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+      "annual_fee": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+      "balance_transfer_fee": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+      "cash_advance_fee": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+      "foreign_transaction_fee": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+      "late_payment_fee": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+      "returned_item_fee": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+      "grace_period": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+      "min_finance_charge": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+      "expedited_payment": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards/consumer-credit-cards",
+      "reward_structure": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards",
+      "card_promotions": "https://www.sunflowerbank.com/personal/loans-credit/credit-cards"
+    },
+    "Enterprise Bank & Trust (New Mexico)": {
+      "annual_fee": "https://www.enterprisebank.com/personal/credit-cards",
+      "apr_purchases": "https://www.enterprisebank.com/personal/credit-cards",
+      "reward_structure": "https://www.enterprisebank.com/personal/credit-cards",
+      "card_promotions": "https://www.enterprisebank.com/personal/credit-cards",
+      "stop_payment": "https://www.enterprisebank.com/scheduleoffees",
+      "effective_date": "https://www.enterprisebank.com/personal/credit-cards"
     }
   }
 }
