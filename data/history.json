@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-29T18:20:49.823440+00:00",
+  "generated_at": "2026-07-30T08:22:51.323532+00:00",
   "institutions": {
     "nusenda": {
       "name": "Nusenda Credit Union",
@@ -2071,8 +2071,8 @@
       "source_quote": null,
       "source_locator": null,
       "issuers": [],
-      "changed_since_last_snapshot": true,
-      "previous_value": "$5.00"
+      "changed_since_last_snapshot": false,
+      "previous_value": null
     },
     {
       "institution": "Nusenda Credit Union",
@@ -2113,8 +2113,8 @@
       "source_quote": null,
       "source_locator": null,
       "issuers": [],
-      "changed_since_last_snapshot": true,
-      "previous_value": "$20.00"
+      "changed_since_last_snapshot": false,
+      "previous_value": null
     },
     {
       "institution": "Nusenda Credit Union",
@@ -2197,8 +2197,8 @@
       "source_quote": null,
       "source_locator": null,
       "issuers": [],
-      "changed_since_last_snapshot": true,
-      "previous_value": "$10.00"
+      "changed_since_last_snapshot": false,
+      "previous_value": null
     },
     {
       "institution": "Nusenda Credit Union",
