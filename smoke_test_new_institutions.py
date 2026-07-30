@@ -37,7 +37,6 @@ EXPECTATIONS = [
      "$12/month, waived with a $5,000 minimum daily balance"),
     ("century_bank_savings_cds_retirement", "Liberty Money Market", "monthly_maintenance_fee",
      "$15/month, waived with a $15,000 minimum daily balance"),
-    ("century_bank_savings_cds_retirement", "Personal Certificate of Deposit", "monthly_maintenance_fee", "None"),
     ("century_bank_savings_cds_retirement", "Market Rate IRA", "monthly_maintenance_fee",
      "$2/month, waived with a $100 minimum daily balance"),
     ("century_bank_savings_cds_retirement", "Fixed Term IRA CD", "monthly_maintenance_fee",

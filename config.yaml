@@ -1,6 +1,13 @@
 # Global Configuration Settings
 settings:
   primary_institution: "Nusenda Credit Union"  # The "us" in the "where we are uncompetitive" check
+  # Purely a display choice -- which column is shown leftmost and
+  # highlighted in the report's header row. Deliberately separate from
+  # primary_institution above (which still means "us" for whenever the
+  # uncompetitiveness check gets built): the user asked to visually
+  # feature Century Bank without changing what "us" means. Set 2026-07-30
+  # per user request.
+  highlighted_institution: "Century Bank (New Mexico)"
   email:
     sender: "fee-comparison-agent@domain.com"
     receiver: "recipient@domain.com"
@@ -224,11 +231,16 @@ institutions:
     name: "Century Bank (New Mexico)"
     url: "https://www.mycenturybank.com/personal-banking/savings-cds-and-retirement"
     type: "multi_card_page"
-    # One page holds 7 distinct products as Bootstrap `.card` divs, mixed in
-    # with unrelated cards (Private Banking, Access your account, etc.) --
-    # `products` is an explicit allowlist keyed by each card's <h2> text so
-    # only these 7 are ingested; card boundaries are per-product, not one
-    # product per URL, for this institution.
+    # One page holds several distinct products as Bootstrap `.card` divs,
+    # mixed in with unrelated cards (Private Banking, Access your account,
+    # etc.) -- `products` is an explicit allowlist keyed by each card's
+    # <h2> text so only these are ingested; card boundaries are per-
+    # product, not one product per URL, for this institution.
+    #
+    # "Personal Certificate of Deposit" is deliberately NOT in this
+    # allowlist -- removed per user request (2026-07-30): with only one
+    # institution in this report ever having a CD product, the category
+    # was never a real cross-institution comparison and added no value.
     card_selector: ".card"
     heading_selector: "h2"
     products:
@@ -244,9 +256,6 @@ institutions:
       "Liberty Money MarkeT":
         product_name: "Liberty Money Market"
         category: "money_market"
-      "Personal Certificate of Deposit":
-        product_name: "Personal Certificate of Deposit"
-        category: "certificate_of_deposit"
       "Market Rate IRA":
         product_name: "Market Rate IRA"
         category: "ira"

@@ -54,7 +54,7 @@
 </head>
 <body>
   <h1>{{ subject }}</h1>
-  <p class="subtitle">Generated {{ generated_at }}. Columns for {{ primary_institution }} are highlighted in the header. Fees are grouped by product category -- see the note above each table for the comparison basis, and each value's italicized line for which specific product(s) it was verified for.</p>
+  <p class="subtitle">Generated {{ generated_at }}. Columns for {{ highlighted_institution }} are highlighted in the header. Fees are grouped by product category -- see the note above each table for the comparison basis, and each value's italicized line for which specific product(s) it was verified for.</p>
 
   {% if credit_card_matrix %}
   <h2>Credit Card Comparison</h2>
@@ -65,7 +65,7 @@
       <tr>
         <th>Fee</th>
         {% for inst in credit_card_matrix.institutions %}
-        <th class="{{ 'primary' if inst == primary_institution else '' }}">{{ inst }}{% if loop.index0 in credit_card_matrix.issuer_columns %}<sup title="Every value in this column except Annual Fee/APR is set by this institution's card issuer -- see the footnote below.">&dagger;</sup>{% endif %}</th>
+        <th class="{{ 'primary' if inst == highlighted_institution else '' }}">{{ inst }}{% if loop.index0 in credit_card_matrix.issuer_columns %}<sup title="Every value in this column except Annual Fee/APR is set by this institution's card issuer -- see the footnote below.">&dagger;</sup>{% endif %}</th>
         {% endfor %}
       </tr>
     </thead>
@@ -104,7 +104,7 @@
       <tr>
         <th>Fee</th>
         {% for inst in section.institutions %}
-        <th class="{{ 'primary' if inst == primary_institution else '' }}">{{ inst }}</th>
+        <th class="{{ 'primary' if inst == highlighted_institution else '' }}">{{ inst }}</th>
         {% endfor %}
       </tr>
     </thead>

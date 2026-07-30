@@ -766,8 +766,14 @@ def build_matrix(config):
 
     nusenda_secured_card = nusenda.pop("_secured_card", None)
 
+    # Century Bank is listed first (leftmost column) per user request
+    # (2026-07-30) -- purely a display-order choice, matching
+    # settings.highlighted_institution in config.yaml. The dicts below are
+    # keyed by name, not position, so this reordering is the only change
+    # needed: every cell is still looked up by institution name, so values
+    # can't end up under the wrong column just because this list moved.
     institutions = [
-        "Nusenda Credit Union", "Century Bank (New Mexico)",
+        "Century Bank (New Mexico)", "Nusenda Credit Union",
         "State Employees Credit Union of New Mexico", "First National 1870 (Sunflower Bank, N.A.)",
         "Enterprise Bank & Trust (New Mexico)",
     ]

@@ -109,7 +109,10 @@ def main():
         config = yaml.safe_load(f)
 
     settings = config["settings"]
-    primary_institution = settings["primary_institution"]
+    # Which column is leftmost/highlighted in the report -- separate from
+    # primary_institution (still "us" for the not-yet-built uncompetitiveness
+    # check), so falls back to it only if not explicitly set.
+    highlighted_institution = settings.get("highlighted_institution", settings["primary_institution"])
     subject = f"{settings['email']['subject_prefix']} - {datetime.now().strftime('%Y-%m-%d')}"
 
     # Read yesterday's snapshot and any confirmed feedback *before* this
@@ -136,7 +139,7 @@ def main():
     credit_card_matrix, matrix_warnings, credit_card_matrix_sources = build_matrix(config)
 
     html_body = render_report(
-        results, primary_institution, subject, facts_by_institution, track_records,
+        results, highlighted_institution, subject, facts_by_institution, track_records,
         credit_card_matrix, matrix_warnings,
     )
 

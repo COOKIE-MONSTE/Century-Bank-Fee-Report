@@ -50,7 +50,7 @@ def _fee_label(fee_key):
     return FIELD_LABEL_MAP.get(fee_key, fee_key.replace("_", " ").title())
 
 
-def render_report(results, primary_institution, subject, facts_by_institution, track_records,
+def render_report(results, highlighted_institution, subject, facts_by_institution, track_records,
                    consumer_card_matrix=None, matrix_warnings=None):
     """Renders the comparison email body.
 
@@ -90,7 +90,7 @@ def render_report(results, primary_institution, subject, facts_by_institution, t
         all_warnings.extend(matrix_warnings)
 
     institution_order = list(facts_by_institution.keys())
-    institution_order.sort(key=lambda name: name != primary_institution)
+    institution_order.sort(key=lambda name: name != highlighted_institution)
 
     # Credit card categories are excluded here -- they get the single
     # institution-level matrix below instead. None of these institutions'
@@ -255,7 +255,7 @@ def render_report(results, primary_institution, subject, facts_by_institution, t
     return template.render(
         subject=subject,
         generated_at=datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
-        primary_institution=primary_institution,
+        highlighted_institution=highlighted_institution,
         sections=sections,
         warnings=all_warnings,
         used_issuer_footnote=report_state["used_issuer_footnote"],
