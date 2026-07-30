@@ -20,16 +20,33 @@ also feed the per-product attribution pipeline as three separate cards
 (see config.yaml's enterprise_bank_credit_cards, type "product_column_table").
 It's still included here too, combined into one column, so every
 institution in this report is comparable side by side in the same table --
-_enterprise_bank_consumer_row() below does that combining (e.g. an APR
-range spanning all three tiers, annual fees listed per tier rather than
-collapsed to one number) instead of picking one card as representative,
-which is what the other institutions' rows do.
+_enterprise_bank_consumer_row() below does that combining by listing each
+tier's own annual fee/APR within the cell (e.g. "Visa Non-Rewards:
+10.99% - 21.99% / Visa Rewards: 15.49% - 23.99% / ..."), never a
+collapsed min-max range: confirmed 2026-07-30 that no Enterprise card is
+actually offered at the union of all three tiers' ranges, so a blended
+number wouldn't correspond to any real product.
 
-A cell is one of two states, never conflated:
+A cell is one of three states, never conflated:
   - a real value (possibly "None" if a source affirmatively states no fee)
   - NOT_STATED: the available source doesn't address this fee at all --
     NOT the same as zero, and rendered differently so a reader never
     mistakes an undisclosed fee for a free one.
+  - NOT_PUBLICLY_DISCLOSED: confirmed to exist but never published (set
+    per-partner-bank, disclosed only at account opening, etc.) -- a
+    stronger claim than NOT_STATED, so never used just because a search
+    came up empty; only when a source affirmatively says so.
+
+GUARDRAIL, applies to every _xxx_consumer_row() function below -- deposit-
+account fees never feed a credit card row, even when the number would
+coincidentally look right. Concretely: First National 1870's $2 paper
+statement fee comes from its Truth-in-Savings DEPOSIT disclosures, not
+its card disclosure (fn1870_checking/fn1870_savings' scrapers, not
+fn1870_credit_cards' -- _fn1870_consumer_row() below never reads from
+those); SECU NM's $10.00 returned item fee and $25.00 uncollected funds
+rate come from the general Fee Schedule (secu_nm, type
+"service_fee_table"), and neither is stated to apply to card payments, so
+_secu_nm_consumer_row() below never reads them either.
 
 Every value here is a **live extraction**, not a hardcoded string -- if a
 value looks static, that's because the same underlying scraper class used
@@ -83,6 +100,7 @@ NOT_STATED = "Not stated"
 MATRIX_ROWS = [
     ("annual_fee", "Annual Fee"),
     ("apr_purchases", "APR -- Purchases"),
+    ("apr_cash_advances", "APR -- Cash Advances"),
     ("apr_ceiling", "APR Ceiling"),
     ("penalty_apr", "Penalty APR"),
     ("late_payment", "Late Payment"),
@@ -178,6 +196,66 @@ def _century_rewards_and_promos(warnings):
     return reward_summary, promo_summary, url
 
 
+def _century_secured_agreement_extras(warnings):
+    """Grace period, over-limit fee, and penalty APR aren't part of
+    TcmIssuerScraper's canonical field set -- this reads them directly
+    from the Secured Card Cardholder Agreement (confirmed 2026-07-30: no
+    "over-limit"/"penalty"/"default APR" wording appears anywhere in that
+    51K-character document, so absence is treated as a confirmed "None",
+    not "not stated").
+
+    MEDIUM CONFIDENCE CAVEAT: this is the *Secured* agreement specifically
+    -- TCM's unsecured Consumer agreement (what TcmIssuerScraper's
+    "consumer" agreement type actually fetches for the rest of Century's
+    fields) almost certainly matches on these three points, since TCM's
+    agreements share structure across products, but a March 2026 unsecured
+    version with these same sections could not be located to confirm
+    directly. TODO: obtain/verify against the unsecured Consumer agreement
+    once TCM publishes one with matching content.
+    """
+    url = "https://www.tcmbank.com/documents/45248/903684/SecuredCardCardholderAgreement_March2026.pdf"
+    text = _fetch_pdf_text(url, warnings, "Century Bank / TCM Secured Card Cardholder Agreement (grace period/over-limit/penalty APR)")
+    if not text:
+        return {}, None
+
+    warnings.append(
+        "[Credit card matrix] Century Bank's Grace Period, Over-Limit, and Penalty APR values are sourced "
+        "from TCM's *Secured* Card Cardholder Agreement, not the Consumer agreement used for Century's other "
+        "card fields -- medium confidence pending an unsecured agreement to confirm these three points match. "
+        f"Source: {url}"
+    )
+
+    # pypdf's text extraction inserts a stray space inside some words in
+    # this document ("Y our" for "Your") -- the regex below starts from
+    # "Payment Due Date" specifically to sidestep that rather than trying
+    # to match "Your" literally.
+    extras = {}
+    grace_m = re.search(r"Payment Due Date is at least (\d+) days after the close of each billing cycle", text)
+    if grace_m:
+        extras["grace_period"] = (
+            f"Your Payment Due Date is at least {grace_m.group(1)} days after the close of each billing cycle. "
+            "No interest on Purchases (including Balance Transfers) if you pay your entire balance by the due "
+            "date. There is no grace period on Cash Advances -- finance charges accrue from the transaction date."
+        )
+
+    # The agreement DOES discuss "Over Limit Transactions" (the cardholder's
+    # obligation not to exceed the Credit Limit, and the bank's discretion
+    # to honor one anyway) -- but never states a dollar FEE for one, so a
+    # bare phrase-presence check would wrongly conclude "not stated" here.
+    # Confirmed "None" by checking specifically for a dollar amount near
+    # any over-limit mention, not just whether the phrase appears at all.
+    over_limit_fee_found = any(
+        re.search(r"\$[\d,]+(?:\.\d{2})?", text[max(0, m.start() - 200):m.start() + 200])
+        for m in re.finditer(r"over[\s-]limit", text, re.IGNORECASE)
+    )
+    if re.search(r"over[\s-]limit", text, re.IGNORECASE) and not over_limit_fee_found:
+        extras["over_limit"] = "None"
+
+    if not re.search(r"penalty|default APR", text, re.IGNORECASE):
+        extras["penalty_apr"] = "None"
+    return extras, url
+
+
 # Maps TcmIssuerScraper's canonical field names to this module's matrix
 # row keys, so an "llm_assisted" tag on the scraped card (see
 # tcm_issuer_scraper.py's _FIELD_DESCRIPTIONS) can be translated into which
@@ -203,6 +281,17 @@ def _century_consumer_row(warnings):
     fallback rather than a regex match (see tcm_issuer_scraper.py), so
     build_matrix() can flag those cells distinctly instead of presenting
     an AI guess with the same visual weight as a direct pattern match.
+
+    GUARDRAIL -- never source Century's annual fee/APR fields from TCM's
+    own-brand disclosures (e.g. tcmbank.com/docs/tcmbanklibraries/
+    disclosures/tcm-disclosures.pdf or the copy mirrored on icba.org): TCM
+    sets pricing per PARTNER BANK, and TCM's own-brand terms are
+    confirmed different from Century's (Century's late fee is $30/$41;
+    TCM's own-brand disclosure, effective 2026-01-30, says "Up to $40" --
+    different structures, different programs). Century's annual fee/APR
+    stay NOT_PUBLICLY_DISCLOSED for exactly this reason: no source states
+    Century-specific figures, and TCM's generic ones must never be
+    substituted in.
     """
     tcm_cfg = {
         "products": {"__matrix_probe__": {"agreement": "consumer", "category": "credit_card_standard"}},
@@ -227,24 +316,33 @@ def _century_consumer_row(warnings):
         sources["reward_structure"] = rewards_url
         sources["card_promotions"] = rewards_url
 
+    secured_agreement_extras, secured_agreement_url = _century_secured_agreement_extras(warnings)
+    if secured_agreement_url:
+        for field in secured_agreement_extras:
+            sources[field] = secured_agreement_url
+
     values = {
         "annual_fee": NOT_PUBLICLY_DISCLOSED,
         "apr_purchases": NOT_PUBLICLY_DISCLOSED,
+        # Same "set per-partner-bank, never published" reasoning as
+        # annual_fee/apr_purchases above applies to every APR type here,
+        # not just purchases -- TCM discloses none of them for Century.
+        "apr_cash_advances": NOT_PUBLICLY_DISCLOSED,
         "apr_ceiling": NOT_STATED,
-        "penalty_apr": NOT_STATED,
+        "penalty_apr": secured_agreement_extras.get("penalty_apr", NOT_STATED),
         "late_payment": card.get("late_payment_fee", NOT_STATED),
         "returned_payment": card.get("returned_item_fee", NOT_STATED),
         "cash_advance": card.get("cash_advance_fee", NOT_STATED),
         "balance_transfer": card.get("balance_transfer_fee", NOT_STATED),
         "foreign_transaction": card.get("foreign_transaction_fee", NOT_STATED),
-        "over_limit": NOT_STATED,
+        "over_limit": secured_agreement_extras.get("over_limit", NOT_STATED),
         "paper_statement": extra.get("paper_statement", NOT_STATED),
         "stop_payment": card.get("stop_payment_fee", NOT_STATED),
         "expedited_payment": extra.get("expedited_payment", NOT_STATED),
         "research_copies": extra.get("research_copies", NOT_STATED),
         "min_finance_charge": extra.get("min_finance_charge", NOT_STATED),
         "min_payment": NOT_STATED,
-        "grace_period": NOT_STATED,
+        "grace_period": secured_agreement_extras.get("grace_period", NOT_STATED),
         "reward_structure": reward_structure,
         "card_promotions": card_promotions,
         "effective_date": extra.get("effective_date", NOT_STATED),
@@ -291,6 +389,79 @@ def _nusenda_promo_check(url, warnings):
     if found:
         return f"Possible promotion detected near: \"{text[max(0, found.start()-40):found.start()+80]}\" -- verify manually."
     return "None advertised (promotional intro APR exists separately -- see Intro Offers)"
+
+
+def _nusenda_terms_page_extras(url, warnings):
+    """Over-Limit and Grace Period aren't part of HTMLScraper's canonical
+    field set (they're prose, not table rows, and HTMLScraper's generic
+    fallback only searches fields already seeded by get_default_fields()
+    or a table match) -- read directly from the same terms-and-conditions
+    page HTMLScraper already covers, via a second targeted fetch.
+    """
+    try:
+        r = requests.get(url, headers=HEADERS, timeout=20)
+        r.raise_for_status()
+        text = " ".join(BeautifulSoup(r.content, "html.parser").get_text(separator=" ", strip=True).split())
+    except Exception as e:
+        msg = f"[Credit card matrix] Failed to fetch Nusenda terms page for over-limit/grace period: {e}"
+        logger.error(msg)
+        warnings.append(msg)
+        return {}
+
+    extras = {}
+    if re.search(r"Over-the-Credit Limit:\s*None\.\s*We do not allow transactions that will exceed your credit limit\.", text, re.IGNORECASE):
+        extras["over_limit"] = "None. We do not allow transactions that will exceed your credit limit."
+    grace_m = re.search(
+        r"(Your due date is at least \d+ days after we mail your billing statement\. "
+        r"We will not charge you interest on purchases[^.]*\. "
+        r"We will begin charging interest on cash advances, balance transfers and credit card checks[^.]*\.)",
+        text, re.IGNORECASE,
+    )
+    if grace_m:
+        extras["grace_period"] = grace_m.group(1)
+    return extras
+
+
+def _nusenda_superseded_addendum_extras(warnings):
+    """Research/Copies fee for Nusenda's cards only appears in an older
+    addendum (stamped 08/08/22) that is no longer linked from Nusenda's
+    current agreement page -- confirmed 2026-07-30: the current 12/22/25
+    addenda's "OTHER FEES" list runs Late Fee / Returned Payment / Cash
+    Advance / Annual Fee only, with no Copy Charges section at all.
+
+    Kept anyway (it's the most recent figure available) but flagged as
+    superseded directly in the value string and via a Data Quality Notes
+    warning, matching how SECU NM's stale effective_date is already
+    handled -- rather than silently presenting a 2022 figure as current.
+    Two independent tells confirm this document is genuinely the older
+    one, not just an alternate current document: its repeat late fee is
+    $35.00 versus $30.00 in the current addenda, and it quotes Prime at
+    5.50% versus 6.75% in the 12/22/25 addenda.
+    """
+    url = "https://www.nusenda.org/docs/default-source/addendums/visadisclosure_775_addendum_disclosure.pdf"
+    text = _fetch_pdf_text(url, warnings, "Nusenda Visa Addendum (superseded, 08/08/22 -- Research/Copies fee)")
+    if not text:
+        return None, None
+
+    m = re.search(
+        r"A \$([\d.]+) per page fee will be assessed for each additional copy you request of a monthly "
+        r"billing statement\. A \$([\d.]+) charge will be assessed for each charge slip copy you request\.",
+        text, re.IGNORECASE,
+    )
+    if not m:
+        return None, None
+
+    warnings.append(
+        "[Credit card matrix] Nusenda's Research/Copies fee is sourced from a Visa addendum dated 08/08/22 that "
+        "is no longer linked from Nusenda's current agreement page -- the current 12/22/25 addenda don't restate "
+        f"this fee at all. Kept as the most recent figure available. Source: {url}"
+    )
+    value = (
+        f"${m.group(1)} per page for each additional copy of a monthly billing statement; ${m.group(2)} for each "
+        "charge slip copy (from a Nusenda addendum dated 08/08/22 that is no longer linked from their current "
+        "disclosures page; not restated in the 12/22/25 addenda -- see Data Quality Notes)"
+    )
+    return value, url
 
 
 def _nusenda_consumer_row(warnings, config):
@@ -366,6 +537,26 @@ def _nusenda_consumer_row(warnings, config):
             min_finance_charge = f"${m3.group(1)}"
             sources["min_finance_charge"] = addendum_url
 
+    # Each addendum stamps its own effective date right after "Equal
+    # Opportunity Lender" (e.g. "ADM 12/22/25") -- extracted live rather
+    # than hardcoded, since Nusenda reissues these addenda periodically
+    # (this exact mechanism is why the 08/08/22 Research/Copies source
+    # above is stale: it was superseded by newer addenda that dropped
+    # that fee entirely). The general (non-Secured) addendum's date
+    # covers most of this column's fields; the Secured addendum's own
+    # date (used for the Secured APR row) can differ, noted separately.
+    effective_date = NOT_STATED
+    general_addendum_url = "https://www.nusenda.org/docs/default-source/addendums/visa-9-75-12-22-25--16-50.pdf"
+    general_text = _fetch_pdf_text(general_addendum_url, warnings, "Nusenda general Visa addendum (effective date)")
+    date_pattern = r"Equal Opportunity Lender\s*ADM\s*(\d{1,2}/\d{1,2}/\d{2,4})"
+    general_date_m = re.search(date_pattern, general_text, re.IGNORECASE) if general_text else None
+    secured_date_m = re.search(date_pattern, text, re.IGNORECASE) if text else None
+    if general_date_m:
+        effective_date = general_date_m.group(1)
+        sources["effective_date"] = general_addendum_url
+        if secured_date_m and secured_date_m.group(1) != general_date_m.group(1):
+            effective_date += f" (Secured card addendum dated {secured_date_m.group(1)})"
+
     reward_parts = [f"{c['card_name']}: {c.get('rewards_structure', NOT_STATED)}" for c in cards]
     reward_structure = " ".join(reward_parts) if reward_parts else NOT_STATED
     if cards:
@@ -374,30 +565,46 @@ def _nusenda_consumer_row(warnings, config):
     card_promotions = _nusenda_promo_check(nusenda_cfg["url"], warnings)
     sources["card_promotions"] = nusenda_cfg["url"]
 
+    terms_extras = _nusenda_terms_page_extras(nusenda_cfg["url"], warnings)
+    for field in terms_extras:
+        sources[field] = nusenda_cfg["url"]
+
+    # Research/Copies has no CURRENT Nusenda card source at all -- unlike
+    # Stop Payment above, which is genuinely, independently confirmed live
+    # via the General Fees widget, so that one is NOT re-pointed at the
+    # superseded document even though it also appears there.
+    research_copies, research_copies_url = _nusenda_superseded_addendum_extras(warnings)
+    if research_copies_url:
+        sources["research_copies"] = research_copies_url
+
     values = {
         "annual_fee": general_card.get("annual_fee", NOT_STATED) if general_card else NOT_STATED,
         "apr_purchases": (
             f"{general_card['purchase_apr']} (variable, Prime + 5.75-9.75%)"
             if general_card and general_card.get("purchase_apr") else NOT_STATED
         ),
+        "apr_cash_advances": (
+            f"{general_card['cash_advance_apr']} (variable, Prime + 5.75-9.75%)"
+            if general_card and general_card.get("cash_advance_apr") else NOT_STATED
+        ),
         "apr_ceiling": apr_ceiling,
         "penalty_apr": penalty_apr,
         "late_payment": general_card.get("late_payment_fee", NOT_STATED) if general_card else NOT_STATED,
         "returned_payment": general_card.get("returned_item_fee", NOT_STATED) if general_card else NOT_STATED,
         "cash_advance": general_card.get("cash_advance_fee", NOT_STATED) if general_card else NOT_STATED,
-        "balance_transfer": NOT_STATED,
+        "balance_transfer": general_card.get("balance_transfer_fee", NOT_STATED) if general_card else NOT_STATED,
         "foreign_transaction": general_card.get("foreign_transaction_fee", NOT_STATED) if general_card else NOT_STATED,
-        "over_limit": NOT_STATED,
+        "over_limit": terms_extras.get("over_limit", NOT_STATED),
         "paper_statement": NOT_STATED,
         "stop_payment": stop_payment,
         "expedited_payment": NOT_STATED,
-        "research_copies": NOT_STATED,
+        "research_copies": research_copies or NOT_STATED,
         "min_finance_charge": min_finance_charge,
         "min_payment": NOT_STATED,
-        "grace_period": NOT_STATED,
+        "grace_period": terms_extras.get("grace_period", NOT_STATED),
         "reward_structure": reward_structure,
         "card_promotions": card_promotions,
-        "effective_date": NOT_STATED,
+        "effective_date": effective_date,
     }
 
     # This module's own extra data (Secured card fields) rides along on the
@@ -488,6 +695,35 @@ def _secu_nm_consumer_row(warnings):
     effective_date = stale_m.group(1) if stale_m else NOT_STATED
     sources["effective_date"] = pdf_url
 
+    # Research/Copies isn't in the card disclosure -- SECU NM's general
+    # Fee Schedule covers it as an institution-wide service fee (not
+    # card-specific, but the disclosure has no separate card version and
+    # these are exactly the kind of general administrative fees that
+    # would apply to a card account too, same as Century's and FN1870's
+    # equivalents, which are also just generic photocopy/research fees in
+    # THEIR agreements rather than card-specific line items).
+    fee_schedule_url = "https://www.secunm.org/fee-schedule.html"
+    research_copies = NOT_STATED
+    try:
+        r = requests.get(fee_schedule_url, headers=HEADERS, timeout=20)
+        r.raise_for_status()
+        fee_schedule_text = " ".join(BeautifulSoup(r.content, "html.parser").get_text(separator=" ", strip=True).split())
+        copies_m = re.search(
+            r"Check Copies\s*(\$[\d.]+)\s*Monthly Statement Copies\s*(\$[\d.]+)\s*Both Available via Online Banking\s*(FREE)",
+            fee_schedule_text, re.IGNORECASE,
+        )
+        research_m = re.search(r"Account Reconciliation or Research\s*(\$[\d.]+ per hour)", fee_schedule_text, re.IGNORECASE)
+        if copies_m and research_m:
+            research_copies = (
+                f"Check copies: {copies_m.group(1)}; monthly statement copies: {copies_m.group(2)} "
+                f"(both {copies_m.group(3)} via online banking); account research: {research_m.group(1)}"
+            )
+            sources["research_copies"] = fee_schedule_url
+    except Exception as e:
+        msg = f"[Credit card matrix] Failed to fetch SECU NM fee schedule for research/copies: {e}"
+        logger.error(msg)
+        warnings.append(msg)
+
     # `cards` already has purchase_apr set per card by scrape() (it fetches
     # the rates table internally) -- reading it back off `cards` instead of
     # calling _fetch_apr_by_card() again avoids a second live fetch of the
@@ -499,12 +735,28 @@ def _secu_nm_consumer_row(warnings):
     # displayed value still exactly matches what was scraped.
     apr_numeric = sorted(apr_values, key=lambda v: float(v.rstrip("%")))
     apr_purchases = f"{apr_numeric[0]} - {apr_numeric[-1]} (non-variable per card)" if apr_numeric else NOT_STATED
+    # Deliberately NOT sourced from the disclosure PDF's own stated
+    # "ANNUAL PERCENTAGE RATE (APR) FOR PURCHASES: 7.50-18.00%." line --
+    # investigated 2026-07-30 (requester flagged 7.50%-18.00% as a
+    # correction). That line is SECU's general creditworthiness-tiered
+    # spread across any applicant/tier, not a number tied to any of the 3
+    # real, currently-offered cards. Confirmed with the requester: keep
+    # deriving the range from the live per-card rates table above (this
+    # row's whole purpose is a spread across an institution's own named
+    # tiers, which 7.50-18.00% doesn't clearly map to -- see MATRIX_ROWS'
+    # apr_ceiling, a genuinely different concept, for the disclosure-
+    # stated-cap case this would need to be to belong there instead).
     if apr_values:
         sources["apr_purchases"] = secu_cfg["rates_url"]
 
     values = {
         "annual_fee": card.get("annual_fee", NOT_STATED),
         "apr_purchases": apr_purchases,
+        # The disclosure states exactly one APR ("Non-Variable Rate Visa
+        # Credit Cards... ANNUAL PERCENTAGE RATE (APR) FOR PURCHASES:
+        # 7.50-18.00%") with no separate cash-advance rate anywhere --
+        # confirmed 2026-07-30, not assumed to match the purchase rate.
+        "apr_cash_advances": NOT_STATED,
         "apr_ceiling": NOT_STATED,
         "penalty_apr": NOT_STATED,
         "late_payment": card.get("late_payment_fee", NOT_STATED),
@@ -516,7 +768,7 @@ def _secu_nm_consumer_row(warnings):
         "paper_statement": NOT_STATED,
         "stop_payment": NOT_STATED,
         "expedited_payment": NOT_STATED,
-        "research_copies": NOT_STATED,
+        "research_copies": research_copies,
         "min_finance_charge": NOT_STATED,
         "min_payment": min_payment,
         "grace_period": grace,
@@ -600,10 +852,12 @@ def _fn1870_consumer_row(warnings, config):
         sources["card_promotions"] = rewards_url
 
     purchase_apr = card.get("purchase_apr")
+    cash_advance_apr = card.get("cash_advance_apr")
 
     values = {
         "annual_fee": card.get("annual_fee", NOT_STATED),
         "apr_purchases": f"{purchase_apr} (variable, WSJ Prime)" if purchase_apr else NOT_STATED,
+        "apr_cash_advances": f"{cash_advance_apr} (variable, WSJ Prime)" if cash_advance_apr else NOT_STATED,
         "apr_ceiling": NOT_STATED,
         "penalty_apr": NOT_STATED,
         "late_payment": card.get("late_payment_fee", NOT_STATED),
@@ -650,6 +904,15 @@ def _enterprise_bank_consumer_row(warnings, config):
     matrix's one-column-per-institution shape rather than picking one card
     as "representative" the way the shared-disclosure institutions' rows
     do.
+
+    GUARDRAIL -- never source Enterprise's foreign transaction fee from
+    enterprisebank.com/sites/default/files/2019-12/Visa_Credit_Card_
+    Benefits_Consumer_WEB.pdf: that's a 2019 Visa cardholder BENEFITS
+    guide, not a fee schedule. A 1% figure circulates from it but isn't
+    confirmed on any Enterprise primary page (checked 2026-07-30,
+    including the CFPB credit card agreement database) -- foreign
+    transaction fee stays NOT_PUBLICLY_DISCLOSED rather than sourced from
+    that document.
     """
     eb_cfg = config["institutions"]["enterprise_bank_credit_cards"]
     scraper = ProductColumnTableScraper(name=eb_cfg["name"], url=eb_cfg["url"], config=eb_cfg)
@@ -687,15 +950,21 @@ def _enterprise_bank_consumer_row(warnings, config):
             logger.error(msg)
             warnings.append(msg)
 
-    annual_fee_parts, apr_lows, apr_highs, reward_parts, promo_parts = [], [], [], [], []
+    annual_fee_parts, apr_purchases_parts, cash_advance_aprs, reward_parts, promo_parts = [], [], [], [], []
     effective_date = None
     for card in cards:
         name = card.get("card_name", "Unknown")
         annual_fee_parts.append(f"{card.get('annual_fee', NOT_STATED)} ({name})")
-        m = re.search(r"([\d.]+)%\s*-\s*([\d.]+)%", card.get("purchase_apr", ""))
-        if m:
-            apr_lows.append(float(m.group(1)))
-            apr_highs.append(float(m.group(2)))
+        # Per-card breakdown, not a collapsed min-max range -- confirmed
+        # 2026-07-30 that no Enterprise card is actually offered at the
+        # union of all three tiers' ranges (10.99%-23.99%); that number
+        # doesn't correspond to any real product. Same per-card-breakdown
+        # treatment already used for reward_structure/card_promotions
+        # below, now applied consistently to APR too.
+        if card.get("purchase_apr"):
+            apr_purchases_parts.append(f"{name}: {card['purchase_apr']}")
+        if card.get("cash_advance_apr"):
+            cash_advance_aprs.append(card["cash_advance_apr"])
         reward_parts.append(f"{name}: {card.get('rewards_structure', NOT_STATED)}")
         if card.get("intro_offers"):
             promo_parts.append(f"{name}: {card['intro_offers']}")
@@ -703,9 +972,13 @@ def _enterprise_bank_consumer_row(warnings, config):
             effective_date = card.get("_matrix_extra", {}).get("effective_date")
 
     annual_fee = " / ".join(annual_fee_parts) if annual_fee_parts else NOT_STATED
-    apr_purchases = (
-        f"{min(apr_lows):.2f}% - {max(apr_highs):.2f}% (varies by tier -- see Data Quality Notes)"
-        if apr_lows and apr_highs else NOT_STATED
+    apr_purchases = " / ".join(apr_purchases_parts) if apr_purchases_parts else NOT_STATED
+    # All three tiers carry the identical cash advance APR (confirmed
+    # 2026-07-30), so unlike purchase APR there's no per-tier spread to
+    # preserve -- one shared value with a note is accurate here.
+    apr_cash_advances = (
+        f"{cash_advance_aprs[0]} (variable, Prime; identical across all three cards)"
+        if cash_advance_aprs else NOT_STATED
     )
     reward_structure = " ".join(reward_parts) if reward_parts else NOT_STATED
     card_promotions = " ".join(promo_parts) if promo_parts else NOT_STATED
@@ -713,6 +986,7 @@ def _enterprise_bank_consumer_row(warnings, config):
     values = {
         "annual_fee": annual_fee,
         "apr_purchases": apr_purchases,
+        "apr_cash_advances": apr_cash_advances,
         "apr_ceiling": NOT_STATED,
         "penalty_apr": NOT_STATED,
         "late_payment": NOT_PUBLICLY_DISCLOSED,

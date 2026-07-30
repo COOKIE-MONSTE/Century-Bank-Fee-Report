@@ -18,6 +18,12 @@ class MultiCardPageScraper(BaseScraper):
     the card's heading text -- deliberately not "every .card on the page",
     since this page mixes real product cards with marketing/navigation
     cards that happen to use the same component.
+
+    `fee_pattern`/`balance_pattern` are configurable (default to Century's
+    own "$X Monthly Service Fee" / "$X Min. Daily Balance..." wording,
+    value-before-label) since not every institution's card page uses that
+    exact phrase or order -- SECU NM's compare-accounts page, for example,
+    states "Monthly Service Fee $X" (label-before-value).
     """
 
     def __init__(self, name, url, config):
@@ -33,10 +39,16 @@ class MultiCardPageScraper(BaseScraper):
         heading_selector = self.config.get("heading_selector", "h2")
         products_cfg = self.config.get("products", {})
 
-        fee_re = re.compile(r"\$([\d,]+(?:\.\d{2})?)\s*Monthly Service Fee", re.IGNORECASE)
+        fee_re = re.compile(
+            self.config.get("fee_pattern", r"\$([\d,]+(?:\.\d{2})?)\s*Monthly Service Fee"),
+            re.IGNORECASE,
+        )
         balance_re = re.compile(
-            r"\$([\d,]+(?:\.\d{2})?)\s*(?:Min\.\s*Daily Balance to Avoid Fee"
-            r"|minimum daily balance to avoid (?:monthly )?service fee)",
+            self.config.get(
+                "balance_pattern",
+                r"\$([\d,]+(?:\.\d{2})?)\s*(?:Min\.\s*Daily Balance to Avoid Fee"
+                r"|minimum daily balance to avoid (?:monthly )?service fee)",
+            ),
             re.IGNORECASE,
         )
 

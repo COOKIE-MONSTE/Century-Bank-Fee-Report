@@ -14,6 +14,15 @@ logger = logging.getLogger("FeeComparisonScraper")
 # for attribution.classify_mechanism() to tell it's actually recurring.
 _PERIOD_QUALIFIER = re.compile(r"\(per\s+(month|hour|year|day|item|transaction)\)", re.IGNORECASE)
 
+# Some rows state the fee as a *waivable* balance-threshold charge in the
+# TYPE label rather than the amount itself -- e.g. "Minimum Average
+# Balance/Share Draft < $2,500" / "$7.50" -- which left the value reading
+# as an unconditional flat fee. Confirmed 2026-07-30 this affects Dividend
+# Checking, Essential Checking, and Money Market, all via this same label
+# pattern -- not a one-off, so fixed generically here rather than only for
+# whichever one was reported.
+_BALANCE_THRESHOLD_QUALIFIER = re.compile(r"Minimum Average Balance(?:/Share Draft)?\s*<\s*\$([\d,]+)", re.IGNORECASE)
+
 
 class LKCSFeeScraper(BaseScraper):
     """Scrapes fee tables served by the lk-cs.com rates widget API used by
@@ -101,6 +110,9 @@ class LKCSFeeScraper(BaseScraper):
                 period_m = _PERIOD_QUALIFIER.search(type_text)
                 if period_m and period_m.group(1).lower() not in piece.lower():
                     piece = f"{piece} per {period_m.group(1).lower()}"
+                balance_m = _BALANCE_THRESHOLD_QUALIFIER.search(type_text)
+                if balance_m and "waived" not in piece.lower():
+                    piece = f"{piece}/month, waived with a ${balance_m.group(1)} minimum average balance"
                 grouped.setdefault(field, [])
                 if piece not in grouped[field]:
                     grouped[field].append(piece)

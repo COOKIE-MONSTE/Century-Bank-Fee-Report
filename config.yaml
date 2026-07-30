@@ -128,6 +128,23 @@ institutions:
     field_aliases:
       wire_transfer_incoming_fee: wire_transfer_outgoing_domestic_fee
 
+  nusenda_regular_savings:
+    name: "Nusenda Credit Union"
+    url: "https://www.nusenda.org/accounts/savings/savings-accounts"
+    type: "regex_value"
+    product_name: "Regular Savings Account"
+    category: "savings_basic"
+    # Adds Nusenda to the Basic Savings Account comparison, currently
+    # missing it entirely -- confirmed 2026-07-30, an affirmative "no
+    # fees" statement (also corroborated by this same page's FAQ:
+    # "Nusenda's regular savings accounts have no fees"), not an absence
+    # of disclosure, so recorded as a confirmed "None" via
+    # field_fixed_values rather than left NOT_STATED.
+    field_patterns:
+      monthly_maintenance_fee: 'Minimum Opening Deposit \$5 Fees (No fees)'
+    field_fixed_values:
+      monthly_maintenance_fee: "None"
+
   century_bank:
     name: "Century Bank (New Mexico)"
     type: "static"
@@ -380,50 +397,51 @@ institutions:
   # correctly NOT included here -- it has no checking-account features and
   # no product page of its own.
   #
-  # Each of these asserts "no maintenance fee" as a blanket statement
-  # rather than a per-product line item -- e.g. the three Kasasa PDFs all
-  # say "There are no maintenance or activity fees/charges associated with
-  # this account... [except] a dormant account fee". That's real evidence,
-  # but weaker than an independent per-product confirmation, so it's
-  # recorded via assert_universal_fee (see scraper/asserted_fee_scraper.py)
-  # and shows in the report as "asserted universal", not
-  # "verified across all products".
-  secu_nm_kasasa_cash:
+  # Confirmed 2026-07-30: SECU NM also publishes a structured side-by-side
+  # comparison page (compare-accounts.html) that states each Kasasa
+  # product's "Monthly Service Fee" as a discrete labeled value, not a
+  # prose catch-all statement -- unlike the individual Kasasa PDF
+  # disclosures (previously the sole source here, via assert_universal_fee
+  # -- "There are no maintenance or activity fees/charges associated with
+  # this account..."), this is the same kind of structured per-product
+  # figure every other institution's checking pages already get scraped
+  # as plain empirical values from. Switched to sourcing from this page
+  # instead of the PDFs for exactly that reason: it's not "the same
+  # evidence with more corroboration" (assert_universal_fee's confidence
+  # is deliberately never upgraded just by adding sources, see
+  # attribution.py), it's a genuinely different, more structured kind of
+  # source that doesn't need the asserted-universal treatment. The three
+  # PDF disclosures above remain the source of record for the OTHER
+  # Kasasa facts this repo doesn't currently scrape (e.g. the domestic
+  # ATM fee refund up to $25/month) if that's ever added.
+  secu_nm_kasasa_compare:
     name: "State Employees Credit Union of New Mexico"
-    url: "https://www.secunm.org/_/kcms-doc/29/45754/Kasasa_Cash_and_Reward_Checking_Disclosure.pdf"
-    type: "asserted_fee"
-    source_format: "pdf"
-    product_name: "Kasasa Cash"
-    category: "checking_premium"
-    assertions:
-      - field: "monthly_maintenance_fee"
-        pattern: "There are no maintenance or activity (?:fees|charges) associated with this account[^.]*\\."
-        value: "None"
+    url: "https://www.secunm.org/accounts/checking/compare-accounts.html"
+    type: "multi_card_page"
+    card_selector: ".account"
+    heading_selector: ".account-name h2"
+    # Label-before-value order ("Monthly Service Fee $0"), the reverse of
+    # MultiCardPageScraper's Century-tuned default ("$X Monthly Service
+    # Fee") -- overridden here rather than changing the default and
+    # risking Century's own extraction.
+    fee_pattern: 'Monthly Service Fee\s*\$([\d,]+(?:\.\d{2})?)'
+    products:
+      "Kasasa Cash\xae":
+        product_name: "Kasasa Cash"
+        category: "checking_premium"
+      "Kasasa Cash Back\xae":
+        product_name: "Kasasa Cash Back"
+        category: "checking_premium"
+      "Kasasa Tunes\xae":
+        product_name: "Kasasa Tunes"
+        category: "checking_premium"
 
-  secu_nm_kasasa_cash_back:
-    name: "State Employees Credit Union of New Mexico"
-    url: "https://www.secunm.org/_/kcms-doc/29/45759/Kasasa-Cash-Back-Disclosure.pdf"
-    type: "asserted_fee"
-    source_format: "pdf"
-    product_name: "Kasasa Cash Back"
-    category: "checking_premium"
-    assertions:
-      - field: "monthly_maintenance_fee"
-        pattern: "There are no maintenance or activity (?:fees|charges) associated with this account[^.]*\\."
-        value: "None"
-
-  secu_nm_kasasa_tunes:
-    name: "State Employees Credit Union of New Mexico"
-    url: "https://www.secunm.org/_/kcms-doc/29/45767/Kasasa-Tunes-and-Perks-Plus-Checking-Disclosure.pdf"
-    type: "asserted_fee"
-    source_format: "pdf"
-    product_name: "Kasasa Tunes"
-    category: "checking_premium"
-    assertions:
-      - field: "monthly_maintenance_fee"
-        pattern: "There are no maintenance or activity (?:fees|charges) associated with this account[^.]*\\."
-        value: "None"
-
+  # Deliberately still "asserted_fee", not empirical, even though the
+  # three Kasasa products above upgraded away from that treatment
+  # 2026-07-30 -- Regular Checking is a separate product on a separate
+  # page and is NOT on the compare-accounts.html page the Kasasa upgrade
+  # used, so no structured second source exists for it. Confirmed with
+  # the requester not to let that upgrade bleed across into this row.
   secu_nm_regular_checking:
     name: "State Employees Credit Union of New Mexico"
     url: "https://www.secunm.org/accounts/checking/regular-checking.html"
@@ -499,6 +517,28 @@ institutions:
       - field: "monthly_maintenance_fee"
         pattern: "No monthly or annual maintenance fees"
         value: "None"
+
+  # GUARDRAIL, IRA category -- only Century Bank (above) and SECU NM
+  # (above) have a real, tracked-institution IRA source. The IRA table
+  # correctly has NO Enterprise Bank & Trust entry: Enterprise's own IRA
+  # fees could not be found anywhere on enterprisebank.com (checked
+  # 2026-07-30). A UMB Bank, N.A. / Russell Investments Traditional+Roth
+  # IRA package document surfaced during that search
+  # (russellinvestments.com/Publications/US/Document/Combined_Traditional_
+  # Roth_Package_UMB_Bank.pdf) -- it is BLOCKED as a source for every
+  # tracked institution, not just Enterprise: UMB Bank is a separate,
+  # untracked Missouri-chartered bank, the document is a Russell
+  # Investments product description (UMB as custodian for THEIR product),
+  # and no custodial relationship between UMB and Enterprise has been
+  # established. An absence of Enterprise IRA data plus the presence of
+  # an unrelated UMB document is a coincidence of search results, not a
+  # match -- attributing it to Enterprise would be the exact failure mode
+  # the TCM/Century and Visa-benefits-guide/Enterprise guardrails
+  # elsewhere in this file exist to prevent. If Enterprise is ever
+  # confirmed (directly, with Enterprise) to use UMB as an IRA custodian,
+  # that fact needs documenting here BEFORE any figure is added, and
+  # those fees would need the same NOT_PUBLICLY_DISCLOSED-style treatment
+  # as Century's TCM-issued cards (set by the custodian, not Enterprise).
 
   # First National 1870 is a trade-name division of Sunflower Bank, N.A.
   # (Member FDIC, NMLS #709491) -- it has no separate charter and files no
@@ -581,8 +621,16 @@ institutions:
         - "minimum interest charge"
       grace_period:
         - "how to avoid paying interest on purchases"
+      # "Pay By Phone Fee" is the correct match for the matrix's
+      # "Expedited Payment" row (a phone-initiated payment fee, same
+      # concept as Century's $10 phone-payment fee) -- confirmed
+      # 2026-07-30. The Schumer box's OTHER "Other Fees" sub-item,
+      # "Expedited Delivery Fee" ($15), is about physical card shipping
+      # speed, a genuinely different kind of fee with no comparable row
+      # in this matrix; deliberately not mapped here, rather than
+      # conflating it with the payment-processing fee this row means.
       expedited_payment:
-        - "expedited delivery fee"
+        - "pay by phone fee"
     products:
       "Classic":
         product_name: "Visa Classic"
@@ -875,7 +923,12 @@ institutions:
     url: "https://www.enterprisebank.com/personal/interest-checking-nm"
     type: "regex_value"
     product_name: "Interest Checking"
-    category: "checking_general"
+    # checking_premium, not checking_general -- this is an interest-
+    # bearing account, the same tier Century Interest Checking occupies
+    # ($5/mo waived with $500 minimum daily balance, an exact fee-for-fee
+    # match). Reclassified 2026-07-30; was previously landing in the
+    # tier-unspecified fallback bucket instead of next to its real peer.
+    category: "checking_premium"
     # Genuinely NM-specific pricing: $5/mo below $500. The non-NM
     # equivalent (/personal/wc-interest-checking, not scraped here) is
     # $12/mo below $1,500 -- confirmed 2026-07-29, do not swap these.
@@ -901,12 +954,28 @@ institutions:
     type: "regex_value"
     product_name: "Personal Savings"
     category: "savings_basic"
-    # No money market or CD page with published figures exists for the NM
-    # ZIP group -- not invented here.
+    # No CD page with published figures exists for the NM ZIP group --
+    # not invented here.
     field_patterns:
       monthly_maintenance_fee: '(No monthly fees)'
     field_fixed_values:
       monthly_maintenance_fee: "None"
+
+  enterprise_bank_money_market:
+    name: "Enterprise Bank & Trust (New Mexico)"
+    url: "https://www.enterprisebank.com/personal/money-market"
+    type: "regex_value"
+    product_name: "Personal Money Market"
+    category: "money_market"
+    # Adds Enterprise to the Money Market Account comparison, currently
+    # missing it entirely -- confirmed 2026-07-30. Unlike the NM-specific
+    # checking/interest-checking/savings pages (URL suffix "-nm"), this
+    # page has no ZIP-gating markup at all (checked for
+    # "zip"/"zipgroup"/"region" wording, found none) -- appears to be one
+    # bank-wide product, not a region-gated aggregator like
+    # /personal/checking.
+    field_patterns:
+      monthly_maintenance_fee: '(If your average daily balance falls below \$[\d,]+, a monthly service charge of \$[\d.]+ applies\.)'
 
   enterprise_bank_credit_cards:
     name: "Enterprise Bank & Trust (New Mexico)"
