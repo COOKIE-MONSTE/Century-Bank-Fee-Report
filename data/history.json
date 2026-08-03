@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-31T08:47:02.744314+00:00",
+  "generated_at": "2026-08-03T09:40:03.229204+00:00",
   "institutions": {
     "nusenda": {
       "name": "Nusenda Credit Union",
@@ -142,14 +142,29 @@
           "wire_transfer_outgoing_domestic_fee": "$14.00",
           "wire_transfer_outgoing_international_fee": "$37.00",
           "wire_transfer_incoming_fee": "$14.00"
+        },
+        {
+          "card_name": "Checking Account Fees",
+          "category": "checking_general",
+          "returned_item_fee": "No Charge for 1st-5th Items; $10.00 per item for 6th- or more items"
+        },
+        {
+          "card_name": "Dividend Checking Fee (Unlimited Checks Cleared)",
+          "category": "checking_premium",
+          "monthly_maintenance_fee": "$5.00/month, waived with a $2,500 minimum average balance"
+        },
+        {
+          "card_name": "Essential Checking Fee (Unlimited Checks Cleared)",
+          "category": "checking_basic",
+          "monthly_maintenance_fee": "$5.00/month, waived with a $250 minimum average balance"
+        },
+        {
+          "card_name": "Money Market Account Fee",
+          "category": "money_market",
+          "monthly_maintenance_fee": "$7.50/month, waived with a $2,500 minimum average balance"
         }
       ],
-      "warnings": [
-        "Failed to fetch Nusenda Credit Union widget s=979: 500 Server Error: Internal Server Error for url: https://clients.lk-cs.com/id/62155/custom/rates/?r=277&s=979&id=62155",
-        "Failed to fetch Nusenda Credit Union widget s=980: 500 Server Error: Internal Server Error for url: https://clients.lk-cs.com/id/62155/custom/rates/?r=277&s=980&id=62155",
-        "Failed to fetch Nusenda Credit Union widget s=981: 500 Server Error: Internal Server Error for url: https://clients.lk-cs.com/id/62155/custom/rates/?r=277&s=981&id=62155",
-        "Failed to fetch Nusenda Credit Union widget s=982: 500 Server Error: Internal Server Error for url: https://clients.lk-cs.com/id/62155/custom/rates/?r=277&s=982&id=62155"
-      ]
+      "warnings": []
     },
     "nusenda_regular_savings": {
       "name": "Nusenda Credit Union",
@@ -2263,6 +2278,90 @@
       "scope": "General Fees",
       "scope_products": [
         "General Fees"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "Checking Account Fees",
+      "fee_type": "returned_item_fee",
+      "category": "checking_general",
+      "category_label": "Checking Account (tier unspecified)",
+      "value": "No Charge for 1st-5th Items; $10.00 per item for 6th- or more items",
+      "scope": "Checking Account Fees",
+      "scope_products": [
+        "Checking Account Fees"
+      ],
+      "confidence": "high",
+      "mechanism": "per_unit",
+      "mechanism_label": "Per-unit / rate-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "Dividend Checking Fee (Unlimited Checks Cleared)",
+      "fee_type": "monthly_maintenance_fee",
+      "category": "checking_premium",
+      "category_label": "Premium / Dividend Checking Account",
+      "value": "$5.00/month, waived with a $2,500 minimum average balance",
+      "scope": "Dividend Checking Fee (Unlimited Checks Cleared)",
+      "scope_products": [
+        "Dividend Checking Fee (Unlimited Checks Cleared)"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "Essential Checking Fee (Unlimited Checks Cleared)",
+      "fee_type": "monthly_maintenance_fee",
+      "category": "checking_basic",
+      "category_label": "Basic Checking Account",
+      "value": "$5.00/month, waived with a $250 minimum average balance",
+      "scope": "Essential Checking Fee (Unlimited Checks Cleared)",
+      "scope_products": [
+        "Essential Checking Fee (Unlimited Checks Cleared)"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "Money Market Account Fee",
+      "fee_type": "monthly_maintenance_fee",
+      "category": "money_market",
+      "category_label": "Money Market Account",
+      "value": "$7.50/month, waived with a $2,500 minimum average balance",
+      "scope": "Money Market Account Fee",
+      "scope_products": [
+        "Money Market Account Fee"
       ],
       "confidence": "high",
       "mechanism": "flat",
@@ -5210,8 +5309,8 @@
       "source_quote": null,
       "source_locator": null,
       "issuers": [],
-      "changed_since_last_snapshot": true,
-      "previous_value": "If your average daily balance falls below $10,000 or your relationship balance is less than $25,000, a monthly service charge of $20.00 applies."
+      "changed_since_last_snapshot": false,
+      "previous_value": null
     },
     {
       "institution": "Enterprise Bank & Trust (New Mexico)",
@@ -5798,6 +5897,7 @@
       "returned_item_fee": "https://www.nusenda.org/loans-credit-cards/credit-cards/platinum-terms-and-conditions",
       "cash_advance_fee": "https://www.nusenda.org/loans-credit-cards/credit-cards/platinum-terms-and-conditions",
       "foreign_transaction_fee": "https://www.nusenda.org/loans-credit-cards/credit-cards/platinum-terms-and-conditions",
+      "stop_payment": "https://www.nusenda.org/news-resources/rates-fees",
       "apr_ceiling": "https://www.nusenda.org/docs/default-source/addendums/visa-9-75-11-10-25--16-75.pdf?sfvrsn=66e73a2a_1",
       "penalty_apr": "https://www.nusenda.org/docs/default-source/addendums/visa-9-75-11-10-25--16-75.pdf?sfvrsn=66e73a2a_1",
       "min_finance_charge": "https://www.nusenda.org/docs/default-source/addendums/visa-9-75-11-10-25--16-75.pdf?sfvrsn=66e73a2a_1",
