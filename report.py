@@ -39,6 +39,18 @@ FIELD_LABELS = [
 FIELD_LABEL_MAP = dict(FIELD_LABELS)
 FIELD_ORDER = [key for key, _ in FIELD_LABELS]
 
+# Rows deliberately hidden from a specific category's table, per user
+# request -- the underlying fact is still scraped and still lands in
+# data/history.json's fee_facts, this only suppresses the report row.
+# cashiers_check_fee/checking_premium: only Enterprise Bank's Maximum
+# Benefits Account has ever had a value here (an asserted "None" waiver),
+# so the row was never a real cross-institution comparison, just one
+# institution's cell against a column of dashes. Removed 2026-08-04 per
+# user request.
+SUPPRESSED_CATEGORY_FEE_TYPES = {
+    ("checking_premium", "cashiers_check_fee"),
+}
+
 # Must match scraper/tcm_issuer_scraper.py's NOT_PUBLICLY_DISCLOSED exactly --
 # deliberately a different string than the generic "Not disclosed" empty-value
 # placeholder: this one means "confirmed to not exist publicly", not "field
@@ -141,7 +153,10 @@ def render_report(results, highlighted_institution, subject, facts_by_institutio
             for f in facts
             if f["fee_type"] not in FIELD_LABEL_MAP
         })
-        fee_types_present = known_keys_present + extra_keys
+        fee_types_present = [
+            k for k in known_keys_present + extra_keys
+            if (cat_key, k) not in SUPPRESSED_CATEGORY_FEE_TYPES
+        ]
 
         rows = []
         low_confidence_values = 0
