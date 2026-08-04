@@ -47,6 +47,12 @@
   .warnings h2 { font-size: 15px; margin-bottom: 8px; }
   .warnings ul { font-size: 12px; color: #7a4b00; background: #fff8e6; border: 1px solid #f0dca0; padding: 12px 12px 12px 28px; border-radius: 4px; }
   .warnings li { margin-bottom: 4px; }
+  /* Same amber family as .llm-badge, so this section reads as the same
+     "AI-assisted, not independently verified" signal wherever it appears. */
+  .ai-assisted { margin-top: 24px; }
+  .ai-assisted h2 { font-size: 15px; margin-bottom: 4px; }
+  .ai-assisted ul { font-size: 12px; color: #7a4b00; background: #fff0e0; border: 1px solid #f0c896; padding: 12px 12px 12px 28px; border-radius: 4px; margin-top: 8px; }
+  .ai-assisted li { margin-bottom: 4px; }
   .empty-note { color: #888; font-size: 12px; margin-top: 20px; }
   .not-stated { color: #aaa; font-style: italic; }
   .matrix-note { font-size: 11px; color: #555; margin: 0 0 8px 0; }
@@ -139,6 +145,18 @@
   {% endfor %}
   {% else %}
   <p class="empty-note">No card data was available for this run.</p>
+  {% endif %}
+
+  {% if ai_assisted_changes %}
+  <div class="ai-assisted">
+    <h2>AI-Assisted Values This Run</h2>
+    <p class="basis-note">{{ ai_assisted_changes|length }} value(s) below came from the Gemini fallback rather than normal pattern-matching -- either a field that extracted fine in a previous run stopped matching (a likely site change), or today's rotating accuracy spot-check found a fresh figure. Not independently verified; each is also flagged inline where it appears in the tables above.</p>
+    <ul>
+      {% for change in ai_assisted_changes %}
+      <li><strong>{{ change.institution }}</strong> &mdash; {{ change.category_label }}: {{ change.fee_label }} = {{ change.value }}{% if change.scope %} <span class="scope">({{ change.scope }})</span>{% endif %}</li>
+      {% endfor %}
+    </ul>
+  </div>
   {% endif %}
 
   {% if warnings %}

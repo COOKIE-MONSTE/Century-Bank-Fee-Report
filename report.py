@@ -102,6 +102,15 @@ def render_report(results, highlighted_institution, subject, facts_by_institutio
     if matrix_warnings:
         all_warnings.extend(matrix_warnings)
 
+    # Every cell currently sourced by the Gemini fallback (drift-gated
+    # recovery or the daily accuracy audit -- see scraper/base.py's
+    # try_llm_recovery() and daily_audit.py) rather than deterministic
+    # pattern-matching, collected here as a flat list so the report can
+    # call them out in one small, easy-to-scan section instead of leaving
+    # them to be found one at a time inside individual table rows or
+    # buried in the longer Data Quality Notes list below.
+    ai_assisted_changes = []
+
     institution_order = list(facts_by_institution.keys())
     institution_order.sort(key=lambda name: name != highlighted_institution)
 
@@ -187,6 +196,13 @@ def render_report(results, highlighted_institution, subject, facts_by_institutio
                         confidence_severity, confidence_stats = flag_severity(
                             "llm_assisted", fee_key, specific_record, general_record
                         )
+                        ai_assisted_changes.append({
+                            "institution": inst_name,
+                            "category_label": label,
+                            "fee_label": _fee_label(fee_key),
+                            "value": f["value"],
+                            "scope": f["scope"],
+                        })
 
                     drift_severity = "normal"
                     drift_stats = None
@@ -266,7 +282,7 @@ def render_report(results, highlighted_institution, subject, facts_by_institutio
     env = Environment(loader=FileSystemLoader("templates"))
     template = env.get_template("report_email.html.j2")
 
-    credit_card_matrix_view = _prepare_matrix_view(consumer_card_matrix, report_state)
+    credit_card_matrix_view = _prepare_matrix_view(consumer_card_matrix, report_state, ai_assisted_changes)
 
     return template.render(
         subject=subject,
@@ -274,13 +290,14 @@ def render_report(results, highlighted_institution, subject, facts_by_institutio
         highlighted_institution=highlighted_institution,
         sections=sections,
         warnings=all_warnings,
+        ai_assisted_changes=ai_assisted_changes,
         used_issuer_footnote=report_state["used_issuer_footnote"],
         used_not_disclosed_footnote=report_state["used_not_disclosed_footnote"],
         credit_card_matrix=credit_card_matrix_view,
     )
 
 
-def _prepare_matrix_view(matrix, report_state):
+def _prepare_matrix_view(matrix, report_state, ai_assisted_changes):
     """Annotates a credit_card_matrix.build_matrix() row set for the
     template: each cell becomes {value, muted, not_publicly_disclosed} so
     every distinct "not a real value" state (unknown, not publicly
@@ -288,6 +305,11 @@ def _prepare_matrix_view(matrix, report_state):
     but keeps its own specific wording rather than collapsing to one
     generic label -- and marks the report-wide footnote flags if the
     matrix uses them.
+
+    Also appends any Gemini-sourced cell to `ai_assisted_changes` (mutated
+    in place, same list the main per-product loop above feeds) so the
+    matrix's own AI-assisted cells show up in that one shared summary too,
+    instead of only being flagged inline within the matrix table itself.
     """
     if not matrix or not matrix["rows"]:
         return None
@@ -297,11 +319,20 @@ def _prepare_matrix_view(matrix, report_state):
     for row in matrix["rows"]:
         llm_cells = row.get("llm_cells") or [False] * len(row["cells"])
         cells = []
-        for value, is_llm in zip(row["cells"], llm_cells):
+        for inst_name, value, is_llm in zip(institutions, row["cells"], llm_cells):
             is_not_disclosed = value == NOT_PUBLICLY_DISCLOSED
             is_muted = value in credit_card_matrix.MUTED_VALUES and not is_not_disclosed
             if is_not_disclosed:
                 report_state["used_not_disclosed_footnote"] = True
+            is_llm_assisted = is_llm and not is_not_disclosed
+            if is_llm_assisted:
+                ai_assisted_changes.append({
+                    "institution": inst_name,
+                    "category_label": "Credit Card Comparison",
+                    "fee_label": row["label"],
+                    "value": value,
+                    "scope": None,
+                })
             cells.append({
                 "value": value,
                 "muted": is_muted,
@@ -310,7 +341,7 @@ def _prepare_matrix_view(matrix, report_state):
                 # rather than a regex match on the source page (see
                 # scraper/llm_fallback.py) -- always False for institutions
                 # that don't have the fallback wired in yet.
-                "llm_assisted": is_llm and not is_not_disclosed,
+                "llm_assisted": is_llm_assisted,
             })
         rows.append({"label": row["label"], "cells": cells})
 
