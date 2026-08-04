@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-04T08:33:12.365773+00:00",
+  "generated_at": "2026-08-04T21:54:34.512922+00:00",
   "institutions": {
     "nusenda": {
       "name": "Nusenda Credit Union",
@@ -141,12 +141,13 @@
           "stop_payment_fee": "$25.00",
           "wire_transfer_outgoing_domestic_fee": "$14.00",
           "wire_transfer_outgoing_international_fee": "$37.00",
-          "wire_transfer_incoming_fee": "$14.00"
+          "wire_transfer_incoming_fee": "$14.00",
+          "returned_item_fee": "$10.00"
         },
         {
           "card_name": "Checking Account Fees",
           "category": "checking_general",
-          "returned_item_fee": "No Charge for 1st-5th Items; $10.00 per item for 6th- or more items"
+          "returned_item_fee": "No Charge for 1st-5th Items; $10.00 per item for 6th- or more items (Insufficient Fund (NSF) fee tier structures are based on the number of NSF items incurred on an account over a rolling 12-month period. All items are subject to the tier structure in terms of the number or count of occurrences in the rolling 12-month period, however, debit card NSF items are assessed a $0 NSF fee regardless of NSF fee tier level count.)"
         },
         {
           "card_name": "Dividend Checking Fee (Unlimited Checks Cleared)",
@@ -474,7 +475,7 @@
           "cashiers_check_fee": "$1.00",
           "dormant_account_fee": "$10.00 per month",
           "atm_out_of_network_fee": "$1.50",
-          "foreign_transaction_fee": "Variable",
+          "foreign_transaction_fee": "Variable -- At Cost. Fee is assessed by Visa to cover the cost of converting foreign currency to U.S. dollars. Fee is typically 1% of transaction amount and will be passed through to the member at cost on International ATM/check card transactions only.",
           "overdraft_fee": "$25.00",
           "returned_item_fee": "$10.00",
           "stop_payment_fee": "$25.00",
@@ -499,7 +500,9 @@
       ],
       "warnings": [
         "[State Employees Credit Union of New Mexico] 22 fee row(s) did not match any known category (shown for review, not forced into an existing one): 'Closing Account Within First 90 Days': '$10.00'; 'Collection Items': '$20.00 (plus costs)'; 'Copies: Check Copies': '$3.00'; 'Copies: Monthly Statement Copies': '$3.00'; 'Copies: Both Available via Online Banking': 'FREE'; 'Counter Checks': '$2.00 per page'; 'Early Withdrawal \u2013 Certificate Builder': '$10.00'; 'Early Withdrawal \u2013 Christmas Club': '$5.00'; 'Escheatment Fee': '$50.00'; 'Excessive ATM Withdrawal Fee (10 free)': '$0.65 per after 10'; 'Excessive ATM Withdrawal Fee (10 free): Savings Withdrawal': '10 FREE per month'; 'Excessive ATM Withdrawal Fee (10 free): Checking Withdrawal': '10 FREE per month'; 'Garnishment or IRS Levy Fee': '$50.00'; 'Gift Cards: Members': '$2.50'; 'Gift Cards: Non-members': '$4.50'; 'Gift Cards: With Reward Checking, Kasasa Cash & Kasasa Cash Back': 'FREE'; 'Gift Cards: With Perks+ Checking & Kasasa Tunes': 'FREE'; 'Online Banking / Bill Pay': 'FREE'; 'Returned Mail Fee': '$5.00'; 'SECU Loan Pay (Free Online)': '$5.00'; 'Shared Branching Transactions': '$2.00 (5 FREE per month)'; 'Uncollected Funds Fee': '$25.00'",
-        "[State Employees Credit Union of New Mexico] Effective-date conflict: this page states '01/23/23', but the Truth-in-Savings PDF's fee schedule (page 7) states '07/14/2023' for what appears to be the same fee schedule (values match) -- not silently resolved, verify which is authoritative."
+        "[State Employees Credit Union of New Mexico] UNRESOLVED MAPPING, not a change -- four SECU fee schedule lines may be mismapped. Currently: NSF Fee / Overdraft Privilege Fee (mutually exclusive per the TIS PDF's \"either ... but not both\" language, both currently agreeing on the same figure) feed 'overdraft_fee' (this run: $25.00); \"Return Check Charge\" feeds 'returned_item_fee' (this run: $10.00); \"Uncollected Funds Fee\" (this run: $25.00) is unmapped. Evidence the mapping may be backwards: (1) the TIS PDF states Overdraft Privilege Fee = item paid, NSF Fee = item returned -- so 'overdraft_fee' may actually belong on the NSF Fee line, not the Overdraft Privilege Fee line it's currently drawing from equally; (2) page 7's fee schedule footnotes \"**NSF = ISF Fee\", confirming NSF concerns items RETURNED, not paid. If confirmed, \"Return Check Charge\" would instead belong to 'returned_deposit_item_fee' (a deposited check that bounced, not a payment SECU itself returned) -- moving SECU from cheapest to second-most-expensive on the returned-item comparison row. Not changed pending human confirmation via SECU (800.983.7328); see data/feedback_log.yaml.\n",
+        "[State Employees Credit Union of New Mexico] This page states effective date '01/23/23', but the Truth-in-Savings PDF's fee schedule (page 7) states a different date '07/14/2023' -- despite that, all 8 field(s) comparable between the two documents agree on value (account_research_fee, card_replacement_fee, cashiers_check_fee, dormant_account_fee, atm_out_of_network_fee, overdraft_fee, returned_item_fee, stop_payment_fee), so the underlying fee amounts are corroborated across two independently typeset sources even though the stated dates disagree; which date is authoritative is still unresolved.",
+        "[State Employees Credit Union of New Mexico] SECU NM requires a $5.00 \"Par Value of One Share\" to open membership (Truth-in-Savings PDF, page 7) -- a one-time membership cost of access that none of this report's other (non-member-owned) institutions has an equivalent line for.\n"
       ]
     },
     "secu_nm_credit_cards": {
@@ -634,7 +637,9 @@
           }
         }
       ],
-      "warnings": []
+      "warnings": [
+        "[State Employees Credit Union of New Mexico] Kasasa Cash/Cash Back/Tunes members are refunded ATM withdrawal fees nationwide, up to $25/month (this page, confirmed stated identically for all three Kasasa products) -- for a qualifying member, SECU's Foreign ATM Fee cell effectively reads $0, which that institution-wide cell alone doesn't convey since it applies to every SECU customer, not just qualifying Kasasa members.\n"
+      ]
     },
     "secu_nm_regular_checking": {
       "name": "State Employees Credit Union of New Mexico",
@@ -691,6 +696,22 @@
         {
           "card_name": "UTMA/UGMA Savings",
           "category": "savings_basic",
+          "monthly_maintenance_fee": "None",
+          "_field_confidence": {
+            "monthly_maintenance_fee": "low"
+          }
+        },
+        {
+          "card_name": "Money Market Account",
+          "category": "money_market",
+          "monthly_maintenance_fee": "None",
+          "_field_confidence": {
+            "monthly_maintenance_fee": "low"
+          }
+        },
+        {
+          "card_name": "Advantage+ Money Market Account",
+          "category": "money_market",
           "monthly_maintenance_fee": "None",
           "_field_confidence": {
             "monthly_maintenance_fee": "low"
@@ -980,6 +1001,26 @@
         "First National 1870 does not publish a general Fee Schedule online. Its Truth-in-Savings disclosures state the schedule is \"provided to you at the time you open an account... and upon request.\" 14 fee types in this report cannot be sourced publicly for this institution. Verified 2026-07-29.\n"
       ]
     },
+    "fn1870_hsa": {
+      "name": "First National 1870 (Sunflower Bank, N.A.)",
+      "cards": [
+        {
+          "card_name": "Health Savings Account",
+          "category": "checking_general",
+          "monthly_maintenance_fee": "None",
+          "hsa_transfer_fee": "$25.00",
+          "_field_confidence": {
+            "monthly_maintenance_fee": "high",
+            "hsa_transfer_fee": "high"
+          },
+          "_source_urls": {
+            "monthly_maintenance_fee": "https://www.sunflowerbank.com/getContentAsset/48905178-4983-4804-bfbe-70bc503883a5/50c2bc4c-a8ff-46ba-95c2-0e74752d147f/Checking-540-Health-Savings-Account-Example-Account-Disclosure-FINAL-03-27-26.pdf?language=en-US",
+            "hsa_transfer_fee": "https://www.sunflowerbank.com/getContentAsset/48905178-4983-4804-bfbe-70bc503883a5/50c2bc4c-a8ff-46ba-95c2-0e74752d147f/Checking-540-Health-Savings-Account-Example-Account-Disclosure-FINAL-03-27-26.pdf?language=en-US"
+          }
+        }
+      ],
+      "warnings": []
+    },
     "enterprise_bank_fee_schedule": {
       "name": "Enterprise Bank & Trust (New Mexico)",
       "cards": [
@@ -997,7 +1038,7 @@
           "card_replacement_fee": "$5.00",
           "card_replacement_rush_fee": "$55 2-day expedite & $75 next day",
           "dormant_account_fee": "$10.00 per month",
-          "safe_deposit_drill_fee": "Not publicly disclosed",
+          "safe_deposit_drill_fee": "Fees vary by location",
           "wire_transfer_incoming_fee": "Domestic: $10.00 / Foreign: $12.50",
           "check_cashing_non_member_fee": "Under $500: $5.00; Over $500: 1% of the amount",
           "_field_confidence": {
@@ -1184,7 +1225,6 @@
           "cash_advance_apr": "24.99%",
           "cash_advance_fee": "Not publicly disclosed",
           "balance_transfer_fee": "Not publicly disclosed",
-          "foreign_transaction_fee": "Not publicly disclosed",
           "late_payment_fee": "Not publicly disclosed",
           "returned_item_fee": "Not publicly disclosed",
           "_matrix_extra": {
@@ -1210,7 +1250,6 @@
           "cash_advance_apr": "24.99%",
           "cash_advance_fee": "Not publicly disclosed",
           "balance_transfer_fee": "Not publicly disclosed",
-          "foreign_transaction_fee": "Not publicly disclosed",
           "late_payment_fee": "Not publicly disclosed",
           "returned_item_fee": "Not publicly disclosed",
           "_matrix_extra": {
@@ -1236,7 +1275,6 @@
           "cash_advance_apr": "24.99%",
           "cash_advance_fee": "Not publicly disclosed",
           "balance_transfer_fee": "Not publicly disclosed",
-          "foreign_transaction_fee": "Not publicly disclosed",
           "late_payment_fee": "Not publicly disclosed",
           "returned_item_fee": "Not publicly disclosed",
           "_matrix_extra": {
@@ -1247,6 +1285,23 @@
       "warnings": [
         "[Enterprise Bank & Trust (New Mexico)] Credit card page states rate information is accurate as of 06/27/2022 -- that's 4 year(s) old. Card terms have not been independently reconfirmed since then; verify they're still accurate."
       ]
+    },
+    "enterprise_bank_foreign_transaction": {
+      "name": "Enterprise Bank & Trust (New Mexico)",
+      "cards": [
+        {
+          "card_name": "Foreign Transaction Fee (travel tips page)",
+          "category": "credit_card_standard",
+          "foreign_transaction_fee": "1 percent",
+          "_field_confidence": {
+            "foreign_transaction_fee": "high"
+          },
+          "_source_urls": {
+            "foreign_transaction_fee": "https://www.enterprisebank.com/personal/travel-tips"
+          }
+        }
+      ],
+      "warnings": []
     }
   },
   "fee_facts": [
@@ -2291,24 +2346,45 @@
     },
     {
       "institution": "Nusenda Credit Union",
-      "product_name": "Checking Account Fees",
+      "product_name": "General Fees",
       "fee_type": "returned_item_fee",
-      "category": "checking_general",
-      "category_label": "Checking Account (tier unspecified)",
-      "value": "No Charge for 1st-5th Items; $10.00 per item for 6th- or more items",
-      "scope": "Checking Account Fees",
+      "category": "general_account_fees",
+      "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
+      "value": "$10.00",
+      "scope": "General Fees",
       "scope_products": [
-        "Checking Account Fees"
+        "General Fees"
       ],
       "confidence": "high",
-      "mechanism": "per_unit",
-      "mechanism_label": "Per-unit / rate-based",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
       "verification": "empirical",
       "source_quote": null,
       "source_locator": null,
       "issuers": [],
       "changed_since_last_snapshot": false,
       "previous_value": null
+    },
+    {
+      "institution": "Nusenda Credit Union",
+      "product_name": "Checking Account Fees",
+      "fee_type": "returned_item_fee",
+      "category": "checking_general",
+      "category_label": "Checking Account (tier unspecified)",
+      "value": "No Charge for 1st-5th Items; $10.00 per item for 6th- or more items (Insufficient Fund (NSF) fee tier structures are based on the number of NSF items incurred on an account over a rolling 12-month period. All items are subject to the tier structure in terms of the number or count of occurrences in the rolling 12-month period, however, debit card NSF items are assessed a $0 NSF fee regardless of NSF fee tier level count.)",
+      "scope": "Checking Account Fees",
+      "scope_products": [
+        "Checking Account Fees"
+      ],
+      "confidence": "high",
+      "mechanism": "tiered_free",
+      "mechanism_label": "Tiered -- free below threshold",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": true,
+      "previous_value": "No Charge for 1st-5th Items; $10.00 per item for 6th- or more items"
     },
     {
       "institution": "Nusenda Credit Union",
@@ -3591,20 +3667,20 @@
       "fee_type": "foreign_transaction_fee",
       "category": "general_account_fees",
       "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
-      "value": "Variable",
+      "value": "Variable -- At Cost. Fee is assessed by Visa to cover the cost of converting foreign currency to U.S. dollars. Fee is typically 1% of transaction amount and will be passed through to the member at cost on International ATM/check card transactions only.",
       "scope": "SECU NM Fee Schedule",
       "scope_products": [
         "SECU NM Fee Schedule"
       ],
       "confidence": "high",
-      "mechanism": "unknown",
-      "mechanism_label": "Unclear",
+      "mechanism": "variable",
+      "mechanism_label": "Variable / cost-based",
       "verification": "empirical",
       "source_quote": null,
       "source_locator": null,
       "issuers": [],
-      "changed_since_last_snapshot": false,
-      "previous_value": null
+      "changed_since_last_snapshot": true,
+      "previous_value": "Variable"
     },
     {
       "institution": "State Employees Credit Union of New Mexico",
@@ -3968,6 +4044,28 @@
         "Vacation Club Savings",
         "Special Savings",
         "UTMA/UGMA Savings"
+      ],
+      "confidence": "low",
+      "mechanism": "no_fee",
+      "mechanism_label": "No fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "State Employees Credit Union of New Mexico",
+      "product_name": null,
+      "fee_type": "monthly_maintenance_fee",
+      "category": "money_market",
+      "category_label": "Money Market Account",
+      "value": "None",
+      "scope": "verified across all products",
+      "scope_products": [
+        "Money Market Account",
+        "Advantage+ Money Market Account"
       ],
       "confidence": "low",
       "mechanism": "no_fee",
@@ -4439,6 +4537,48 @@
       "scope": "Foundation Checking",
       "scope_products": [
         "Foundation Checking"
+      ],
+      "confidence": "high",
+      "mechanism": "flat",
+      "mechanism_label": "Flat fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": "Health Savings Account",
+      "fee_type": "monthly_maintenance_fee",
+      "category": "checking_general",
+      "category_label": "Checking Account (tier unspecified)",
+      "value": "None",
+      "scope": "Health Savings Account",
+      "scope_products": [
+        "Health Savings Account"
+      ],
+      "confidence": "high",
+      "mechanism": "no_fee",
+      "mechanism_label": "No fee",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": false,
+      "previous_value": null
+    },
+    {
+      "institution": "First National 1870 (Sunflower Bank, N.A.)",
+      "product_name": "Health Savings Account",
+      "fee_type": "hsa_transfer_fee",
+      "category": "checking_general",
+      "category_label": "Checking Account (tier unspecified)",
+      "value": "$25.00",
+      "scope": "Health Savings Account",
+      "scope_products": [
+        "Health Savings Account"
       ],
       "confidence": "high",
       "mechanism": "flat",
@@ -5087,20 +5227,20 @@
       "fee_type": "safe_deposit_drill_fee",
       "category": "general_account_fees",
       "category_label": "General Account Fees (institution-wide, not tied to one product tier)",
-      "value": "Not publicly disclosed",
+      "value": "Fees vary by location",
       "scope": "Enterprise Bank & Trust -- Schedule of Fees",
       "scope_products": [
         "Enterprise Bank & Trust -- Schedule of Fees"
       ],
       "confidence": "high",
-      "mechanism": "unknown",
-      "mechanism_label": "Unclear",
+      "mechanism": "variable",
+      "mechanism_label": "Variable / cost-based",
       "verification": "empirical",
       "source_quote": null,
       "source_locator": null,
       "issuers": [],
-      "changed_since_last_snapshot": false,
-      "previous_value": null
+      "changed_since_last_snapshot": true,
+      "previous_value": "Not publicly disclosed"
     },
     {
       "institution": "Enterprise Bank & Trust (New Mexico)",
@@ -5546,27 +5686,6 @@
     {
       "institution": "Enterprise Bank & Trust (New Mexico)",
       "product_name": "Visa Non-Rewards",
-      "fee_type": "foreign_transaction_fee",
-      "category": "credit_card_standard",
-      "category_label": "Standard Credit Card",
-      "value": "Not publicly disclosed",
-      "scope": "Visa Non-Rewards",
-      "scope_products": [
-        "Visa Non-Rewards"
-      ],
-      "confidence": "high",
-      "mechanism": "unknown",
-      "mechanism_label": "Unclear",
-      "verification": "empirical",
-      "source_quote": null,
-      "source_locator": null,
-      "issuers": [],
-      "changed_since_last_snapshot": false,
-      "previous_value": null
-    },
-    {
-      "institution": "Enterprise Bank & Trust (New Mexico)",
-      "product_name": "Visa Non-Rewards",
       "fee_type": "late_payment_fee",
       "category": "credit_card_standard",
       "category_label": "Standard Credit Card",
@@ -5605,6 +5724,27 @@
       "issuers": [],
       "changed_since_last_snapshot": false,
       "previous_value": null
+    },
+    {
+      "institution": "Enterprise Bank & Trust (New Mexico)",
+      "product_name": "Foreign Transaction Fee (travel tips page)",
+      "fee_type": "foreign_transaction_fee",
+      "category": "credit_card_standard",
+      "category_label": "Standard Credit Card",
+      "value": "1 percent",
+      "scope": "Foreign Transaction Fee (travel tips page)",
+      "scope_products": [
+        "Foreign Transaction Fee (travel tips page)"
+      ],
+      "confidence": "high",
+      "mechanism": "percentage",
+      "mechanism_label": "Percentage-based",
+      "verification": "empirical",
+      "source_quote": null,
+      "source_locator": null,
+      "issuers": [],
+      "changed_since_last_snapshot": true,
+      "previous_value": "Not publicly disclosed"
     },
     {
       "institution": "Enterprise Bank & Trust (New Mexico)",
@@ -5825,28 +5965,6 @@
     {
       "institution": "Enterprise Bank & Trust (New Mexico)",
       "product_name": null,
-      "fee_type": "foreign_transaction_fee",
-      "category": "credit_card_rewards",
-      "category_label": "Rewards Credit Card",
-      "value": "Not publicly disclosed",
-      "scope": "verified across all products",
-      "scope_products": [
-        "Visa Rewards",
-        "Visa Rewards Plus"
-      ],
-      "confidence": "high",
-      "mechanism": "unknown",
-      "mechanism_label": "Unclear",
-      "verification": "empirical",
-      "source_quote": null,
-      "source_locator": null,
-      "issuers": [],
-      "changed_since_last_snapshot": false,
-      "previous_value": null
-    },
-    {
-      "institution": "Enterprise Bank & Trust (New Mexico)",
-      "product_name": null,
       "fee_type": "late_payment_fee",
       "category": "credit_card_rewards",
       "category_label": "Rewards Credit Card",
@@ -5965,6 +6083,7 @@
       "reward_structure": "https://www.enterprisebank.com/personal/credit-cards",
       "card_promotions": "https://www.enterprisebank.com/personal/credit-cards",
       "stop_payment": "https://www.enterprisebank.com/scheduleoffees",
+      "foreign_transaction": "https://www.enterprisebank.com/personal/travel-tips",
       "effective_date": "https://www.enterprisebank.com/personal/credit-cards"
     }
   }
