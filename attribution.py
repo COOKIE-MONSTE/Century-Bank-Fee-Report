@@ -41,9 +41,21 @@ MECHANISM_LABELS = {
     "percentage": "Percentage-based",
     "recurring": "Recurring (periodic)",
     "per_unit": "Per-unit / rate-based",
+    "tiered_free": "Tiered -- free below threshold",
     "variable": "Variable / cost-based",
     "unknown": "Unclear",
 }
+
+# A free allowance before a per-item charge kicks in (e.g. "No Charge for
+# 1st-5th Items; $10.00 per item for 6th- or more items") is a materially
+# different mechanism from a straightforward per-item rate: a member who
+# stays under the threshold pays nothing at all, not "a little." Requires
+# BOTH a free-tier phrase and a dollar-per-unit phrase somewhere in the
+# same value (order-independent, since a source could state either half
+# first) -- a bare "No Charge" alone is already caught by the no_fee check
+# above, and a bare "$10.00 per item" alone is genuinely just per_unit.
+_FREE_TIER_RE = re.compile(r"\b(no charge|free)\b", re.IGNORECASE)
+_PER_UNIT_CHARGE_RE = re.compile(r"\$\s?[\d,]+(?:\.\d{2})?\s*per\s+(item|occurrence|incident|transaction)", re.IGNORECASE)
 
 
 def merge_institution_cards(results):
@@ -75,8 +87,10 @@ def classify_mechanism(value):
     text = value.strip().lower()
     if text in ("none", "no charge", "n/a") or re.match(r"^\$?0(\.00)?%?$", text):
         return "no_fee"
-    if "actual cost" in text or "at cost" in text:
+    if "actual cost" in text or "at cost" in text or "vary by location" in text:
         return "variable"
+    if _FREE_TIER_RE.search(text) and _PER_UNIT_CHARGE_RE.search(text):
+        return "tiered_free"
     # Allows one adjective between "per" and the period noun (e.g. "per
     # quarterly statement cycle", "per monthly statement cycle") -- a bare
     # `per statement` pattern missed these entirely, which mislabeled a
@@ -86,7 +100,7 @@ def classify_mechanism(value):
         return "recurring"
     if re.search(r"\bper\s+(hour|item|occurrence|incident|transaction)\b", text):
         return "per_unit"
-    if "%" in text:
+    if "%" in text or re.search(r"\bpercent\b", text):
         return "percentage"
     if re.search(r"\$\s?\d", text):
         return "flat"

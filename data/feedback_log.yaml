@@ -47,4 +47,42 @@
 #     "balance transfers" is too generic and matches both tables.
 #   synonym: null
 
-[]
+- date: "2026-08-04"
+  institution: "State Employees Credit Union of New Mexico"
+  category: "general_account_fees"
+  fee_type: "returned_item_fee"
+  # PENDING -- not a system-raised flag, so flag_type/verdict are left
+  # null on purpose: compute_flag_track_record() in feedback.py skips any
+  # entry with a falsy flag_type entirely (`if not flag_type: continue`),
+  # so this stub can sit here awaiting a human decision without polluting
+  # calibration stats for a flag_type it doesn't actually belong to.
+  # Fill in flag_type/verdict only if this gets reclassified as an actual
+  # flag verdict later -- otherwise just resolve it directly (see note)
+  # and delete this entry once config.yaml's mapping is updated.
+  flag_type: null
+  verdict: null
+  note: >
+    UNRESOLVED, needs a human decision before any config change: SECU
+    NM's Truth-in-Savings PDF (page 2, sec.7) states "You will be
+    assessed either a NSF Fee or Overdraft Privilege Fee, but not both"
+    -- i.e. Overdraft Privilege Fee = item PAID, NSF Fee = item RETURNED,
+    both $25.00, mutually exclusive. Page 7's fee schedule also carries a
+    footnote the HTML fee-schedule.html page omits: "**NSF = ISF Fee".
+    If that reading holds, 'returned_item_fee' should source from the
+    NSF Fee line instead of drawing equally from Overdraft Privilege Fee
+    (currently config.yaml's secu_nm.field_keywords.overdraft_fee treats
+    NSF and Overdraft Privilege as interchangeable sources for
+    overdraft_fee -- see the "either ... but not both" evidence above
+    suggesting they're actually two DIFFERENT outcomes, not two
+    corroborating labels for one outcome). And "Return Check Charge"
+    (currently feeding returned_item_fee) would instead belong to
+    returned_deposit_item_fee (a deposited check that bounced, not a
+    payment SECU itself returned) -- currently blank for SECU. This
+    would move SECU from cheapest to second-most-expensive on the
+    returned-item comparison row, so it should not be changed without
+    confirming directly with SECU (800.983.7328); nothing published
+    states the mapping outright. See the mapping_review_note on
+    config.yaml's secu_nm entry, which renders this same open question
+    into the report's Data Quality Notes every run with live current
+    figures, so it stays visible until resolved here.
+  synonym: null

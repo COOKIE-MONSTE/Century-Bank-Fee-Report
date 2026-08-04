@@ -125,8 +125,23 @@ institutions:
     # Mirrors the outgoing domestic rate into the incoming field rather
     # than leaving it "Not stated" when the source really does say the
     # same rate applies either way.
+    #
+    # returned_item_fee <- overdraft_fee: widget 978's own row reads
+    # "Overdraft (Share) Paid and Return Unpaid -- $10.00" -- ONE combined
+    # fee covering both outcomes (paid overdraft and a returned-unpaid
+    # item are the same $10.00 charge on share accounts), confirmed
+    # 2026-08-04. LKCSFeeScraper._match_keyword() returns on the FIRST
+    # matching field per row, and overdraft_fee's own keyword
+    # ("overdraft (share)") already claims this row, so no keyword
+    # addition could ever let returned_item_fee see it directly -- this
+    # is exactly the single-figure-covers-two-fields case
+    # apply_field_aliases() exists for. Safe against widget 979, which
+    # sets its own returned_item_fee from its own "Check/Debit Card*/ACH
+    # Overdraft Paid/Returned" row: apply_field_aliases() only assigns
+    # when the target field is still absent, so it never overwrites that.
     field_aliases:
       wire_transfer_incoming_fee: wire_transfer_outgoing_domestic_fee
+      returned_item_fee: overdraft_fee
 
   nusenda_regular_savings:
     name: "Nusenda Credit Union"
@@ -206,6 +221,61 @@ institutions:
     # generic "Not disclosed" placeholder used elsewhere, which means
     # "field not found" -- this means "confirmed to not exist publicly"),
     # rather than left blank or guessed from another TCM partner's terms.
+    #
+    # Best available proxy, NOT a confirmed source: TCM's standard
+    # consumer-suite Schumer boxes at
+    # https://www.icba.org/documents/610744/2081834/TCM+Disclosures_Jan302026.pdf
+    # ("TCM Disclosures", each product stamped accurate as of January 30,
+    # 2026; retrieved 2026-08-04) match every non-APR field already in
+    # this row (cash advance fee $5-or-3%, balance transfer fee
+    # $5-or-3%, foreign transaction 1%, over-limit None, paper statement
+    # $2.50/month, minimum interest charge $1.00, grace period 23 days --
+    # seven for seven), but the annual fee/APR figures there have NOT
+    # been confirmed as Century's own pricing -- TCM sets pricing per
+    # partner bank, and this document is hosted on TCM's parent (ICBA),
+    # not a Century-specific application flow.
+    #
+    # Per-product figures the document shows, recorded HERE (a config
+    # comment, never rendered into the report) rather than in the live
+    # Data Quality Note itself -- that note references this URL/date
+    # instead of restating figures TCM will revise, since a hardcoded
+    # table baked into report output is exactly what this repo's
+    # live-extraction standard forbids:
+    #   Rewards Platinum      -- Annual Fee None; Purchase/BT APR 0% intro
+    #                            12 billing cycles then 16.74%-26.74%;
+    #                            Cash Advance APR 26.74%-28.24%.
+    #   Cash Rewards Platinum -- Annual Fee None; Purchase/BT APR 0% intro
+    #                            12 billing cycles then 17.74%-26.99%;
+    #                            Cash Advance APR 27.74%-28.24%.
+    #   Visa Signature        -- Annual Fee None; Purchase/BT APR 0% intro
+    #                            12 billing cycles then 16.49%-22.49%;
+    #                            Cash Advance APR 25.49%.
+    #   Secured Platinum      -- Annual Fee $29; Purchase/BT APR 24.74%;
+    #                            Cash Advance APR 28.24%.
+    # Four reasons this is a lead and not a confirmation: (1) hosted on
+    # icba.org, TCM's parent, not a Century-specific application flow --
+    # TCM partner banks select pricing tiers, so this is a plausible
+    # default, not a guarantee; (2) shows a 0% intro APR for 12 billing
+    # cycles that appears nowhere in Century's own marketing, and the
+    # Card Promotions cell for Century lists only the Signature Travel
+    # points bonus; (3) caps late/returned payment at "up to $40" where
+    # Century's row has $30 first offense / $41 repeat, sourced from
+    # TCM's Consumer Cardholder Agreement -- close, not identical,
+    # evidence these may not be one identical program; (4) Century's
+    # card is branded "Visa Signature Travel" (1.5 pts/$, 30,000-point
+    # bonus after $2,500 in 3 months) -- TCM's suite lists both a "Visa
+    # Signature" (the product the figures above are from) and an
+    # "Excursion(TM) Visa Signature" with different APRs (17.99%-24.99%
+    # / 27.99%-28.24%), and Century's rewards language doesn't clearly
+    # match either, so the Signature row above may be the wrong product
+    # mapping entirely. Most consequential number if this is ever
+    # confirmed: the $29 Secured Platinum annual fee -- if it holds,
+    # Century would be the only institution in this report charging an
+    # annual fee on a secured card.
+    #
+    # Recorded as an unconfirmed lead in the report's Data Quality Notes
+    # (see _century_consumer_row's own note in credit_card_matrix.py) --
+    # not used to fill these cells.
     products:
       "Rewards Platinum":
         agreement: "consumer"
@@ -310,8 +380,77 @@ institutions:
     # scraper surfaces this as a warning every run rather than silently
     # trusting either date -- see service_fee_table_scraper.py.
     effective_date_pattern: 'Effective\s+(\d{1,2}/\d{1,2}/\d{2,4})'
-    known_conflicting_dates:
-      "the Truth-in-Savings PDF's fee schedule (page 7)": "07/14/2023"
+    # This page's fee schedule is duplicated, independently typeset, on
+    # page 7 of SECU's Truth-in-Savings PDF (the same document
+    # secu_nm_tis_savings already reads page 1 of) -- confirmed 2026-08-04
+    # the two disagree on stated EFFECTIVE DATE (this page: 01/23/23; PDF
+    # page 7: an "as of" date extracted live, observed 07/14/2023) while
+    # stating identical dollar values. Rather than hand-typing that
+    # second date as a permanent "known conflicting date" (which would
+    # freeze the comparison at today's PDF revision and go stale exactly
+    # the way RULE 0 warns against -- the certificate section of this
+    # same PDF was recently refreshed, so it's actively maintained and
+    # WILL be re-issued), the PDF is fetched and read live every run --
+    # see service_fee_table_scraper.py's _extract_pdf_page() for the
+    # two-column word-position reconstruction this page's layout needs.
+    cross_check_pdf:
+      url: "https://www.secunm.org/_/kcms-doc/29/8947/Truth-in-Savings-Disclosure.pdf"
+      page: 7
+      column_split_x: 340
+      label: "the Truth-in-Savings PDF's fee schedule (page 7)"
+      # Par Value of One Share: the credit union membership buy-in --
+      # a real cost of access none of the report's three bank
+      # institutions has an equivalent line for (they aren't
+      # member-owned). Surfaced as a note, not a fee row, per explicit
+      # request (2026-08-04) -- extracted live from the same page-7
+      # fetch the cross-check above already does, never hardcoded.
+      extra_facts:
+        - label: "par value of one share"
+          note: >
+            SECU NM requires a {value} "Par Value of One Share" to open
+            membership (Truth-in-Savings PDF, page 7) -- a one-time
+            membership cost of access that none of this report's other
+            (non-member-owned) institutions has an equivalent line for.
+    # UNRESOLVED, do not remap without human sign-off (2026-08-04): two
+    # pieces of evidence from the Truth-in-Savings PDF suggest
+    # returned_item_fee is sourced from the wrong line. (1) Page 2, sec.7
+    # Overdraft Privilege: "You will be assessed either a NSF Fee or
+    # Overdraft Privilege Fee, but not both" -- i.e. Overdraft Privilege
+    # Fee = item PAID, NSF Fee = item RETURNED, both $25.00, mutually
+    # exclusive. (2) Page 7's fee schedule carries a footnote the HTML
+    # page omits: "**NSF = ISF Fee". If that reading holds,
+    # returned_item_fee should source from the NSF line (currently
+    # feeding overdraft_fee instead), and "Return Check Charge"
+    # (currently returned_item_fee) is actually a DEPOSITED check that
+    # bounced -- i.e. returned_deposit_item_fee, currently blank for
+    # SECU. Resolving this requires SECU confirmation (800.983.7328) --
+    # nothing published states the mapping outright. See
+    # data/feedback_log.yaml for the pending verdict slot. Do NOT change
+    # field_keywords below until that verdict lands.
+    mapping_review_note:
+      fields: ["overdraft_fee", "returned_item_fee"]
+      unmatched_fields: ["Uncollected Funds Fee"]
+      text: >
+        UNRESOLVED MAPPING, not a change -- four SECU fee schedule lines
+        may be mismapped. Currently: NSF Fee / Overdraft Privilege Fee
+        (mutually exclusive per the TIS PDF's "either ... but not both"
+        language, both currently agreeing on the same figure) feed
+        'overdraft_fee' (this run: {overdraft_fee}); "Return Check
+        Charge" feeds 'returned_item_fee' (this run: {returned_item_fee});
+        "Uncollected Funds Fee" (this run: {uncollected_funds_fee}) is
+        unmapped.
+        Evidence the mapping may be backwards: (1) the TIS PDF states
+        Overdraft Privilege Fee = item paid, NSF Fee = item returned --
+        so 'overdraft_fee' may actually belong on the NSF Fee line, not
+        the Overdraft Privilege Fee line it's currently drawing from
+        equally; (2) page 7's fee schedule footnotes "**NSF = ISF Fee",
+        confirming NSF concerns items RETURNED, not paid. If confirmed,
+        "Return Check Charge" would instead belong to
+        'returned_deposit_item_fee' (a deposited check that bounced, not
+        a payment SECU itself returned) -- moving SECU from cheapest to
+        second-most-expensive on the returned-item comparison row. Not
+        changed pending human confirmation via SECU (800.983.7328); see
+        data/feedback_log.yaml.
     field_keywords:
       card_replacement_fee:
         - "atm/debit card re-issue"
@@ -353,6 +492,19 @@ institutions:
       # branching, uncollected funds) are deliberately left unmapped here
       # -- the scraper reports them as unmatched (see its warnings/
       # data/history.json) instead of forcing them into an existing field.
+    # The "International ATM/Debit Card Transactions" row's own label ends
+    # in "*"; the table cell just says "Variable" -- the actual mechanism
+    # ("At Cost. ... typically 1% of transaction amount ... on
+    # International ATM/check card transactions only.") is a separate
+    # <p class="disclaimer"> paragraph after the table (confirmed live
+    # 2026-08-04). Extracted and appended live, not hardcoded, so this
+    # stays distinct from Century's/Nusenda's flat 1% foreign transaction
+    # fee -- SECU's is at-cost/variable and ATM-debit-only, not a fixed
+    # percentage on all foreign purchases.
+    footnote_marker: "*"
+    footnote_selector: "p.disclaimer"
+    footnote_fields:
+      - "foreign_transaction_fee"
     # This page publishes ONE combined wire fee per direction ("Wire
     # Transfer: Domestic" / "International") with no separate incoming
     # rate anywhere -- confirmed 2026-07-29 by checking the live page for
@@ -425,6 +577,24 @@ institutions:
     # Fee") -- overridden here rather than changing the default and
     # risking Century's own extraction.
     fee_pattern: 'Monthly Service Fee\s*\$([\d,]+(?:\.\d{2})?)'
+    # Kasasa ATM fee refund (2026-08-04): this same page states, for all
+    # three Kasasa products, "ATM fees, nationwide (up to $25 monthly)"
+    # -- a qualifying-member refund benefit, not a per-product fee row.
+    # Surfaced as a note rather than folded into the institution-wide
+    # atm_out_of_network_fee cell (secu_nm's "Foreign ATM Fee" row):
+    # that cell is a flat fee everyone pays, while this refund only
+    # applies to qualifying Kasasa members -- blending the two would
+    # misrepresent which SECU customers actually pay $0.
+    page_note:
+      pattern: 'ATM fees,?\s*nationwide\s*\(up to \$([\d,]+(?:\.\d{2})?)\s*monthly\)'
+      text: >
+        Kasasa Cash/Cash Back/Tunes members are refunded ATM withdrawal
+        fees nationwide, up to ${value}/month (this page, confirmed
+        stated identically for all three Kasasa products) -- for a
+        qualifying member, SECU's Foreign ATM Fee cell effectively reads
+        $0, which that institution-wide cell alone doesn't convey since
+        it applies to every SECU customer, not just qualifying Kasasa
+        members.
     products:
       "Kasasa Cash\xae":
         product_name: "Kasasa Cash"
@@ -469,18 +639,29 @@ institutions:
     # why every field from it is forced to low confidence regardless of
     # how clean it looks.
     #
-    # Scoped to only the savings-tier rows below. Deliberately NOT
+    # Scoped to only the savings-tier rows below (plus the two Money
+    # Market rows added 2026-08-04 -- see note below). Deliberately NOT
     # including: Kasasa Cash/Cash Back/Regular Checking/IRA (already
     # covered by their own cleaner PDF/page sources above and below -- this
     # table shows "None" for all of them too, so it would only be redundant
     # corroboration, not new data; the IRA product page confirmed 2026-07-29
     # states the same "no monthly/annual maintenance fees" more directly,
-    # see secu_nm_ira below); "Money Market Account*"/"Advantage+ Money
-    # Market Account***" (their balance-tier sub-rows show literal "$N/A"
-    # placeholder artifacts in this table, and neither name is an exact
-    # match for the "Money Manager" product this task named -- flagging
-    # that naming ambiguity rather than guessing which, if either, row it
-    # refers to).
+    # see secu_nm_ira below).
+    #
+    # "Money Market Account*:"/"Advantage+ Money Market Account***:" ARE
+    # included as of 2026-08-04, reversing an earlier exclusion. The
+    # earlier reasoning ("their balance-tier sub-rows show literal '$N/A'
+    # placeholder artifacts in this table") was correct about what's on
+    # the page but wrong about where: those "$N/A" artifacts live in
+    # column 0 (the balance-TIER label rows, e.g. "$50,000.01 and up"),
+    # not in column `min_balance_column_index` below -- the "Minimum
+    # Balance to Avoid a Service Fee" column reads a clean "None" on both
+    # products' own header rows ("Money Market Account*:" row 19,
+    # "Advantage+ Money Market Account***:" row 24 of the extracted
+    # table). Confirmed live 2026-08-04 by extracting the actual table
+    # and printing column 0 vs. column 7 for both rows side by side --
+    # do not re-exclude these on the original "$N/A" reasoning without
+    # re-checking which column it's actually in.
     table_page: 1
     min_balance_column_index: 7
     products:
@@ -499,6 +680,12 @@ institutions:
       "UTMA/UGMA Savings":
         product_name: "UTMA/UGMA Savings"
         category: "savings_basic"
+      "Money Market Account*:":
+        product_name: "Money Market Account"
+        category: "money_market"
+      "Advantage+ Money Market Account***:":
+        product_name: "Advantage+ Money Market Account"
+        category: "money_market"
 
   secu_nm_ira:
     name: "State Employees Credit Union of New Mexico"
@@ -752,6 +939,41 @@ institutions:
       card_replacement_fee: "Not publicly disclosed"
       card_replacement_rush_fee: "Not publicly disclosed"
 
+  fn1870_hsa:
+    name: "First National 1870 (Sunflower Bank, N.A.)"
+    url: "https://www.sunflowerbank.com/getContentAsset/48905178-4983-4804-bfbe-70bc503883a5/50c2bc4c-a8ff-46ba-95c2-0e74752d147f/Checking-540-Health-Savings-Account-Example-Account-Disclosure-FINAL-03-27-26.pdf?language=en-US"
+    type: "regex_value"
+    product_name: "Health Savings Account"
+    category: "checking_general"
+    # Truth-in-Savings "Example Account Disclosure" for the HSA product
+    # (internal doc code "Checking 540" / "DD8106") -- confirmed live and
+    # text-extractable directly via pypdf 2026-08-04 (no scanned-image
+    # issue, unlike the Foundation Checking disclosure on this same CMS --
+    # see the comment on fn1870_checking's "Foundation Checking" product
+    # for that one; its numbers are already covered live by that scraper,
+    # so it needed no new entry here). The account is structurally a
+    # checking account with NOW + money market sub-accounts (the
+    # disclosure's own wording), hence checking_general rather than a new
+    # HSA-specific category -- no other institution in this report offers
+    # a comparable HSA product.
+    #
+    # Like every other FN1870 Truth-in-Savings disclosure, this one ALSO
+    # says fees are "provided to you at the time you open an account...
+    # and upon request" -- i.e. this is still not the general Fee
+    # Schedule PDF (see fn1870_not_disclosed, still unresolved). Only the
+    # 2 fees this document states about ITSELF, in its own "ACCOUNT
+    # SPECIFIC FEE SCHEDULE" section, are captured below. The document
+    # also states "unlimited withdrawals ... with no activity fee" --
+    # deliberately not captured as a field: it has no established
+    # canonical name anywhere in this report and no dollar figure to
+    # extract, matching how Foundation Checking's own activity-fee
+    # statement is likewise left uncaptured.
+    field_patterns:
+      monthly_maintenance_fee: 'ACCOUNT MAINTENANCE FEE:\s*This account has (no monthly maintenance fee)'
+      hsa_transfer_fee: 'TRANSFER FEE:\s*A fee of\s*(\$[\d,]+(?:\.\d{2})?)\s+will be charged to transfer your HSA'
+    field_fixed_values:
+      monthly_maintenance_fee: "None"
+
   # Enterprise Bank & Trust (New Mexico) -- Enterprise Financial Services
   # Corp, Clayton MO, routing #081006162, on www.enterprisebank.com ONLY.
   #
@@ -848,11 +1070,14 @@ institutions:
             prefix: "Over $500: "
         join: "; "
     # "Safe Deposit Box Drilling & Key Replacement" literally reads "Fees
-    # vary by location" -- a direct admission of regional variation, not a
-    # centrally-set figure, so it's recorded as NOT_PUBLICLY_DISCLOSED
-    # rather than the literal phrase (see line_item_fee_scraper.py).
-    not_publicly_disclosed_fields:
-      - "safe_deposit_drill_fee"
+    # vary by location" -- that IS disclosed (the document states it in so
+    # many words), just not as a single centrally-set figure, so as of
+    # 2026-08-04 this is taken as the literal phrase rather than the
+    # NOT_PUBLICLY_DISCLOSED sentinel (that sentinel means "confirmed to
+    # not exist publicly", which doesn't fit a value the source states
+    # outright). classify_mechanism() in attribution.py recognizes "vary
+    # by location" and resolves it to the "variable" mechanism, same
+    # bucket as the "actual cost"/"at cost" phrasing used elsewhere.
 
   enterprise_bank_not_disclosed:
     name: "Enterprise Bank & Trust (New Mexico)"
@@ -1013,11 +1238,14 @@ institutions:
       balance_transfer_apr: 'After that, APR will be ([\d.]+%\s*-\s*[\d.]+%)'
       intro_offers: '(0\.00% introductory APR[^.]*\.)'
       cash_advance_apr: '^([\d.]+%)'
-    # Not published anywhere for these cards -- confirmed 2026-07-29.
+    # Not published anywhere for these cards -- re-checked 2026-08-04, not
+    # on this page and Enterprise publishes no consumer cardholder
+    # agreement. foreign_transaction_fee is deliberately NOT in this list
+    # (see enterprise_bank_foreign_transaction below): it's disclosed on a
+    # different Enterprise page, just not this one.
     fixed_not_disclosed_fields:
       - "cash_advance_fee"
       - "balance_transfer_fee"
-      - "foreign_transaction_fee"
       - "late_payment_fee"
       - "returned_item_fee"
     products:
@@ -1030,3 +1258,32 @@ institutions:
       "Visa Rewards Plus Card":
         product_name: "Visa Rewards Plus"
         category: "credit_card_rewards"
+
+  enterprise_bank_foreign_transaction:
+    name: "Enterprise Bank & Trust (New Mexico)"
+    url: "https://www.enterprisebank.com/personal/travel-tips"
+    type: "regex_value"
+    product_name: "Foreign Transaction Fee (travel tips page)"
+    category: "credit_card_standard"
+    # Matrix-only source, read directly by _enterprise_bank_consumer_row()
+    # in credit_card_matrix.py -- not part of enterprise_bank_credit_cards'
+    # products list above, since this isn't a per-card Schumer-box field,
+    # it's a single prose statement on a different page entirely (see the
+    # GUARDRAIL comment on _enterprise_bank_consumer_row for the full
+    # reasoning and the 2019-benefits-PDF source this must never come
+    # from instead). Confirmed 2026-08-04, under "During Your Trip" ->
+    # "Currency Conversion": "If you have a Visa� credit card, each time
+    # a transaction is made in a foreign currency or in a country outside
+    # the United States and its territories, a foreign transaction fee of
+    # 1 percent is assessed." Pattern anchored on the surrounding sentence
+    # (tolerant of the (R) glyph and surrounding punctuation), with the
+    # capture group wrapping the QUANTITY ITSELF (number + "percent"/"%"),
+    # not just a bare digit -- so the captured text is a complete,
+    # self-describing value ("1 percent") with no field_fixed_values
+    # override needed. If Enterprise reprices to 2 percent or switches to
+    # a numeral like "1%", this pattern still matches and reports the new
+    # figure; if the sentence changes shape entirely, it stops matching
+    # and falls back to NOT_PUBLICLY_DISCLOSED rather than silently
+    # keeping a stale figure.
+    field_patterns:
+      foreign_transaction_fee: 'Visa.{0,3}credit card,[^.]*a foreign transaction fee of ([\d.]+\s*(?:percent|%)) is assessed'

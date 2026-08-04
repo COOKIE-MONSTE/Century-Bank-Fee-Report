@@ -5,7 +5,7 @@ from datetime import date, datetime
 
 import pypdf
 
-from .base import BaseScraper
+from .base import BaseScraper, default_field_description
 from .tcm_issuer_scraper import NOT_PUBLICLY_DISCLOSED
 
 logger = logging.getLogger("FeeComparisonScraper")
@@ -131,7 +131,15 @@ class LineItemFeeScraper(BaseScraper):
                 if value:
                     break
             if not value:
-                self.log_field_warning(card["card_name"], field)
+                # A field genuinely marked not_publicly_disclosed is
+                # expected to never match a label here -- that's not a
+                # regression, it's this document confirming the fee
+                # varies/isn't centrally set (see e.g. Enterprise's safe
+                # deposit drilling fee). try_llm_recovery's own drift
+                # check (never-had-a-real-value = ineligible) already
+                # protects those, so no separate exclusion is needed here.
+                if self.try_llm_recovery(card, field, text, default_field_description(field)):
+                    field_confidence[field] = "llm_assisted"
                 continue
             if field in not_disclosed_fields:
                 card[field] = NOT_PUBLICLY_DISCLOSED

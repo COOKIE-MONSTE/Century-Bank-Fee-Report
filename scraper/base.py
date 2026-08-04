@@ -13,12 +13,45 @@ logging.basicConfig(
 )
 logger = logging.getLogger("FeeComparisonScraper")
 
+# Values that mean "no real figure here" for the purposes of deciding
+# whether a missing field looks like a genuine site-structure regression
+# (see try_llm_recovery below) -- kept separate from attribution.py's
+# EMPTY_VALUES (which also treats an unset field the same way for display
+# purposes) since this module can't import attribution.py without risking
+# a cycle (attribution/report/credit_card_matrix all sit above scraper/*).
+_NON_REAL_VALUES = {None, "", "Not disclosed", "Not stated", "Not publicly disclosed"}
+
+
+def default_field_description(field):
+    """Generic, human-readable description of a canonical field key, for
+    scrapers that don't have a hand-written description per field (see
+    scraper/tcm_issuer_scraper.py's _FIELD_DESCRIPTIONS for a hand-written
+    example where the extra precision was worth the upkeep). Good enough
+    for Gemini to locate a labeled fee in prose or a table -- it doesn't
+    need report.py's display-quality labels, just an unambiguous target.
+    """
+    return f"The {field.replace('_', ' ')} -- a dollar amount, percentage, or short phrase stating it."
+
+
 class BaseScraper:
     def __init__(self, name, url, config):
         self.name = name
         self.url = url
         self.config = config
         self.warnings = []
+        # {(category, field): value} from yesterday's committed
+        # data/history.json, scoped to THIS institution only -- set by
+        # run.py via set_previous_values() before scrape() is called.
+        # Empty by default so every scraper (including ones under test in
+        # isolation, with no history available) degrades safely to "no
+        # eligible previous value" rather than erroring.
+        self._previous_values = {}
+
+    def set_previous_values(self, previous_values):
+        """Supplies yesterday's {(category, field): value} lookup for this
+        institution -- see try_llm_recovery() for what it's used for.
+        """
+        self._previous_values = previous_values or {}
 
     def fetch_url(self, url=None):
         """Fetches URL contents with headers to avoid bot detection.
@@ -182,6 +215,63 @@ class BaseScraper:
         msg = f"[{self.name} - {card_name}] Field '{field_name}' could not be parsed."
         logger.warning(msg)
         self.warnings.append(msg)
+
+    def try_llm_recovery(self, card, field, page_text, field_description):
+        """Attempts a Gemini-assisted re-extraction for `field`, but ONLY
+        when this exact (category, field) had a REAL value in yesterday's
+        committed snapshot -- i.e. this looks like a genuine extraction
+        regression (the source's structure likely changed), not a fact
+        that has simply never been published. A field that has NEVER
+        extracted (e.g. Century's annual fee, permanently
+        NOT_PUBLICLY_DISCLOSED by TCM's own design) never qualifies, so
+        this never spends API quota chasing a fact no page will ever
+        state -- and never risks handing that field's genuinely-confirmed
+        "not disclosed" status to a probabilistic guess.
+
+        On success: sets card[field], tags its confidence "llm_assisted",
+        logs a warning making clear this is a stopgap (the underlying
+        pattern needs a real fix), and returns True. On any failure
+        (ineligible, LLM unavailable, LLM found nothing): calls
+        log_field_warning() exactly as the pre-existing "not found" path
+        did, and returns False -- callers don't need a separate branch
+        for "didn't even try" vs. "tried and failed".
+        """
+        card_name = card.get("card_name", "Unknown")
+        category = card.get("category") or self.config.get("category")
+        previous_value = self._previous_values.get((category, field))
+
+        if previous_value in _NON_REAL_VALUES:
+            self.log_field_warning(card_name, field)
+            return False
+
+        msg = (
+            f"[{self.name} - {card_name}] Field '{field}' extracted a real value "
+            f"({previous_value!r}) in the previous run but not this one -- likely a "
+            f"site change, not a newly-undisclosed fee. Attempting Gemini recovery."
+        )
+        logger.warning(msg)
+        self.warnings.append(msg)
+
+        context = (
+            f"This institution, {self.name}, is located in New Mexico or a nearby "
+            f"region. Only use the page text provided below -- do not use outside "
+            f"knowledge about any other bank with a similar name."
+        )
+        value = self.llm_extract_field(page_text, field_description, context=context)
+        if not value:
+            self.log_field_warning(card_name, field)
+            return False
+
+        card[field] = self.clean_value(value)
+        card.setdefault("_field_confidence", {})[field] = "llm_assisted"
+        recovery_msg = (
+            f"[{self.name} - {card_name}] Recovered '{field}' via Gemini after an apparent "
+            f"extraction regression: {value!r}. This is a stopgap, not a fix -- the "
+            f"underlying pattern should be updated to match the source's new structure."
+        )
+        logger.warning(recovery_msg)
+        self.warnings.append(recovery_msg)
+        return True
 
     def finalize_card(self, card):
         """Ensures every card carries a category before it leaves the scraper.

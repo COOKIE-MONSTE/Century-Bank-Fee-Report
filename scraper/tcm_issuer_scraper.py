@@ -6,7 +6,7 @@ from urllib.parse import urljoin
 import pypdf
 from bs4 import BeautifulSoup
 
-from .base import BaseScraper
+from .base import BaseScraper, _NON_REAL_VALUES
 
 logger = logging.getLogger("FeeComparisonScraper")
 
@@ -57,6 +57,24 @@ class TcmIssuerScraper(BaseScraper):
 
     def __init__(self, name, url, config):
         super().__init__(name, url, config)
+
+    def _had_real_previous_value(self, field):
+        """This scraper builds one shared `fields` dict per AGREEMENT
+        (consumer/secured), reused across several products with different
+        categories -- unlike try_llm_recovery()'s per-card design, there's
+        no single category to key on here. Scans across every category
+        this institution had for `field` instead: if ANY of them had a
+        real value yesterday, this counts as an extraction regression
+        worth attempting recovery for. A field permanently unpublished
+        (e.g. annual_fee/purchase_apr, set per-partner-bank and disclosed
+        only at account opening) never had a real value in ANY category,
+        so it's correctly never eligible -- Gemini is never asked to
+        guess a fact no page will ever state.
+        """
+        return any(
+            fld == field and value not in _NON_REAL_VALUES
+            for (_category, fld), value in self._previous_values.items()
+        )
 
     def _resolve_agreement_urls(self):
         response = self.fetch_url()
@@ -192,18 +210,37 @@ class TcmIssuerScraper(BaseScraper):
             extra["effective_date"] = effective.group(1)
 
         # Regex-first, always -- this only runs for whichever of the 6
-        # canonical fields the patterns above didn't find. An LLM read is
-        # slower and costs API quota, so it's the exception path, not the
-        # default one, and every field it does supply is tagged
-        # "llm_assisted" (see scrape()) rather than trusted like a regex
-        # match.
+        # canonical fields the patterns above didn't find, and even then
+        # ONLY when that field extracted a real value in a previous run
+        # (see _had_real_previous_value): a field that has NEVER matched
+        # (e.g. one genuinely absent from this agreement) is not a site
+        # regression, so it's never worth spending API quota chasing --
+        # and never risks a probabilistic guess quietly filling in what
+        # should stay a visible gap. An LLM read is also slower and costs
+        # API quota, so it's the exception path, not the default one, and
+        # every field it does supply is tagged "llm_assisted" (see
+        # scrape()) rather than trusted like a regex match.
         llm_derived = set()
         for field, description in self._FIELD_DESCRIPTIONS.items():
             if field in fields:
                 continue
+            if not self._had_real_previous_value(field):
+                continue
+            msg = (
+                f"[{self.name}] Field '{field}' extracted a real value in the previous run "
+                f"but not this one ({agreement_label} agreement) -- likely a document change, "
+                f"not a newly-unpublished fee. Attempting Gemini recovery."
+            )
+            logger.warning(msg)
+            self.warnings.append(msg)
             value = self.llm_extract_field(
                 text, description,
-                context=f"This is TCM Bank, N.A.'s {agreement_label} Cardholder Agreement.",
+                context=(
+                    f"This is TCM Bank, N.A.'s {agreement_label} Cardholder Agreement, issued on "
+                    f"behalf of Century Bank, located in New Mexico or a nearby region. Only use "
+                    f"the page text provided below -- do not use outside knowledge about any "
+                    f"other bank with a similar name."
+                ),
             )
             if value:
                 fields[field] = value

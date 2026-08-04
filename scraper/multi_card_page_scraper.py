@@ -24,6 +24,15 @@ class MultiCardPageScraper(BaseScraper):
     value-before-label) since not every institution's card page uses that
     exact phrase or order -- SECU NM's compare-accounts page, for example,
     states "Monthly Service Fee $X" (label-before-value).
+
+    `page_note` captures one page-WIDE fact (not tied to any single
+    product card) via a regex over the whole page's text, rendered into
+    an info-level Data Quality Note -- e.g. SECU's Kasasa products all
+    state the same "ATM fees, nationwide (up to $X monthly)" refund cap,
+    a qualifying-member benefit that isn't a `monthly_maintenance_fee`-
+    shaped per-card value and would misrepresent scope if blended into
+    the institution-wide out-of-network-ATM fee cell (that cell applies
+    to everyone; this refund only applies to qualifying Kasasa members).
     """
 
     def __init__(self, name, url, config):
@@ -95,5 +104,21 @@ class MultiCardPageScraper(BaseScraper):
             msg = f"[{self.name}] Expected product card(s) not found on page: {sorted(missing)}"
             logger.warning(msg)
             self.warnings.append(msg)
+
+        page_note = self.config.get("page_note")
+        if page_note:
+            whole_text = " ".join(soup.get_text(separator=" ", strip=True).split())
+            note_m = re.search(page_note["pattern"], whole_text, re.IGNORECASE)
+            if note_m:
+                msg = f"[{self.name}] " + page_note["text"].format(value=note_m.group(1))
+                logger.info(msg)
+                self.warnings.append(msg)
+            else:
+                msg = (
+                    f"[{self.name}] Configured page_note pattern not found on this page this run -- "
+                    f"note not rendered."
+                )
+                logger.warning(msg)
+                self.warnings.append(msg)
 
         return cards_out

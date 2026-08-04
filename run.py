@@ -27,6 +27,8 @@ from feedback import load_feedback_log, compute_flag_track_record, promote_confi
 from credit_card_matrix import build_matrix
 from report import render_report
 from emailer import send_email
+from daily_audit import run_daily_audit
+from scraper import llm_fallback
 
 logging.basicConfig(
     level=logging.INFO,
@@ -54,8 +56,24 @@ SCRAPER_TYPES = {
 }
 
 
-def scrape_all(config):
+def _previous_values_by_institution(previous_fee_facts):
+    """Groups yesterday's committed fee_facts into
+    {institution_name: {(category, field): value}}, for
+    BaseScraper.try_llm_recovery()'s drift-eligibility check -- a field
+    only qualifies for the Gemini recovery fallback if IT, specifically,
+    had a real value yesterday, not just because something on the page
+    did.
+    """
+    by_institution = {}
+    for fact in previous_fee_facts:
+        key = (fact["category"], fact["fee_type"])
+        by_institution.setdefault(fact["institution"], {})[key] = fact["value"]
+    return by_institution
+
+
+def scrape_all(config, previous_fee_facts=None):
     results = {}
+    previous_values = _previous_values_by_institution(previous_fee_facts or [])
     for inst_key, inst_cfg in config["institutions"].items():
         name = inst_cfg["name"]
         scraper_cls = SCRAPER_TYPES.get(inst_cfg["type"])
@@ -65,6 +83,7 @@ def scrape_all(config):
             continue
 
         scraper = scraper_cls(name=name, url=inst_cfg.get("url", ""), config=inst_cfg)
+        scraper.set_previous_values(previous_values.get(name, {}))
         try:
             cards = scraper.scrape()
         except Exception as e:
@@ -125,7 +144,19 @@ def main():
     if promoted:
         logger.info(f"Promoted {len(promoted)} confirmed synonym(s) into the shared taxonomy: {promoted}")
 
-    results = scrape_all(config)
+    # Fresh Gemini call budget/rate-limit state for this run -- shared by
+    # every LLM-assisted path below (drift-gated recovery inside
+    # scrape_all(), and the daily audit right after it).
+    llm_fallback.reset_run_state()
+
+    results = scrape_all(config, previous_fee_facts)
+
+    # Once-a-day spot-check of one field across every institution (see
+    # daily_audit.py) -- runs AFTER scraping but BEFORE attribution, so a
+    # correction flows into facts/drift/the report exactly like a normal
+    # scrape result would. Shares scrape_all()'s Gemini call budget, so
+    # this can't push total usage past what llm_fallback.py allows.
+    run_daily_audit(config, results)
 
     institution_cards = merge_institution_cards(results)
     facts_by_institution = build_fee_facts(institution_cards)

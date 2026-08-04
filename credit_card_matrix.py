@@ -88,6 +88,7 @@ from scraper.shared_credit_card_scraper import SharedCreditCardDisclosureScraper
 from scraper.schumer_box_scraper import SchumerBoxScraper
 from scraper.line_item_fee_scraper import LineItemFeeScraper
 from scraper.product_column_table_scraper import ProductColumnTableScraper
+from scraper.regex_value_scraper import RegexValueScraper
 
 logger = logging.getLogger("FeeComparisonScraper")
 
@@ -320,6 +321,40 @@ def _century_consumer_row(warnings):
     if secured_agreement_url:
         for field in secured_agreement_extras:
             sources[field] = secured_agreement_url
+
+    # UNCONFIRMED LEAD, not a fill -- Annual Fee/APR stay
+    # NOT_PUBLICLY_DISCLOSED (see GUARDRAIL above). Recorded here only so
+    # a human reviewer has the pointer and the reasoning in one place;
+    # this is a static note, not a live-derived value, and deliberately
+    # never feeds `values` or data/history.json.
+    #
+    # Deliberately does NOT restate TCM's per-product dollar/APR figures
+    # here -- that table is on a document TCM revises periodically (new
+    # date stamp, versioned URL), so baking it into report output would
+    # be exactly the kind of frozen literal this repo's live-extraction
+    # standard forbids. The full dated breakdown lives in this
+    # institution's config.yaml comment (century_bank_credit_cards)
+    # instead; this note only points there.
+    warnings.append(
+        "[Credit card matrix] UNCONFIRMED LEAD, not a fill -- Century Bank's Annual Fee, "
+        "APR -- Purchases, and APR -- Cash Advances remain \"Not publicly disclosed\" and are NOT "
+        "being changed. TCM Bank's standard consumer-suite Schumer boxes "
+        "(https://www.icba.org/documents/610744/2081834/TCM+Disclosures_Jan302026.pdf, each product "
+        "stamped accurate as of January 30, 2026; retrieved 2026-08-04) corroborate every other "
+        "field already in this row -- cash advance fee, balance transfer fee, foreign transaction "
+        "fee, over-limit, paper statement, minimum interest charge, and grace period all match "
+        "exactly (7 for 7) -- but the annual fee/APR figures themselves have NOT been confirmed as "
+        "Century-specific pricing. Four reasons: (1) hosted on icba.org, TCM's parent, not a "
+        "Century application flow -- TCM partner banks select pricing tiers, so this is a plausible "
+        "default, not a guarantee; (2) shows an introductory 0% APR period that appears nowhere in "
+        "Century's own marketing, and the Card Promotions cell for Century lists only the Signature "
+        "Travel points bonus; (3) its late/returned-payment cap differs slightly from the figure "
+        "sourced from TCM's own Consumer Cardholder Agreement -- close, not identical, evidence "
+        "these may not be one identical program; (4) Century's card branding doesn't clearly match "
+        "either candidate product in TCM's suite, so the product mapping itself may be wrong. See "
+        "this institution's config.yaml comment for the full per-product pricing breakdown, dated "
+        "figures, and which single number would be most consequential if ever confirmed."
+    )
 
     values = {
         "annual_fee": NOT_PUBLICLY_DISCLOSED,
@@ -908,11 +943,20 @@ def _enterprise_bank_consumer_row(warnings, config):
     GUARDRAIL -- never source Enterprise's foreign transaction fee from
     enterprisebank.com/sites/default/files/2019-12/Visa_Credit_Card_
     Benefits_Consumer_WEB.pdf: that's a 2019 Visa cardholder BENEFITS
-    guide, not a fee schedule. A 1% figure circulates from it but isn't
-    confirmed on any Enterprise primary page (checked 2026-07-30,
-    including the CFPB credit card agreement database) -- foreign
-    transaction fee stays NOT_PUBLICLY_DISCLOSED rather than sourced from
-    that document.
+    guide, not a fee schedule, and this guardrail still stands. As of
+    2026-07-30 the 1% figure that circulates from it wasn't confirmed on
+    any Enterprise primary page (checked, including the CFPB credit card
+    agreement database) -- but that "not confirmed anywhere" conclusion
+    is now SUPERSEDED: confirmed 2026-08-04 on
+    enterprisebank.com/personal/travel-tips (see
+    enterprise_bank_foreign_transaction in config.yaml), a current,
+    first-party page stating the fee directly in prose under "During
+    Your Trip" -> "Currency Conversion". The two sources happening to
+    agree on 1% doesn't make the 2019 benefits PDF a legitimate source --
+    it still isn't a fee schedule, and must still never be used here or
+    anywhere else in this module. If travel-tips ever stops stating the
+    fee, this falls back to NOT_PUBLICLY_DISCLOSED -- do not "fix" a
+    missing value by pointing this back at the benefits PDF.
     """
     eb_cfg = config["institutions"]["enterprise_bank_credit_cards"]
     scraper = ProductColumnTableScraper(name=eb_cfg["name"], url=eb_cfg["url"], config=eb_cfg)
@@ -947,6 +991,35 @@ def _enterprise_bank_consumer_row(warnings, config):
                 sources["stop_payment"] = schedule_cfg["url"]
         except Exception as e:
             msg = f"[Credit card matrix] Failed to scrape Enterprise Bank fee schedule for stop payment: {e}"
+            logger.error(msg)
+            warnings.append(msg)
+
+    # Foreign Transaction: confirmed 2026-08-04 on a dedicated travel-tips
+    # page (see GUARDRAIL above and enterprise_bank_foreign_transaction in
+    # config.yaml) -- NOT the 2019 Visa benefits PDF, which stays
+    # permanently off-limits regardless of what this scrape returns.
+    foreign_transaction = NOT_PUBLICLY_DISCLOSED
+    fx_cfg = config["institutions"].get("enterprise_bank_foreign_transaction")
+    if fx_cfg:
+        fx_scraper = RegexValueScraper(name=fx_cfg["name"], url=fx_cfg["url"], config=fx_cfg)
+        try:
+            fx_cards = fx_scraper.scrape()
+            _extend_real_warnings(warnings, fx_scraper.warnings)
+            if fx_cards and fx_cards[0].get("foreign_transaction_fee"):
+                foreign_transaction = fx_cards[0]["foreign_transaction_fee"]
+                sources["foreign_transaction"] = fx_cfg["url"]
+            else:
+                msg = (
+                    "[Credit card matrix] Enterprise Bank's travel-tips page no longer states a "
+                    "foreign transaction fee in the expected wording -- falling back to "
+                    "NOT_PUBLICLY_DISCLOSED rather than the 2019 Visa benefits PDF (see GUARDRAIL "
+                    "in credit_card_matrix.py). Verify the fee is still 1% and update the pattern "
+                    "if the page's wording changed."
+                )
+                logger.warning(msg)
+                warnings.append(msg)
+        except Exception as e:
+            msg = f"[Credit card matrix] Failed to scrape Enterprise Bank travel-tips page for foreign transaction fee: {e}"
             logger.error(msg)
             warnings.append(msg)
 
@@ -993,7 +1066,7 @@ def _enterprise_bank_consumer_row(warnings, config):
         "returned_payment": NOT_PUBLICLY_DISCLOSED,
         "cash_advance": NOT_PUBLICLY_DISCLOSED,
         "balance_transfer": NOT_PUBLICLY_DISCLOSED,
-        "foreign_transaction": NOT_PUBLICLY_DISCLOSED,
+        "foreign_transaction": foreign_transaction,
         "over_limit": NOT_STATED,
         "paper_statement": NOT_STATED,
         "stop_payment": stop_payment,

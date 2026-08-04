@@ -29,11 +29,34 @@ class LKCSFeeScraper(BaseScraper):
     Nusenda's Rates & Fees page. The page itself renders no fee data in its
     static HTML -- it loads each section via a small AJAX call. Each
     configured widget ID returns one HTML fragment: an <h2> product title
-    plus a <table class='tbl-rates'> of Type/Fee (or Type/Items/Fee) rows.
+    plus a <table class='tbl-rates'> of Type/Fee (or Type/Items/Fee) rows,
+    plus an optional `<div class="tbl-rates-disclaimers">` of `<p>`
+    footnotes below the table.
+
+    A row's own Type label can carry a "*" marker (e.g. "Check/Debit
+    Card*/ACH Overdraft Paid/Returned") whose explanation lives in one of
+    those footnote paragraphs, not the table cell itself -- e.g. widget
+    979's NSF tiers state a rolling-12-month period and a "debit card
+    items are always $0" carve-out only in the footnote, not in either
+    tier row. Any field whose winning row carried a "*" gets that
+    footnote's text (the first disclaimer paragraph starting with "*",
+    marker stripped) appended to its value live -- extracted, not
+    retyped into config.
     """
 
     def __init__(self, name, url, config):
         super().__init__(name, url, config)
+
+    @staticmethod
+    def _find_footnote(soup):
+        container = soup.find("div", class_="tbl-rates-disclaimers")
+        if not container:
+            return None
+        for p in container.find_all("p"):
+            text = " ".join(p.get_text(separator=" ", strip=True).split())
+            if text.startswith("*") and not text.startswith("**"):
+                return text.lstrip("*").strip()
+        return None
 
     def _fetch_widget(self, s_value):
         client_id = self.config["client_id"]
@@ -96,6 +119,7 @@ class LKCSFeeScraper(BaseScraper):
                 continue
 
             grouped = {}
+            has_footnote_marker = set()
             for type_text, cells in self._parse_rows(table):
                 field = self._match_keyword(type_text)
                 if not field:
@@ -113,16 +137,23 @@ class LKCSFeeScraper(BaseScraper):
                 balance_m = _BALANCE_THRESHOLD_QUALIFIER.search(type_text)
                 if balance_m and "waived" not in piece.lower():
                     piece = f"{piece}/month, waived with a ${balance_m.group(1)} minimum average balance"
+                if "*" in type_text and not "**" in type_text:
+                    has_footnote_marker.add(field)
                 grouped.setdefault(field, [])
                 if piece not in grouped[field]:
                     grouped[field].append(piece)
+
+            footnote_text = self._find_footnote(soup) if has_footnote_marker else None
 
             widget_categories = self.config.get("widget_categories", {})
             category = widget_categories.get(s_value) or categories.guess_category(product_name)
 
             card = {"card_name": product_name, "category": category}
             for field, pieces in grouped.items():
-                card[field] = self.clean_value("; ".join(pieces))
+                value = self.clean_value("; ".join(pieces))
+                if field in has_footnote_marker and footnote_text:
+                    value = f"{value} ({footnote_text})"
+                card[field] = value
             self.apply_field_aliases(card)
             cards.append(self.finalize_card(card))
 

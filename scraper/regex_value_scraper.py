@@ -1,9 +1,11 @@
+import io
 import logging
 import re
 
 from bs4 import BeautifulSoup
+import pypdf
 
-from .base import BaseScraper
+from .base import BaseScraper, default_field_description
 
 logger = logging.getLogger("FeeComparisonScraper")
 
@@ -14,6 +16,16 @@ class RegexValueScraper(BaseScraper):
     paragraph rather than a table (e.g. Sunflower Bank's overdraft-privilege
     explainer, which states the fee inline: "...a fee (currently $29.00 for
     consumer accounts and $36.00 for business accounts)...").
+
+    Works against either an HTML page or a PDF at `url` -- detected from
+    the response's Content-Type header (falling back to the URL's own
+    extension, since some CMS asset endpoints don't set it reliably) --
+    since a Truth-in-Savings PDF states its per-product fees in the same
+    kind of inline prose sentence an HTML explainer page does (e.g. First
+    National 1870's HSA disclosure: "A fee of$25.00 will be charged to
+    transfer your HSA..."). PDF text is extracted via pypdf and flattened
+    to one whitespace-normalized string per page before regex matching --
+    same clean_value() normalization either way.
 
     Distinct from AssertedFeeScraper: that class records a fixed config-
     supplied value when a written CLAIM's pattern matches (e.g. "no monthly
@@ -53,10 +65,22 @@ class RegexValueScraper(BaseScraper):
         if not response:
             return []
 
-        soup = BeautifulSoup(response.content, "html.parser")
-        selector = self.config.get("content_selector", "main")
-        container = soup.select_one(selector) or soup
-        text = " ".join(container.get_text(separator=" ", strip=True).split())
+        content_type = response.headers.get("Content-Type", "")
+        is_pdf = "pdf" in content_type.lower() or self.url.lower().split("?")[0].endswith(".pdf")
+        if is_pdf:
+            try:
+                reader = pypdf.PdfReader(io.BytesIO(response.content))
+                text = " ".join(" ".join((page.extract_text() or "").split()) for page in reader.pages)
+            except Exception as e:
+                msg = f"[{self.name}] Failed to parse PDF: {e}"
+                logger.error(msg)
+                self.warnings.append(msg)
+                return []
+        else:
+            soup = BeautifulSoup(response.content, "html.parser")
+            selector = self.config.get("content_selector", "main")
+            container = soup.select_one(selector) or soup
+            text = " ".join(container.get_text(separator=" ", strip=True).split())
 
         card = {
             "card_name": self.config.get("product_name", self.name),
@@ -73,8 +97,9 @@ class RegexValueScraper(BaseScraper):
                 card[field] = self.clean_value(value)
                 field_confidence[field] = "high"
                 source_urls[field] = self.url
-            else:
-                self.log_field_warning(card["card_name"], field)
+            elif self.try_llm_recovery(card, field, text, default_field_description(field)):
+                field_confidence[field] = "llm_assisted"
+                source_urls[field] = self.url
 
         for field, pattern in self.config.get("asserted_field_patterns", {}).items():
             m = re.search(pattern, text, re.IGNORECASE)

@@ -32,10 +32,29 @@ class TisTableScraper(BaseScraper):
     Only accounts explicitly listed in config's `products` are ingested
     (never "every row in the table"), since this document mixes real
     accounts with unfilled template placeholder rows.
+
+    Some products (Money Market Account, Advantage+ Money Market Account)
+    are laid out as a HEADER row (their own name in column 0, every other
+    column blank) followed by several balance-TIER sub-rows whose own
+    column 0 is a placeholder ("$N/A" or a balance boundary), not the
+    product name -- confirmed 2026-08-04. A plain exact-match lookup on
+    the header row's own name finds a row with no value at all (the fee
+    column is blank on the header row itself; the real values are one
+    row down, per tier). For a header-only row (every column but 0 is
+    empty), this scraper instead reads every sub-row between it and the
+    next header-only row (or the end of the table), and uses the
+    balance-column value ONLY if every tier agrees -- if the tiers
+    disagree, that's surfaced as a warning rather than silently picking
+    one, since "which tier's answer is the product's answer" would be a
+    guess this scraper has no basis for making.
     """
 
     def __init__(self, name, url, config):
         super().__init__(name, url, config)
+
+    @staticmethod
+    def _is_header_only_row(row):
+        return len(row) > 1 and all(c is None for c in row[1:])
 
     def scrape(self):
         response = self.fetch_url()
@@ -64,12 +83,16 @@ class TisTableScraper(BaseScraper):
             self.warnings.append(msg)
             return []
 
+        table_rows = tables[0]
         rows_by_account = {}
-        for row in tables[0]:
+        header_row_index = {}
+        for idx, row in enumerate(table_rows):
             if not row or not row[0]:
                 continue
             account = " ".join(row[0].split())
             rows_by_account[account] = row
+            if self._is_header_only_row(row):
+                header_row_index.setdefault(account, idx)
 
         balance_col = self.config.get("min_balance_column_index", 7)
         products = self.config.get("products", {})
@@ -83,10 +106,34 @@ class TisTableScraper(BaseScraper):
                 self.warnings.append(msg)
                 continue
 
-            raw_value = row[balance_col] if balance_col < len(row) else None
-            if not raw_value:
-                self.log_field_warning(account_name, "monthly_maintenance_fee")
-                continue
+            if self._is_header_only_row(row):
+                idx = header_row_index[account_name]
+                tier_values = []
+                for sub_row in table_rows[idx + 1:]:
+                    if not sub_row or self._is_header_only_row(sub_row):
+                        break
+                    v = sub_row[balance_col] if balance_col < len(sub_row) else None
+                    if v:
+                        tier_values.append(v.strip())
+                distinct = set(tier_values)
+                if not distinct:
+                    self.log_field_warning(account_name, "monthly_maintenance_fee")
+                    continue
+                if len(distinct) > 1:
+                    msg = (
+                        f"[{self.name} - {account_name}] Balance tiers disagree on 'Minimum Balance "
+                        f"to Avoid a Service Fee' ({sorted(distinct)!r}) -- not silently picking one; "
+                        f"verify manually."
+                    )
+                    logger.warning(msg)
+                    self.warnings.append(msg)
+                    continue
+                raw_value = tier_values[0]
+            else:
+                raw_value = row[balance_col] if balance_col < len(row) else None
+                if not raw_value:
+                    self.log_field_warning(account_name, "monthly_maintenance_fee")
+                    continue
 
             value = "None" if raw_value.strip().lower() == "none" else self.clean_value(raw_value)
             card = {

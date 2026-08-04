@@ -35,6 +35,7 @@ FIELD_LABELS = [
     ("card_replacement_fee", "Card Replacement Fee"),
     ("card_replacement_rush_fee", "Rush Card Replacement Fee"),
     ("monthly_maintenance_fee", "Monthly Maintenance Fee"),
+    ("hsa_transfer_fee", "HSA Transfer Fee (to Another Institution)"),
 ]
 FIELD_LABEL_MAP = dict(FIELD_LABELS)
 FIELD_ORDER = [key for key, _ in FIELD_LABELS]
