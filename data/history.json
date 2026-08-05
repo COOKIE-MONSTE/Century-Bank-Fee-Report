@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-04T21:54:34.512922+00:00",
+  "generated_at": "2026-08-05T08:33:33.102783+00:00",
   "institutions": {
     "nusenda": {
       "name": "Nusenda Credit Union",
@@ -2383,8 +2383,8 @@
       "source_quote": null,
       "source_locator": null,
       "issuers": [],
-      "changed_since_last_snapshot": true,
-      "previous_value": "No Charge for 1st-5th Items; $10.00 per item for 6th- or more items"
+      "changed_since_last_snapshot": false,
+      "previous_value": null
     },
     {
       "institution": "Nusenda Credit Union",
@@ -3679,8 +3679,8 @@
       "source_quote": null,
       "source_locator": null,
       "issuers": [],
-      "changed_since_last_snapshot": true,
-      "previous_value": "Variable"
+      "changed_since_last_snapshot": false,
+      "previous_value": null
     },
     {
       "institution": "State Employees Credit Union of New Mexico",
@@ -5239,8 +5239,8 @@
       "source_quote": null,
       "source_locator": null,
       "issuers": [],
-      "changed_since_last_snapshot": true,
-      "previous_value": "Not publicly disclosed"
+      "changed_since_last_snapshot": false,
+      "previous_value": null
     },
     {
       "institution": "Enterprise Bank & Trust (New Mexico)",
@@ -5743,8 +5743,8 @@
       "source_quote": null,
       "source_locator": null,
       "issuers": [],
-      "changed_since_last_snapshot": true,
-      "previous_value": "Not publicly disclosed"
+      "changed_since_last_snapshot": false,
+      "previous_value": null
     },
     {
       "institution": "Enterprise Bank & Trust (New Mexico)",
